@@ -1,0 +1,4 @@
+name: pulumi-snowflake-example
+runtime: python
+description: A sample Pulumi program which demonstrates use of the resources in the pulumi-snowflake
+  package
