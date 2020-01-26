@@ -1,6 +1,5 @@
-import pulumi
-from pulumi.dynamic import ResourceProvider, CreateResult
-import snowflake.connector
+from pulumi.dynamic import CreateResult, ResourceProvider
+from pulumi_snowflake.SnowflakeConnectionProvider import SnowflakeConnectionProvider
 
 
 class FileFormatProvider(ResourceProvider):
@@ -8,26 +7,36 @@ class FileFormatProvider(ResourceProvider):
     Dynamic provider for Snowflake FileFormat resources
     """
 
+    connectionProvider: SnowflakeConnectionProvider
+
+    def __init__(self, connectionProvider: SnowflakeConnectionProvider = None):
+        super().__init__()
+
+        if connectionProvider is None:
+            self.connectionProvider = SnowflakeConnectionProvider()
+        else:
+            self.connectionProvider = connectionProvider
+
     def create(self, inputs):
 
-        ctx = snowflake.connector.connect(
-            user=inputs["snowflakeUsername"],
+        connection = self.connectionProvider.get(
+            username=inputs["snowflakeUsername"],
             password=inputs["snowflakePassword"],
-            account=inputs["snowflakeAccountName"]
+            accountName=inputs["snowflakeAccountName"]
         )
-
-        cs = ctx.cursor()
+        cursor = connection.cursor()
 
         version = "novalue"
 
         try:
-            cs.execute("SELECT current_version()")
-            one_row = cs.fetchone()
+            cursor.execute("SELECT current_version()")
+            one_row = cursor.fetchone()
             version = f"{one_row[0]}"
             print(version)
         finally:
-            cs.close()
-        ctx.close()
+            cursor.close()
+
+        connection.close()
 
         return CreateResult(id_="foo", outs={
             "name": version

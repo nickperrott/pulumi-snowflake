@@ -1,4 +1,3 @@
-import sys
 import pulumi
 import pulumi_snowflake as snowflake
 
