@@ -1,5 +1,7 @@
 from pulumi.dynamic import CreateResult, ResourceProvider
-from pulumi_snowflake.SnowflakeConnectionProvider import SnowflakeConnectionProvider
+from pulumi_snowflake.SnowflakeConnectionProvider import \
+    SnowflakeConnectionProvider
+from pulumi_snowflake.Validation import Validation
 
 
 class FileFormatProvider(ResourceProvider):
@@ -26,18 +28,24 @@ class FileFormatProvider(ResourceProvider):
         )
         cursor = connection.cursor()
 
-        version = "novalue"
+        # Snowflake's input binding only works for column values, not identifiers,
+        # so we have to validate them manually and put straight into the SQL
+        validatedDatabase = Validation.validateIdentifier(inputs["database"])
+        validatedName = Validation.validateIdentifier(inputs["name"])
+        validatedType = Validation.validateIdentifier(inputs["type"])
 
         try:
-            cursor.execute("SELECT current_version()")
-            one_row = cursor.fetchone()
-            version = f"{one_row[0]}"
-            print(version)
+            cursor.execute(f"USE DATABASE {validatedDatabase}")
+            cursor.execute('\n'.join([
+                f"CREATE FILE FORMAT {validatedName}",
+                f"TYPE = {validatedType}"
+            ]))
         finally:
             cursor.close()
 
         connection.close()
 
         return CreateResult(id_="foo", outs={
-            "name": version
+            "type": validatedType,
+            "name": validatedName
         })
