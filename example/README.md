@@ -8,6 +8,14 @@
 pip install -e ..
 ```
 
+* Set your Snowflake credentials
+
+```
+pulumi config set snowflakeAccountName [your Snowflake account name]
+pulumi config set --secret snowflakeUsername [your Snowflake username]
+pulumi config set --secret snowflakePassword [snowflake password]
+```
+
 * Deploy the stack
 
 ```

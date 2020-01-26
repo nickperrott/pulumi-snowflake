@@ -15,5 +15,6 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'pulumi>=1.0.0',
+        'snowflake-connector-python>=2.1.3'
     ]
 )
