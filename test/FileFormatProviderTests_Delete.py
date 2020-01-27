@@ -6,8 +6,6 @@ from pulumi_snowflake.FileFormatProvider import FileFormatProvider
 
 class FileFormatProviderTests(unittest.TestCase):
 
-    # Make DB name an output of create
-    # Allow choice of schema
     # Put outputs on fileformat object
 
     def testWhenCallDeleteThenSqlIsGenerated(self):
@@ -21,6 +19,37 @@ class FileFormatProviderTests(unittest.TestCase):
 
         mockCursor.execute.assert_has_calls([
             call(f"USE DATABASE database_name"),
+            call(f"DROP FILE FORMAT test_file_format")
+        ])
+
+    def testWhenCallDeleteWithSchemaNoneThenUseSchemaIsNotExecuted(self):
+        mockCursor = Mock()
+        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+
+        provider = FileFormatProvider(mockConnectionProvider)
+        provider.delete("test_file_format", {
+            "database": "database_name",
+            "schema": None
+        })
+
+        mockCursor.execute.assert_has_calls([
+            call(f"USE DATABASE database_name"),
+            call(f"DROP FILE FORMAT test_file_format")
+        ])
+
+    def testWhenCallDeleteWithSchemaThenUseSchemaIsExecuted(self):
+        mockCursor = Mock()
+        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+
+        provider = FileFormatProvider(mockConnectionProvider)
+        provider.delete("test_file_format", {
+            "database": "database_name",
+            "schema": "schema_name"
+        })
+
+        mockCursor.execute.assert_has_calls([
+            call(f"USE DATABASE database_name"),
+            call(f"USE SCHEMA schema_name"),
             call(f"DROP FILE FORMAT test_file_format")
         ])
 

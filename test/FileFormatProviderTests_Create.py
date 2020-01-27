@@ -22,6 +22,25 @@ class FileFormatProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def testWhenCallCreateWithSchemaThenExecutesUseSchema(self):
+        mockCursor = Mock()
+        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+
+        provider = FileFormatProvider(mockConnectionProvider)
+        provider.create({
+            **self.getStandardInputs(),
+            "schema": "test_schema"
+        })
+
+        mockCursor.execute.assert_has_calls([
+            call(f"USE DATABASE {self.getStandardInputs()['database']}"),
+            call(f"USE SCHEMA test_schema"),
+            call("\n".join([
+                f"CREATE FILE FORMAT {self.getStandardInputs()['name']}",
+                f"TYPE = {FileFormatType.CSV}"
+            ]))
+        ])
+
     def testWhenCallCreateWithNameAndTypeThenOutputsAreReturned(self):
         mockCursor = Mock()
         mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
@@ -32,8 +51,27 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertDictEqual(result.outs, {
             "name": self.getStandardInputs()["name"],
             "type": self.getStandardInputs()["type"],
-            "database": self.getStandardInputs()["database"]
+            "database": self.getStandardInputs()["database"],
+            "schema": None
         })
+    
+    def testWhenCallCreateWithSchemaThenAppearsInOutputs(self):
+        mockCursor = Mock()
+        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+
+        provider = FileFormatProvider(mockConnectionProvider)
+        result = provider.create({
+            **self.getStandardInputs(),
+            "schema": "test_schema"
+        })
+
+        self.assertDictEqual(result.outs, {
+            "name": self.getStandardInputs()["name"],
+            "type": self.getStandardInputs()["type"],
+            "database": self.getStandardInputs()["database"],
+            "schema": "test_schema"
+        })
+
 
     def testWhenCallCreateWithNameAndTypeThenFileFormatNameIsReturnedAsId(self):
         mockCursor = Mock()
@@ -64,6 +102,15 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertRaises(Exception, provider.create, {
             **self.getStandardInputs(),
             'database': 'invalid-db-name',
+        })
+
+    def testWhenGiveInvalidSchemaThenErrorThrown(self):
+        mockConnectionProvider = self.getMockConnectionProvider(Mock())
+        provider = FileFormatProvider(mockConnectionProvider)
+
+        self.assertRaises(Exception, provider.create, {
+            **self.getStandardInputs(),
+            'schema': 'invalid-schema-name',
         })
 
     def testWhenGiveInvalidNameThenErrorThrown(self):
