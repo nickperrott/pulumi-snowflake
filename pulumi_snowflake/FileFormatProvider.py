@@ -45,7 +45,7 @@ class FileFormatProvider(ResourceProvider):
 
         connection.close()
 
-        return CreateResult(id_="foo", outs={
+        return CreateResult(id_=validatedDatabase, outs={
             "type": validatedType,
             "name": validatedName
         })

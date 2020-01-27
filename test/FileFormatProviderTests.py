@@ -37,6 +37,15 @@ class FileFormatProviderTests(unittest.TestCase):
             "type": self.getStandardInputs()["type"]
         })
 
+    def testWhenCallCreateWithNameAndTypeThenDatabaseNameIsReturnedAsId(self):
+        mockCursor = Mock()
+        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+
+        provider = FileFormatProvider(mockConnectionProvider)
+        result = provider.create(self.getStandardInputs())
+
+        self.assertEqual(result.id, self.getStandardInputs()["database"])
+
     def testWhenGiveInvalidDbThenErrorThrown(self):
         mockConnectionProvider = self.getMockConnectionProvider(Mock())
         provider = FileFormatProvider(mockConnectionProvider)
