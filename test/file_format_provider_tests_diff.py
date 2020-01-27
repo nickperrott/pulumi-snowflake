@@ -7,9 +7,7 @@ from pulumi_snowflake.file_format_type import FileFormatType
 
 class FileFormatProviderTests(unittest.TestCase):
 
-    # Put outputs on fileformat object
-
-    def testWhenTypeAndDatabaseAreUnchangedThenNoChange(self):
+    def test_when_type_and_database_are_unchanged_then_no_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,
@@ -22,7 +20,7 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertFalse(result.changes)
         self.assertSetEqual(set(result.replaces), set())
 
-    def testWhenTypeChangedThenNeedsChange(self):
+    def test_when_type_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,
@@ -35,7 +33,7 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertTrue(result.changes)
         self.assertSetEqual(set(result.replaces), {"type"})
 
-    def testWhenDatabaseChangedThenNeedsChange(self):
+    def test_when_database_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,
@@ -48,7 +46,7 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertTrue(result.changes)
         self.assertSetEqual(set(result.replaces), {"database"})
 
-    def testWhenNameChangedThenNeedsChange(self):
+    def test_when_name_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,
@@ -63,7 +61,7 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertTrue(result.changes)
         self.assertSetEqual(set(result.replaces), {"name"})
 
-    def testWhenNameNotGivenInNewsThenNoChange(self):
+    def test_when_name_not_given_in_news_then_no_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,
@@ -77,7 +75,7 @@ class FileFormatProviderTests(unittest.TestCase):
         self.assertFalse(result.changes)
         self.assertSetEqual(set(result.replaces), set())
 
-    def testWhenSchemaChangedThenNeedsChange(self):
+    def test_when_schema_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
             "type": FileFormatType.CSV,

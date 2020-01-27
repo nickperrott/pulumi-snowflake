@@ -53,13 +53,13 @@ class FileFormat(Resource):
         """
 
         config = Config()
-        connectionProvider = SnowflakeConnectionProvider(
+        connection_provider = SnowflakeConnectionProvider(
             config.require('snowflakeUsername'),
             config.require('snowflakePassword'),
             config.require('snowflakeAccountName')
         )
 
-        super().__init__(FileFormatProvider(connectionProvider), resource_name, {
+        super().__init__(FileFormatProvider(connection_provider), resource_name, {
             'database': database,
             'resource_name': resource_name,
             'name': name,

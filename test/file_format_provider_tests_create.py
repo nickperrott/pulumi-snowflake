@@ -7,152 +7,152 @@ from pulumi_snowflake.file_format_type import FileFormatType
 
 class FileFormatProviderTests(unittest.TestCase):
 
-    def testWhenCallCreateWithNameAndTypeThenSqlIsGenerated(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_with_name_and_type_then_sql_is_generated(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
-        provider.create(self.getStandardInputs())
+        provider = FileFormatProvider(mock_connection_provider)
+        provider.create(self.get_standard_inputs())
 
-        mockCursor.execute.assert_has_calls([
-            call(f"USE DATABASE {self.getStandardInputs()['database']}"),
+        mock_cursor.execute.assert_has_calls([
+            call(f"USE DATABASE {self.get_standard_inputs()['database']}"),
             call("\n".join([
-                f"CREATE FILE FORMAT {self.getStandardInputs()['name']}",
+                f"CREATE FILE FORMAT {self.get_standard_inputs()['name']}",
                 f"TYPE = {FileFormatType.CSV}"
             ]))
         ])
 
-    def testWhenCallCreateWithSchemaThenExecutesUseSchema(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_with_schema_then_executes_use_schema(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
+        provider = FileFormatProvider(mock_connection_provider)
         provider.create({
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             "schema": "test_schema"
         })
 
-        mockCursor.execute.assert_has_calls([
-            call(f"USE DATABASE {self.getStandardInputs()['database']}"),
+        mock_cursor.execute.assert_has_calls([
+            call(f"USE DATABASE {self.get_standard_inputs()['database']}"),
             call(f"USE SCHEMA test_schema"),
             call("\n".join([
-                f"CREATE FILE FORMAT {self.getStandardInputs()['name']}",
+                f"CREATE FILE FORMAT {self.get_standard_inputs()['name']}",
                 f"TYPE = {FileFormatType.CSV}"
             ]))
         ])
 
-    def testWhenCallCreateWithNameAndTypeThenOutputsAreReturned(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_with_name_and_type_then_outputs_are_returned(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
-        result = provider.create(self.getStandardInputs())
+        provider = FileFormatProvider(mock_connection_provider)
+        result = provider.create(self.get_standard_inputs())
 
         self.assertDictEqual(result.outs, {
-            "name": self.getStandardInputs()["name"],
-            "type": self.getStandardInputs()["type"],
-            "database": self.getStandardInputs()["database"],
+            "name": self.get_standard_inputs()["name"],
+            "type": self.get_standard_inputs()["type"],
+            "database": self.get_standard_inputs()["database"],
             "schema": None
         })
     
-    def testWhenCallCreateWithSchemaThenAppearsInOutputs(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_with_schema_then_appears_in_outputs(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
+        provider = FileFormatProvider(mock_connection_provider)
         result = provider.create({
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             "schema": "test_schema"
         })
 
         self.assertDictEqual(result.outs, {
-            "name": self.getStandardInputs()["name"],
-            "type": self.getStandardInputs()["type"],
-            "database": self.getStandardInputs()["database"],
+            "name": self.get_standard_inputs()["name"],
+            "type": self.get_standard_inputs()["type"],
+            "database": self.get_standard_inputs()["database"],
             "schema": "test_schema"
         })
 
 
-    def testWhenCallCreateWithNameAndTypeThenFileFormatNameIsReturnedAsId(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_with_name_and_type_then_file_format_name_is_returned_as_id(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
-        result = provider.create(self.getStandardInputs())
+        provider = FileFormatProvider(mock_connection_provider)
+        result = provider.create(self.get_standard_inputs())
 
-        self.assertEqual(result.id, self.getStandardInputs()["name"])
+        self.assertEqual(result.id, self.get_standard_inputs()["name"])
 
-    def testWhenCallCreateWithoutNameThenNameIsAutoGenerated(self):
-        mockCursor = Mock()
-        mockConnectionProvider = self.getMockConnectionProvider(mockCursor)
+    def test_when_call_create_without_name_then_name_is_autogenerated(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mockConnectionProvider)
+        provider = FileFormatProvider(mock_connection_provider)
         result = provider.create({
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'name': None,
         })
 
-        resourceName = self.getStandardInputs()["resource_name"]
+        resourceName = self.get_standard_inputs()["resource_name"]
         self.assertRegex(result.outs["name"], resourceName + '_[a-f,0-9]{7}')
 
-    def testWhenGiveInvalidDbThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_give_invalid_db_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'database': 'invalid-db-name',
         })
 
-    def testWhenGiveInvalidSchemaThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_give_invalid_schema_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'schema': 'invalid-schema-name',
         })
 
-    def testWhenGiveInvalidNameThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_give_invalid_name_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'name': 'invalid-format',
         })
 
-    def testWhenGiveInvalidTypeThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_give_invalid_type_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'type': "C-SV"
         })
 
-    def testWhenNoTypeGivenThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_no_type_given_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'type': None
         })
 
-    def testWhenInvalidResourceNameGivenAndNameIsAutoGeneratedThenErrorThrown(self):
-        mockConnectionProvider = self.getMockConnectionProvider(Mock())
-        provider = FileFormatProvider(mockConnectionProvider)
+    def test_when_invalid_resource_name_given_and_name_is_autogenerated_then_error_thrown(self):
+        mock_connection_provider = self.get_mock_connection_provider(Mock())
+        provider = FileFormatProvider(mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            **self.getStandardInputs(),
+            **self.get_standard_inputs(),
             'name': None,
             'resource_name': 'invalid-name'
         })
 
     # HELPERS
 
-    def getStandardInputs(self):
+    def get_standard_inputs(self):
         return {
             'database': 'test_database_name',
             'type': FileFormatType.CSV,
@@ -160,9 +160,9 @@ class FileFormatProviderTests(unittest.TestCase):
             'name': 'test_file_format'
         }
 
-    def getMockConnectionProvider(self, mockCursor):
+    def get_mock_connection_provider(self, mock_cursor):
         mockConnection = Mock()
-        mockConnection.cursor.return_value = mockCursor
-        mockConnectionProvider = Mock()
-        mockConnectionProvider.get.return_value = mockConnection
-        return mockConnectionProvider
+        mockConnection.cursor.return_value = mock_cursor
+        mock_connection_provider = Mock()
+        mock_connection_provider.get.return_value = mockConnection
+        return mock_connection_provider
