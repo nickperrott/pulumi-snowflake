@@ -42,14 +42,23 @@ class FileFormatProvider(ResourceProvider):
 
         connection.close()
 
-        return CreateResult(id_=validatedDatabase, outs={
+        return CreateResult(id_=validatedName, outs={
             "type": validatedType,
-            "name": validatedName
+            "name": validatedName,
+            "database": validatedDatabase
         })
 
     def delete(self, id, props):
+        connection = self.connectionProvider.get()
+        cursor = connection.cursor()
 
-        print("THE ID is")
-        print(id)
-        print("TJHE PROPS ARE")
-        print(props)
+        validatedDatabase = Validation.validateIdentifier(props["database"])
+        validatedId = Validation.validateIdentifier(id)
+
+        try:
+            cursor.execute(f"USE DATABASE {validatedDatabase}")
+            cursor.execute(f"DROP FILE FORMAT {validatedId}")
+        finally:
+            cursor.close()
+
+        connection.close()
