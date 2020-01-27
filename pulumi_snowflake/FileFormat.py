@@ -25,6 +25,16 @@ class FileFormat(Resource):
     The file format type.  One of `FileFormatType`.
     """
 
+    database: Output[str]
+    """
+    The Snowflake database in which the file format exists.
+    """
+
+    schema: Output[str]
+    """
+    The Snowflake schema in which the file format exists.
+    """
+
     def __init__(self,
                  resource_name: str,
                  database: Input[str],

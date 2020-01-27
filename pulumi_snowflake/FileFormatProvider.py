@@ -1,4 +1,4 @@
-from pulumi.dynamic import CreateResult, ResourceProvider
+from pulumi.dynamic import CreateResult, DiffResult, ResourceProvider
 from pulumi_snowflake.RandomId import RandomId
 from pulumi_snowflake.SnowflakeConnectionProvider import \
     SnowflakeConnectionProvider
@@ -68,6 +68,22 @@ class FileFormatProvider(ResourceProvider):
             cursor.close()
 
         connection.close()
+
+    def diff(self, id, olds, news):
+        fields = ["type", "database", "schema"]
+        changedFields = []
+
+        for field in fields:
+            if olds.get(field) != news.get(field):
+                changedFields.append(field)
+
+        if (news.get("name") is not None and olds.get("name") != news.get("name")):
+            changedFields.append("name")
+        
+        return DiffResult(
+            changes=len(changedFields) > 0,
+            replaces=changedFields
+        )
 
     def _getValidatedName(self, inputs):
         name = inputs.get("name")
