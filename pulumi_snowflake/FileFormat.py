@@ -39,6 +39,7 @@ class FileFormat(Resource):
         config = Config()
         super().__init__(FileFormatProvider(), resource_name, {
             'database': database,
+            'resource_name': resource_name,
             'name': name,
             'type': type,
             'snowflakeAccountName': config.require_secret('snowflakeAccountName'),

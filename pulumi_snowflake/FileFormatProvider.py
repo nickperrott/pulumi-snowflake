@@ -1,4 +1,5 @@
 from pulumi.dynamic import CreateResult, ResourceProvider
+from pulumi_snowflake.RandomId import RandomId
 from pulumi_snowflake.SnowflakeConnectionProvider import \
     SnowflakeConnectionProvider
 from pulumi_snowflake.Validation import Validation
@@ -28,10 +29,15 @@ class FileFormatProvider(ResourceProvider):
         )
         cursor = connection.cursor()
 
+        name = inputs.get("name")
+
+        if name is None:
+            name = f'{inputs["resource_name"]}_{RandomId.generate(7)}'
+
         # Snowflake's input binding only works for column values, not identifiers,
         # so we have to validate them manually and put straight into the SQL
         validatedDatabase = Validation.validateIdentifier(inputs["database"])
-        validatedName = Validation.validateIdentifier(inputs["name"])
+        validatedName = Validation.validateIdentifier(name)
         validatedType = Validation.validateIdentifier(inputs["type"])
 
         try:
