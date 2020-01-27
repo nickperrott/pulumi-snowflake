@@ -109,10 +109,7 @@ class FileFormatProviderTests(unittest.TestCase):
             'database': 'test_database_name',
             'type': FileFormatType.CSV,
             'resource_name': 'pulumi_test_file_format',
-            'name': 'test_file_format',
-            'snowflakeUsername': 'testUsername',
-            'snowflakePassword': 'testPassword',
-            'snowflakeAccountName': 'testAccountName',
+            'name': 'test_file_format'
         }
 
     def getMockConnectionProvider(self, mockCursor):

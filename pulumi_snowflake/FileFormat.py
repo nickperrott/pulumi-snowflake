@@ -1,6 +1,10 @@
-from pulumi import ResourceOptions, Input, Output, Config
-from pulumi.dynamic import Resource
 from typing import Optional
+
+from pulumi import Config, Input, Output, ResourceOptions
+from pulumi.dynamic import Resource
+from pulumi_snowflake.SnowflakeConnectionProvider import \
+    SnowflakeConnectionProvider
+
 from .FileFormatProvider import FileFormatProvider
 
 
@@ -37,13 +41,16 @@ class FileFormat(Resource):
         """
 
         config = Config()
-        super().__init__(FileFormatProvider(), resource_name, {
+        connectionProvider = SnowflakeConnectionProvider(
+            config.require('snowflakeUsername'),
+            config.require('snowflakePassword'),
+            config.require('snowflakeAccountName')
+        )
+
+        super().__init__(FileFormatProvider(connectionProvider), resource_name, {
             'database': database,
             'resource_name': resource_name,
             'name': name,
-            'type': type,
-            'snowflakeAccountName': config.require_secret('snowflakeAccountName'),
-            'snowflakeUsername': config.require_secret('snowflakeUsername'),
-            'snowflakePassword': config.require_secret('snowflakePassword'),
+            'type': type
         }, opts)
         self.type = type

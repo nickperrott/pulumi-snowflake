@@ -6,10 +6,14 @@ class SnowflakeConnectionProvider:
     Returns a connection to a Snowflake database.
     """
 
-    def get(self, username, password, accountName):
+    def __init__(self, username, password, accountName):
+        self.username = username
+        self.password = password
+        self.accountName = accountName
 
+    def get(self):
         return snowflake.connector.connect(
-            user=username,
-            password=password,
-            account=accountName
+            user=self.username,
+            password=self.password,
+            account=self.accountName
         )

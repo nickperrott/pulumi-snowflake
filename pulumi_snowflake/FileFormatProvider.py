@@ -12,21 +12,12 @@ class FileFormatProvider(ResourceProvider):
 
     connectionProvider: SnowflakeConnectionProvider
 
-    def __init__(self, connectionProvider: SnowflakeConnectionProvider = None):
+    def __init__(self, connectionProvider: SnowflakeConnectionProvider):
         super().__init__()
-
-        if connectionProvider is None:
-            self.connectionProvider = SnowflakeConnectionProvider()
-        else:
-            self.connectionProvider = connectionProvider
+        self.connectionProvider = connectionProvider
 
     def create(self, inputs):
-
-        connection = self.connectionProvider.get(
-            username=inputs["snowflakeUsername"],
-            password=inputs["snowflakePassword"],
-            accountName=inputs["snowflakeAccountName"]
-        )
+        connection = self.connectionProvider.get()
         cursor = connection.cursor()
 
         name = inputs.get("name")
@@ -55,3 +46,10 @@ class FileFormatProvider(ResourceProvider):
             "type": validatedType,
             "name": validatedName
         })
+
+    def delete(self, id, props):
+
+        print("THE ID is")
+        print(id)
+        print("TJHE PROPS ARE")
+        print(props)
