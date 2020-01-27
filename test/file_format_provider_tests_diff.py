@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from pulumi_snowflake.FileFormatProvider import FileFormatProvider
-from pulumi_snowflake.FileFormatType import FileFormatType
+from pulumi_snowflake.file_format_provider import FileFormatProvider
+from pulumi_snowflake.file_format_type import FileFormatType
 
 
 class FileFormatProviderTests(unittest.TestCase):

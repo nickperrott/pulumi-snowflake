@@ -1,8 +1,8 @@
 from pulumi.dynamic import CreateResult, DiffResult, ResourceProvider
-from pulumi_snowflake.RandomId import RandomId
-from pulumi_snowflake.SnowflakeConnectionProvider import \
+from pulumi_snowflake.random_id import RandomId
+from pulumi_snowflake.snowflake_connection_provider import \
     SnowflakeConnectionProvider
-from pulumi_snowflake.Validation import Validation
+from pulumi_snowflake.validation import Validation
 
 
 class FileFormatProvider(ResourceProvider):

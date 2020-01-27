@@ -1,8 +1,8 @@
-from .FileFormat import (
+from .file_format import (
     FileFormat,
 )
 
-from .FileFormatProvider import (
+from .file_format_provider import (
     FileFormatProvider,
 )
 

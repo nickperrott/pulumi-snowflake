@@ -1,6 +1,6 @@
 import pulumi
 import pulumi_snowflake as snowflake
-from pulumi_snowflake.FileFormatType import FileFormatType
+from pulumi_snowflake.file_format_type import FileFormatType
 
 # Enter your snowflake DB name and (optionally) Schema here
 snowflakeDbName = "FIRSTTEST"

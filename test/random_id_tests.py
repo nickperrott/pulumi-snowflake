@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake.RandomId import RandomId
+from pulumi_snowflake.random_id import RandomId
 
 
 class RandomIdTests(unittest.TestCase):
