@@ -3,5 +3,7 @@ config:
   pulumi-snowflake-example:snowflakeAccountName: zr85610.eu-west-1
   pulumi-snowflake-example:snowflakePassword:
     secure: AAABAL7X/3gNagwpIwTqNa2MO2plp8JPlhn9jQrSMuk5VZh2WY9bQ+uLwCrUrRCtkh28BIuhHv/F
+  pulumi-snowflake-example:snowflakeRole:
+    secure: AAABAHxugf5immMNPT3li+6Hp5ZKQudiPHpSScHiCBj1WwFOYkctOMsENUo=
   pulumi-snowflake-example:snowflakeUsername:
     secure: AAABABvjCLHhB/f1oZYF9bnd2KDKuV4g/BOWin7063C1zhBJ6tDIWS0m

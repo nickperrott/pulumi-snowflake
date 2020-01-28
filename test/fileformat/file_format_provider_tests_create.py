@@ -95,6 +95,7 @@ class FileFormatProviderTests(unittest.TestCase):
 
         resourceName = self.get_standard_inputs()["resource_name"]
         self.assertRegex(result.outs["name"], resourceName + '_[a-f,0-9]{7}')
+        self.assertEqual(result.id, result.outs["name"])
 
     def test_when_give_invalid_db_then_error_thrown(self):
         mock_connection_provider = self.get_mock_connection_provider(Mock())

@@ -57,4 +57,3 @@ class FileFormat(Resource):
             'type': type,
             'schema': schema
         }, opts)
-        self.type = type
