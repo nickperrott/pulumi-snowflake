@@ -2,9 +2,7 @@ from typing import Optional
 
 from pulumi import Config, Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
-from pulumi_snowflake.snowflake_connection_provider import \
-    SnowflakeConnectionProvider
-
+from pulumi_snowflake import SnowflakeConnectionProvider
 from .file_format_provider import FileFormatProvider
 
 

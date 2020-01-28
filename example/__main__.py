@@ -1,15 +1,15 @@
 import pulumi
-import pulumi_snowflake as snowflake
+from pulumi_snowflake.fileformat import FileFormat, FileFormatType
 
 # Enter your snowflake DB name and (optionally) Schema here
 snowflake_db_name = "FIRSTTEST"
 snowflake_schema_name = "FIRSTSCHEMA"
 
-myRes = snowflake.FileFormat("MyFileFormat",
+myRes = FileFormat("MyFileFormat",
      name=None,
      database=snowflake_db_name,
      schema=snowflake_schema_name,
-     type=snowflake.FileFormatType.JSON
+     type=FileFormatType.JSON
  )
 
 pulumi.export('FileFormatType', myRes.type)
