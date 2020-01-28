@@ -18,11 +18,10 @@ class FileFormatProviderTests(unittest.TestCase):
         })
 
         mock_cursor.execute.assert_has_calls([
-            call(f"USE DATABASE database_name"),
-            call(f"DROP FILE FORMAT test_file_format")
+            call(f"DROP FILE FORMAT database_name..test_file_format")
         ])
 
-    def test_when_call_delete_with_schema_none_then_use_schema_is_not_executed(self):
+    def test_when_call_delete_with_schema_none_then_schema_is_not_used(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
@@ -33,11 +32,10 @@ class FileFormatProviderTests(unittest.TestCase):
         })
 
         mock_cursor.execute.assert_has_calls([
-            call(f"USE DATABASE database_name"),
-            call(f"DROP FILE FORMAT test_file_format")
+            call(f"DROP FILE FORMAT database_name..test_file_format")
         ])
 
-    def test_when_call_delete_with_schema_then_use_schema_is_executed(self):
+    def test_when_call_delete_with_schema_then_uses_schema(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
@@ -48,9 +46,7 @@ class FileFormatProviderTests(unittest.TestCase):
         })
 
         mock_cursor.execute.assert_has_calls([
-            call(f"USE DATABASE database_name"),
-            call(f"USE SCHEMA schema_name"),
-            call(f"DROP FILE FORMAT test_file_format")
+            call(f"DROP FILE FORMAT database_name.schema_name.test_file_format")
         ])
 
     def test_when_call_delete_and_id_invalid_then_error_thrown(self):

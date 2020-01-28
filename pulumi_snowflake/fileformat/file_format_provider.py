@@ -25,15 +25,11 @@ class FileFormatProvider(ResourceProvider):
         validated_type = Validation.validate_identifier(inputs["type"])
         validated_name = self._get_validated_name(inputs)
         validated_schema = self._get_validated_schema_or_none(inputs)
+        qualified_name = self._get_qualified_object_name(validated_database, validated_name, validated_schema)
 
         try:
-            cursor.execute(f"USE DATABASE {validated_database}")
-
-            if validated_schema is not None:
-                cursor.execute(f"USE SCHEMA {validated_schema}")
-
             cursor.execute('\n'.join([
-                f"CREATE FILE FORMAT {validated_name}",
+                f"CREATE FILE FORMAT {qualified_name}",
                 f"TYPE = {validated_type}"
             ]))
         finally:
@@ -55,14 +51,10 @@ class FileFormatProvider(ResourceProvider):
         validated_database = Validation.validate_identifier(props["database"])
         validated_id = Validation.validate_identifier(id)
         validated_schema = self._get_validated_schema_or_none(props)
+        qualified_name = self._get_qualified_object_name(validated_database, validated_id, validated_schema)
 
         try:
-            cursor.execute(f"USE DATABASE {validated_database}")
-
-            if validated_schema is not None:
-                cursor.execute(f"USE SCHEMA {validated_schema}")
-
-            cursor.execute(f"DROP FILE FORMAT {validated_id}")
+            cursor.execute(f"DROP FILE FORMAT {qualified_name}")
         finally:
             cursor.close()
 
@@ -99,3 +91,9 @@ class FileFormatProvider(ResourceProvider):
             return Validation.validate_identifier(schema)
 
         return None
+
+    def _get_qualified_object_name(self, validated_database, validated_name, validated_schema):
+        qualifiedName = f"{validated_database}.{validated_schema}.{validated_name}" \
+            if validated_schema is not None else \
+            f"{validated_database}..{validated_name}"
+        return qualifiedName

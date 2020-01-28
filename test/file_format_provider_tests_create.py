@@ -14,15 +14,16 @@ class FileFormatProviderTests(unittest.TestCase):
         provider = FileFormatProvider(mock_connection_provider)
         provider.create(self.get_standard_inputs())
 
+        fullName = f"{self.get_standard_inputs()['database']}..{self.get_standard_inputs()['name']}"
+
         mock_cursor.execute.assert_has_calls([
-            call(f"USE DATABASE {self.get_standard_inputs()['database']}"),
             call("\n".join([
-                f"CREATE FILE FORMAT {self.get_standard_inputs()['name']}",
+                f"CREATE FILE FORMAT {fullName}",
                 f"TYPE = {FileFormatType.CSV}"
             ]))
         ])
 
-    def test_when_call_create_with_schema_then_executes_use_schema(self):
+    def test_when_call_create_with_schema_then_executes_in_schema(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
@@ -32,11 +33,11 @@ class FileFormatProviderTests(unittest.TestCase):
             "schema": "test_schema"
         })
 
+        fullName = f"{self.get_standard_inputs()['database']}.test_schema.{self.get_standard_inputs()['name']}"
+
         mock_cursor.execute.assert_has_calls([
-            call(f"USE DATABASE {self.get_standard_inputs()['database']}"),
-            call(f"USE SCHEMA test_schema"),
             call("\n".join([
-                f"CREATE FILE FORMAT {self.get_standard_inputs()['name']}",
+                f"CREATE FILE FORMAT {fullName}",
                 f"TYPE = {FileFormatType.CSV}"
             ]))
         ])
