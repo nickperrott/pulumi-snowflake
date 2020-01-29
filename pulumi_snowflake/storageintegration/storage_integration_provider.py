@@ -1,7 +1,13 @@
-from pulumi.dynamic import CreateResult, DiffResult, ResourceProvider
+from typing import List
+
+
+from pulumi.dynamic import CreateResult, ResourceProvider
 
 from pulumi_snowflake.random_id import RandomId
 from pulumi_snowflake import SnowflakeConnectionProvider
+from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute, IdentifierAttribute, StringAttribute
+from pulumi_snowflake.snowflakeprovider.boolean_attribute import BooleanAttribute
+from pulumi_snowflake.snowflakeprovider.string_list_attribute import StringListAttribute
 from pulumi_snowflake.validation import Validation
 
 
@@ -16,73 +22,64 @@ class AWSStorageIntegrationProvider(ResourceProvider):
         super().__init__()
         self.connection_provider = connection_provider
 
+        self.attributes: List[SnowflakeObjectAttribute] = [
+            IdentifierAttribute("type", True),
+            IdentifierAttribute("storage_provider", True),
+            StringAttribute("storage_aws_role_arn", True),
+            BooleanAttribute("enabled", True),
+            StringListAttribute("storage_allowed_locations", True),
+            StringListAttribute("storage_blocked_locations", False),
+            StringAttribute("comment", False)
+        ]
+
+
+
     def create(self, inputs):
+        self.check_required_attributes(inputs)
+        validated_name = self._get_validated_name(inputs)
+        attributesWithValues = list(filter(lambda a: inputs.get(a.name) is not None, self.attributes))
+
+        sqlStatements = self.generate_sql_create_statement(attributesWithValues, validated_name, inputs)
+        sqlBindings = self.generate_sql_create_bindings(attributesWithValues, inputs)
+        self.execute_sql(sqlStatements, sqlBindings)
+
+        return CreateResult(id_=validated_name, outs={
+            'name': validated_name,
+            **self.generate_outputs(inputs)
+        })
+
+    def execute_sql(self, statements, bindings):
         connection = self.connection_provider.get()
         cursor = connection.cursor()
-
-        self._require_inputs(inputs, [ 'type', 'storage_provider', 'storage_aws_role_arn', 'enabled',
-                               'storage_allowed_locations' ])
-        if inputs["name"] is None and inputs["resource_name"] is None:
-            raise Exception("At least one of 'name' or 'resource_name' must be provided")
-
-        # Snowflake's input binding only works for column values, not identifiers,
-        # so we have to validate them manually and put straight into the SQL
-        validated_type = Validation.validate_identifier(inputs["type"])
-        validated_storage_provider = Validation.validate_identifier(inputs["storage_provider"])
-        validated_name = self._get_validated_name(inputs)
-        allowed_locations_placeholder = ','.join(['%s'] * len(inputs['storage_allowed_locations']))
-
-        statements = [
-            f"CREATE STORAGE INTEGRATION {validated_name}",
-            f"TYPE = {validated_type}",
-            f"STORAGE_PROVIDER = {validated_storage_provider}",
-            f"STORAGE_AWS_ROLE_ARN = %s",
-            f"ENABLED = {self._bool_to_sql(inputs['enabled'])}",
-            f"STORAGE_ALLOWED_LOCATIONS = ({allowed_locations_placeholder})"
-        ]
-
-        bindings = [
-            inputs['storage_aws_role_arn'],
-            *inputs['storage_allowed_locations']
-        ]
-
-        if inputs.get('comment') is not None:
-            statements.append("COMMENT = %s")
-            bindings.append(inputs['comment'])
-
-        if inputs.get('storage_blocked_locations') is not None:
-            blocked_locations_placeholder = ','.join(['%s'] * len(inputs['storage_blocked_locations']))
-            statements.append(f"STORAGE_BLOCKED_LOCATIONS = ({blocked_locations_placeholder})")
-            bindings.extend(inputs['storage_blocked_locations'])
-
         try:
             cursor.execute('\n'.join(statements), (*bindings,))
         finally:
             cursor.close()
-
         connection.close()
 
-        return CreateResult(id_=validated_name, outs={
-            'name': validated_name,
-            'type': validated_type,
-            'storage_provider': validated_storage_provider,
-            'storage_aws_role_arn': inputs["storage_aws_role_arn"],
-            'enabled': inputs["enabled"],
-            'storage_allowed_locations': inputs["storage_allowed_locations"],
-            'storage_blocked_locations': inputs.get("storage_blocked_locations"),
-            'comment': inputs.get("comment")
-        })
+    def generate_outputs(self, inputs):
+        outputs = {a.name: inputs.get(a.name) for a in self.attributes}
+        return outputs
 
-    def _bool_to_sql(self, value):
-        if value is None:
-            raise Exception("Cannot convert None value to SQL Boolean")
+    def generate_sql_create_bindings(self, attributesWithValues, inputs):
+        bindingTuplesList = list(map(lambda a: a.generate_bindings(inputs.get(a.name)), attributesWithValues))
+        bindingTuplesList = filter(lambda t: t is not None, bindingTuplesList)
+        bindings = [item for sublist in bindingTuplesList for item in sublist]
+        return bindings
 
-        return 'TRUE' if value else 'FALSE'
+    def generate_sql_create_statement(self, attributesWithValues, validated_name, inputs):
+        statements = [
+            f"CREATE STORAGE INTEGRATION {validated_name}",
+            *list(map(lambda a: a.generate_sql(inputs.get(a.name)), attributesWithValues))
+        ]
+        return statements
 
-    def _require_inputs(self, inputs, keys):
-        for key in keys:
-            if inputs.get(key) is None:
-                raise Exception(f"Required input value '{key}' is not present")
+    def check_required_attributes(self, inputs):
+        for attribute in self.attributes:
+            if attribute.is_required() and inputs[attribute.name] is None:
+                raise Exception(f"Required input attribute '{attribute.name}' is not present")
+        if inputs["name"] is None and inputs["resource_name"] is None:
+            raise Exception("At least one of 'name' or 'resource_name' must be provided")
 
     def _get_validated_name(self, inputs):
         name = inputs.get("name")
