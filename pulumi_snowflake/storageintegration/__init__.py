@@ -1,2 +1,3 @@
-from .storage_integration import AWSStorageIntegration
-from .storage_integration_provider import AWSStorageIntegrationProvider
+from .storage_integration import StorageIntegration
+from .aws_storage_integration import AWSStorageIntegration
+from .aws_storage_integration_provider import AWSStorageIntegrationProvider

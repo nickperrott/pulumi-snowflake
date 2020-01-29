@@ -4,7 +4,7 @@ from typing import List
 from pulumi.dynamic import CreateResult, ResourceProvider
 
 from pulumi_snowflake.random_id import RandomId
-from pulumi_snowflake import SnowflakeConnectionProvider
+from pulumi_snowflake.snowflake_connection_provider import SnowflakeConnectionProvider
 from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute, IdentifierAttribute, StringAttribute
 from pulumi_snowflake.snowflakeprovider.boolean_attribute import BooleanAttribute
 from pulumi_snowflake.snowflakeprovider.string_list_attribute import StringListAttribute
