@@ -14,3 +14,13 @@ class Validation:
             raise Exception(f'Invalid Snowflake identifier: {id}')
 
         return id
+
+    def validate_object_name(id: str):
+        """ Validates a Snowflake SQL object name.
+        """
+        pattern = re.compile("^([A-Z,a-z,0-9$_ ])+$")
+
+        if not pattern.match(id):
+            raise Exception(f'Invalid Snowflake object name: {id}')
+
+        return id
