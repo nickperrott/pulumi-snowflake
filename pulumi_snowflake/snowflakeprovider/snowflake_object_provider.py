@@ -122,15 +122,15 @@ class SnowflakeObjectProvider(ResourceProvider, ABC):
         return bindings
 
     def _execute_sql(self, statement, bindings):
-        """
-        Creates a connection, executes a SQL statement, and closes the connection.
-        :param List[str] statement: A single SQL statement represented as an array of lines
-        :param bindings: The values for bindings which should be substituted into placeholders in the SQL statement
-        """
         connection = self.connection_provider.get()
         cursor = connection.cursor()
+
         try:
-            cursor.execute('\n'.join(statement), (*bindings,))
+            if bindings:
+                cursor.execute('\n'.join(statement), (*bindings,))
+            else:
+                cursor.execute('\n'.join(statement))
         finally:
             cursor.close()
+
         connection.close()
