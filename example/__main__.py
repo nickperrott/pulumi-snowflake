@@ -19,8 +19,7 @@ pulumi.export('FileFormatDatabase', myRes.database)
 pulumi.export('FileFormatSchema', myRes.schema)
 
 myStorageIntegration = AWSStorageIntegration("MyStorageIntegration",
-    name='MyStorageIntegrationName',
-    enabled=False,
+    enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc']
 )

@@ -26,13 +26,13 @@ class AWSStorageIntegration(StorageIntegration):
 
     def __init__(self,
                  resource_name: str,
-                 name: str,
                  enabled: Input[bool],
                  storage_aws_role_arn: Input[str],
                  storage_allowed_locations: Input[List[str]],
-                 storage_blocked_locations: Input[Optional[List[str]]] = None,
+                 name: str = None,
                  type: Input[str] = StorageIntegration.DEFAULT_STORAGE_INTEGRATION_TYPE,
                  storage_provider: Input[str] = DEFAULT_STORAGE_PROVIDER,
+                 storage_blocked_locations: Input[Optional[List[str]]] = None,
                  comment: Input[Optional[str]] = None,
                  opts: Optional[ResourceOptions] = None):
         """
