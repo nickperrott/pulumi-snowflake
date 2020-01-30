@@ -15,7 +15,10 @@ An example Pulumi program which uses this package is present in the `example` fo
 pulumi config set snowflakeAccountName [snowflake account name]
 pulumi config set --secret snowflakeUsername [snowflake username]
 pulumi config set --secret snowflakePassword [snowflake password]
+pulumi config set --secret snowflakeRole [snowflake role]
 ```
+
+> Note: `snowflakeRole` is optional.
 
 ## Resources
 
