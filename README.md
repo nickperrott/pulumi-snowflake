@@ -19,9 +19,10 @@ pulumi config set --secret snowflakePassword [snowflake password]
 
 ## Resources
 
-Currently this package supports a single resource.
+Currently this package supports a the following resources:
 
-* The `pulumi_snowflake.FileFormat` class is a Pulumi resource for managing [Snowflake file format objects](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).
+* The `pulumi_snowflake.fileformat.FileFormat` class is a Pulumi resource for managing [Snowflake file format objects](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).
+* The `pulumi_snowflake.storage_integration.AWSStorageIntegration` class is a Pulumi resource for managing [storage integration objects with AWS parameters](https://docs.snowflake.net/manuals/sql-reference/sql/create-storage-integration.html).
 
 
 ## Development
