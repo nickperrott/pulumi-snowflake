@@ -9,7 +9,7 @@ class SnowflakeObjectAttribute(ABC):
     def __init__(self, name: str, required: bool):
         Validation.validate_identifier(name)
         self.name = name
-        self.sqlName = name.upper()
+        self.sql_name = name.upper()
         self.required = required
 
     def is_required(self) -> bool:

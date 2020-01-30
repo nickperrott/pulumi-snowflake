@@ -10,7 +10,7 @@ class IdentifierAttribute(SnowflakeObjectAttribute):
 
     def generate_sql(self, value) -> str:
         Validation.validate_identifier(value)
-        return f"{self.sqlName} = {value}"
+        return f"{self.sql_name} = {value}"
 
     def generate_bindings(self, value) -> Tuple:
         return None

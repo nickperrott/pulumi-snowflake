@@ -8,7 +8,7 @@ class StringAttribute(SnowflakeObjectAttribute):
         super().__init__(name, required)
 
     def generate_sql(self, value) -> str:
-        return f"{self.sqlName} = %s"
+        return f"{self.sql_name} = %s"
 
     def generate_bindings(self, value) -> Tuple:
         return (value,)

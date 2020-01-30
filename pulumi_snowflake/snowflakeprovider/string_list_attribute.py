@@ -10,7 +10,7 @@ class StringListAttribute(SnowflakeObjectAttribute):
 
     def generate_sql(self, value) -> str:
         placeholder = ','.join(['%s'] * len(value))
-        return f"{self.sqlName} = ({placeholder})"
+        return f"{self.sql_name} = ({placeholder})"
 
     def generate_bindings(self, value) -> Tuple:
         return (*value,)

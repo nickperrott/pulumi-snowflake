@@ -10,7 +10,7 @@ class BooleanAttribute(SnowflakeObjectAttribute):
 
     def generate_sql(self, value) -> str:
         sqlValue = self._bool_to_sql(value)
-        return f"{self.sqlName} = {sqlValue}"
+        return f"{self.sql_name} = {sqlValue}"
 
     def generate_bindings(self, value) -> Tuple:
         return None
