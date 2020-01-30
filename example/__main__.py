@@ -10,7 +10,7 @@ myRes = FileFormat("MyFileFormat",
      name=None,
      database=snowflake_db_name,
      schema=snowflake_schema_name,
-     type=FileFormatType.JSON
+     type=FileFormatType.CSV
  )
 
 pulumi.export('FileFormatType', myRes.type)
@@ -20,7 +20,7 @@ pulumi.export('FileFormatSchema', myRes.schema)
 
 myStorageIntegration = AWSStorageIntegration("MyStorageIntegration",
     name='MyStorageIntegrationName',
-    enabled=True,
+    enabled=False,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc']
 )

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pulumi.dynamic import ResourceProvider, CreateResult
+from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
 from pulumi_snowflake import SnowflakeConnectionProvider
 from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
@@ -76,6 +76,30 @@ class SnowflakeObjectProvider(ResourceProvider, ABC):
         return CreateResult(
             id_=validated_name,
             outs=self.generate_outputs(validated_name, inputs,provisional_outputs)
+        )
+
+    def diff(self, id, olds, news):
+        """
+        Simple implementation which forces a replacement if any fields have changed.
+        """
+        ignoreFields = ["name", "resource_name", "__provider"]
+        oldFields = set(filter(lambda k: k not in ignoreFields, olds.keys()))
+        newFields = set(filter(lambda k: k not in ignoreFields, news.keys()))
+        fields = list(oldFields.union(newFields))
+
+        changed_fields = []
+
+        for field in fields:
+            if olds.get(field) != news.get(field):
+                changed_fields.append(field)
+
+        if (news.get("name") is not None and olds.get("name") != news.get("name")):
+            changed_fields.append("name")
+
+        return DiffResult(
+            changes=len(changed_fields) > 0,
+            replaces=changed_fields,
+            delete_before_replace=True
         )
 
     def delete(self, id, props):
