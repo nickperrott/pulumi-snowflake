@@ -1,11 +1,11 @@
 from pulumi_snowflake.snowflake_connection_provider import SnowflakeConnectionProvider
 from pulumi_snowflake.snowflakeprovider import IdentifierAttribute, StringAttribute
 from pulumi_snowflake.snowflakeprovider.boolean_attribute import BooleanAttribute
-from pulumi_snowflake.snowflakeprovider.globally_scoped_object_provider import GloballyScopedObjectProvider
+from pulumi_snowflake.snowflakeprovider.provider import Provider
 from pulumi_snowflake.snowflakeprovider.string_list_attribute import StringListAttribute
 
 
-class AWSStorageIntegrationProvider(GloballyScopedObjectProvider):
+class AWSStorageIntegrationProvider(Provider):
     """
     Dynamic provider for Snowflake Storage Integration resources.
     """

@@ -40,7 +40,7 @@ python setup.py test
 
 ### Generic object provider framework
 
-The dynamic providers for each object type are build on top of some generic classes which make it straightforward to support new object types in the future.  The `SnowflakeObjectProvider` class handles the `create`, `diff` and `delete` methods based on a few parameters which define the Snowflake object.  In particular, there are two concrete subclasses which can be instantiated or overridden to create a new object provider:
+The dynamic providers for each object type are build on top of some generic classes which make it straightforward to support new object types in the future.  The `Provider` class handles the `create`, `diff` and `delete` methods based on a few parameters which define the Snowflake object.  In particular, there are two concrete subclasses which can be instantiated or overridden to create a new object provider:
 
 * `GloballyScopedObjectProvider` should be used for objects which live at the account level, such as `STORAGE INTEGRATION`.
 * `SchemaScopedObjectProvider` should be used for objects which live within a particular schema, such as `FILE FORMAT`.
