@@ -4,6 +4,9 @@ from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
 
 
 class BooleanAttribute(SnowflakeObjectAttribute):
+    """
+    Represents a boolean SQL attribute.  Values are Python `bool`s which are converted to the SQL `TRUE` or `FALSE`.
+    """
 
     def __init__(self, name: str, required: bool):
         super().__init__(name, required)

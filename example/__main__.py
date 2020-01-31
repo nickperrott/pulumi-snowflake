@@ -6,18 +6,6 @@ from pulumi_snowflake.storageintegration import AWSStorageIntegration
 snowflake_db_name = "FIRSTTEST"
 snowflake_schema_name = "FIRSTSCHEMA"
 
-myRes = FileFormat("MyFileFormat",
-     name=None,
-     database=snowflake_db_name,
-     schema=snowflake_schema_name,
-     type=FileFormatType.CSV
- )
-
-pulumi.export('FileFormatType', myRes.type)
-pulumi.export('FileFormatName', myRes.name)
-pulumi.export('FileFormatDatabase', myRes.database)
-pulumi.export('FileFormatSchema', myRes.schema)
-
 myStorageIntegration = AWSStorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
@@ -27,3 +15,15 @@ myStorageIntegration = AWSStorageIntegration("MyStorageIntegration",
 pulumi.export('StorageIntegrationName', myStorageIntegration.name)
 pulumi.export('StorageIntegrationType', myStorageIntegration.type)
 pulumi.export('StorageIntegrationArn', myStorageIntegration.storage_aws_role_arn)
+
+myRes = FileFormat("MyFileFormat",
+    name=None,
+    database=snowflake_db_name,
+    schema=snowflake_schema_name,
+    type=FileFormatType.CSV
+)
+
+pulumi.export('FileFormatType', myRes.type)
+pulumi.export('FileFormatName', myRes.name)
+pulumi.export('FileFormatDatabase', myRes.database)
+pulumi.export('FileFormatSchema', myRes.schema)
