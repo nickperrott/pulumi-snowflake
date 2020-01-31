@@ -1,9 +1,9 @@
 from typing import Optional
 
-from pulumi import Config, Input, Output, ResourceOptions
+from pulumi import Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
-from pulumi_snowflake import ConnectionProvider
-from .file_format_provider import FileFormatProvider
+from pulumi_snowflake import ConnectionProvider, Credentials
+from pulumi_snowflake.fileformat import FileFormatProvider
 
 
 class FileFormat(Resource):
@@ -49,7 +49,7 @@ class FileFormat(Resource):
         :param pulumi.Input[str] type: The name of the schema in which to create the file format.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-        connection_provider = ConnectionProvider.create_from_config()
+        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
         super().__init__(FileFormatProvider(connection_provider), resource_name, {
             'database': database,
             'resource_name': resource_name,

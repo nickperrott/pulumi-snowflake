@@ -4,7 +4,7 @@ from typing import Tuple
 from pulumi_snowflake.validation import Validation
 
 
-class SnowflakeObjectAttribute(ABC):
+class BaseAttribute(ABC):
     """
     Base class for SQL object attributes.  The subclasses of this class are used to define the attributes of a SQL
     object (e.g. Table, Schema, Storage Integration, etc.).
@@ -37,4 +37,4 @@ class SnowflakeObjectAttribute(ABC):
         return value
 
     def __repr__(self):
-        return f"SnowflakeObjectAttribute({self.name},{self.required})"
+        return f"BaseAttribute({self.name},{self.required})"

@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from pulumi_snowflake.provider import BaseAttribute
 from pulumi_snowflake.validation import Validation
 
-class IdentifierAttribute(SnowflakeObjectAttribute):
+class IdentifierAttribute(BaseAttribute):
     """
     Represents an attribute which holds a SQL identifier.  Identifiers may contain alphanumeric characters and
     underscores only.  Values are Python strings which are converted to the SQL identifiers (i.e. strings without

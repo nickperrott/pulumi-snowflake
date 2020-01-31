@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from pulumi_snowflake.provider import BaseAttribute
 
 
-class StringListAttribute(SnowflakeObjectAttribute):
+class StringListAttribute(BaseAttribute):
     """
     Represents a string list SQL attribute.  Values are Python lists of strings.  The generated SQL produces
     a comma-separated list in parentheses.  The list contains only `%s` placeholders, with the actual values being

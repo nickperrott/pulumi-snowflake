@@ -3,7 +3,7 @@ from typing import List
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from pulumi_snowflake.provider import BaseAttribute
 from pulumi_snowflake.validation import Validation
 from pulumi_snowflake.random_id import RandomId
 
@@ -12,7 +12,7 @@ class Provider(ResourceProvider):
     """
     Generic base class for a Pulumi dynamic provider which manages Snowflake objects using a SQL connection.  Objects
     are described by passing in the SQL name of the object (e.g., "STORAGE INTEGRATION) and a list of attributes
-    represented as `SnowflakeObjectAttribute` instances.  This class then automatically handles the create, delete and
+    represented as `BaseAttribute` instances.  This class then automatically handles the create, delete and
     diff methods by generating and executing the appropriate SQL commands.
 
     This class can be instantiated directly, but there are a couple of methods which can be overridden to account
@@ -23,7 +23,7 @@ class Provider(ResourceProvider):
     def __init__(self,
                  connection_provider: ConnectionProvider,
                  sql_name: str,
-                 attributes: List[SnowflakeObjectAttribute]):
+                 attributes: List[BaseAttribute]):
         self.connection_provider = connection_provider
         self.sql_name = sql_name
         self.attributes = attributes

@@ -2,9 +2,8 @@ from typing import List, Optional
 
 from pulumi import Input, Output, ResourceOptions
 
-from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.storageintegration.aws_storage_integration_provider import AWSStorageIntegrationProvider
-from pulumi_snowflake.storageintegration.storage_integration import StorageIntegration
+from pulumi_snowflake import ConnectionProvider, Credentials
+from pulumi_snowflake.storageintegration import AWSStorageIntegrationProvider, StorageIntegration
 
 
 class AWSStorageIntegration(StorageIntegration):
@@ -49,8 +48,7 @@ class AWSStorageIntegration(StorageIntegration):
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-
-        connection_provider = ConnectionProvider.create_from_config()
+        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
         super().__init__(AWSStorageIntegrationProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,

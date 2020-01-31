@@ -1,7 +1,5 @@
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.snowflakeprovider import IdentifierAttribute
-from pulumi_snowflake.snowflakeprovider import StringAttribute
-from pulumi_snowflake.snowflakeprovider.provider import Provider
+from pulumi_snowflake.provider import IdentifierAttribute, StringAttribute, Provider
 from pulumi_snowflake.validation import Validation
 
 

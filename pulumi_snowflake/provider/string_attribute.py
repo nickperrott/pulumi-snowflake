@@ -1,8 +1,8 @@
 from typing import Tuple
 
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from pulumi_snowflake.provider import BaseAttribute
 
-class StringAttribute(SnowflakeObjectAttribute):
+class StringAttribute(BaseAttribute):
     """
     Represents a string SQL attribute.  Values are Python strings.  The generated SQL will represent values with a
     `%s` placeholder for value binding, and returns the actual string value in `generate_bindings`.

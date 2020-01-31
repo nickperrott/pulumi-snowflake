@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from pulumi_snowflake.provider import BaseAttribute
 
 
-class BooleanAttribute(SnowflakeObjectAttribute):
+class BooleanAttribute(BaseAttribute):
     """
     Represents a boolean SQL attribute.  Values are Python `bool`s which are converted to the SQL `TRUE` or `FALSE`.
     """

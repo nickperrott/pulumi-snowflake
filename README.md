@@ -56,7 +56,7 @@ class FileFormatProvider(SchemaScopedObjectProvider):
         ])
 ```
 
-Notice how the attributes list is used to define the structure of `CREATE` and `UPDATE` calls to the object in a manner that [matches the documentation](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).  The values in the attribute list are all subclasses of `SnowflakeObjectAttribute`, which define properties of the attributes and the way they are turned into SQL fragments.  Existing subclasses of `SnowflakeObjectAttribute` are:
+Notice how the attributes list is used to define the structure of `CREATE` and `UPDATE` calls to the object in a manner that [matches the documentation](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).  The values in the attribute list are all subclasses of `BaseAttribute`, which define properties of the attributes and the way they are turned into SQL fragments.  Existing subclasses of `BaseAttribute` are:
 
 * `BooleanAttribute`: represents a SQL boolean value from a Python `bool`
 * `IdentifierAttribute`: represents a SQL identifier from a Python `str`.  An identifier contains only alphanumeric characters and underscores, and appears in SQL without quotes.  For safety, an exception is thrown if the value does not match this criteria.
