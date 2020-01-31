@@ -1,4 +1,4 @@
-from pulumi_snowflake import SnowflakeConnectionProvider
+from pulumi_snowflake import ConnectionProvider
 from pulumi_snowflake.snowflakeprovider import IdentifierAttribute
 from pulumi_snowflake.snowflakeprovider import StringAttribute
 from pulumi_snowflake.snowflakeprovider.provider import Provider
@@ -10,9 +10,9 @@ class FileFormatProvider(Provider):
     Dynamic provider for Snowflake FileFormat resources.
     """
 
-    connection_provider: SnowflakeConnectionProvider
+    connection_provider: ConnectionProvider
 
-    def __init__(self, connection_provider: SnowflakeConnectionProvider):
+    def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "FILE FORMAT", [
             IdentifierAttribute("type", True),
             StringAttribute("comment", False)

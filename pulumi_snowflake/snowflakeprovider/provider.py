@@ -2,7 +2,7 @@ from typing import List
 
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
-from pulumi_snowflake import SnowflakeConnectionProvider
+from pulumi_snowflake import ConnectionProvider
 from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
 from pulumi_snowflake.validation import Validation
 from pulumi_snowflake.random_id import RandomId
@@ -21,7 +21,7 @@ class Provider(ResourceProvider):
     """
 
     def __init__(self,
-                 connection_provider: SnowflakeConnectionProvider,
+                 connection_provider: ConnectionProvider,
                  sql_name: str,
                  attributes: List[SnowflakeObjectAttribute]):
         self.connection_provider = connection_provider

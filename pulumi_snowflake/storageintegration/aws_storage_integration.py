@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pulumi import Input, Output, ResourceOptions
 
-from pulumi_snowflake import SnowflakeConnectionProvider
+from pulumi_snowflake import ConnectionProvider
 from pulumi_snowflake.storageintegration.aws_storage_integration_provider import AWSStorageIntegrationProvider
 from pulumi_snowflake.storageintegration.storage_integration import StorageIntegration
 
@@ -50,7 +50,7 @@ class AWSStorageIntegration(StorageIntegration):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
 
-        connection_provider = SnowflakeConnectionProvider.create_from_config()
+        connection_provider = ConnectionProvider.create_from_config()
         super().__init__(AWSStorageIntegrationProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,

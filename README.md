@@ -49,7 +49,7 @@ These objects take a Snowflake connection, the object name, and a list of attrib
 
 ```python
 class FileFormatProvider(SchemaScopedObjectProvider):
-    def __init__(self, connection_provider: SnowflakeConnectionProvider):
+    def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "FILE FORMAT", [
             IdentifierAttribute("type", True),
             StringAttribute("comment", False)

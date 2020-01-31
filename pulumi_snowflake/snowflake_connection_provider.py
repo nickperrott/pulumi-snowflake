@@ -1,7 +1,7 @@
 import snowflake.connector
 from pulumi import Config
 
-class SnowflakeConnectionProvider:
+class ConnectionProvider:
     """
     Returns a connection to a Snowflake database.
     """
@@ -9,10 +9,10 @@ class SnowflakeConnectionProvider:
     @staticmethod
     def create_from_config():
         """
-        :return: A `SnowflakeConnectionProvider` instance which was created using credentials in the Pulumi config
+        :return: A `ConnectionProvider` instance which was created using credentials in the Pulumi config
         """
         config = Config()
-        return SnowflakeConnectionProvider(
+        return ConnectionProvider(
             config.require('snowflakeUsername'),
             config.require('snowflakePassword'),
             config.require('snowflakeAccountName'),

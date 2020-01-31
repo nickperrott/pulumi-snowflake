@@ -1,4 +1,4 @@
-from pulumi_snowflake.snowflake_connection_provider import SnowflakeConnectionProvider
+from pulumi_snowflake.snowflake_connection_provider import ConnectionProvider
 from pulumi_snowflake.snowflakeprovider import IdentifierAttribute, StringAttribute
 from pulumi_snowflake.snowflakeprovider.boolean_attribute import BooleanAttribute
 from pulumi_snowflake.snowflakeprovider.provider import Provider
@@ -10,9 +10,9 @@ class AWSStorageIntegrationProvider(Provider):
     Dynamic provider for Snowflake Storage Integration resources.
     """
 
-    connection_provider: SnowflakeConnectionProvider
+    connection_provider: ConnectionProvider
 
-    def __init__(self, connection_provider: SnowflakeConnectionProvider):
+    def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "STORAGE INTEGRATION", [
             IdentifierAttribute("type", True),
             IdentifierAttribute("storage_provider", True),
