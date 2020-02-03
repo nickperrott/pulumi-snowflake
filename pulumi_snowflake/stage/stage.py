@@ -3,7 +3,7 @@ from typing import Optional
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 
-from . import StageFileFormat
+from .stage_file_format import StageFileFormat
 from .stage_provider import StageProvider
 from pulumi_snowflake import ConnectionProvider, Credentials
 

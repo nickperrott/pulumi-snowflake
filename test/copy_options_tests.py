@@ -1,15 +1,15 @@
 import unittest
 
-from pulumi_snowflake import OnCopyErrorValues, StageMatchByColumnNameValues
-from pulumi_snowflake.stage.stage_copy_options import StageCopyOptions
+from pulumi_snowflake import StageOnCopyErrorValues, StageMatchByColumnNameValues
+from pulumi_snowflake.stage import StageCopyOptions
 
 
-class CopyOptionsTests(unittest.TestCase):
+class StageCopyOptionsTests(unittest.TestCase):
 
     def test_when_pass_values_then_generates_dict(self):
         copy_options = StageCopyOptions(
             size_limit=42,
-            on_error=OnCopyErrorValues.CONTINUE,
+            on_error=StageOnCopyErrorValues.CONTINUE,
             purge=True,
             return_failed_only=False,
             match_by_column_name=StageMatchByColumnNameValues.CASE_SENSITIVE,

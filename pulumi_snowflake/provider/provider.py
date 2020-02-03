@@ -3,9 +3,9 @@ from typing import List
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.provider import BaseAttribute
 from pulumi_snowflake.validation import Validation
 from pulumi_snowflake.random_id import RandomId
+from .attribute import BaseAttribute
 
 
 class Provider(ResourceProvider):

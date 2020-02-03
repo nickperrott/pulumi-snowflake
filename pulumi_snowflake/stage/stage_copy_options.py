@@ -21,7 +21,7 @@ class StageCopyOptions:
         """
         :param pulumi.Input[str] size_limit: Maximum size (in bytes) of data to be loaded for a given COPY statement.
         :param pulumi.Input[str] on_error: String (constant) that specifies the action to perform when an error is
-        encountered while loading data from a file.  Should be one of OnCopyErrorValues.
+        encountered while loading data from a file.  Should be one of StageOnCopyErrorValues.
         :param pulumi.Input[bool] purge: Boolean that specifies whether to purge the data files from the location
         automatically after the data is successfully loaded.
         :param pulumi.Input[bool] return_failed_only: Boolean that specifies whether to return only files that have

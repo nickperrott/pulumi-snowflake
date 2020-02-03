@@ -1,4 +1,4 @@
-class OnCopyErrorValues:
+class StageOnCopyErrorValues:
     """
     Class which represents possible values for error handling when a stage performs a copy operation. See
     https://docs.snowflake.net/manuals/sql-reference/sql/copy-into-table.html#copy-options-copyoptions for more details.

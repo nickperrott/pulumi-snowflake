@@ -1,7 +1,7 @@
 import unittest
 
-from pulumi_snowflake.stage.stage_format_type_options import StageCsvFileFormat, CompressionValues, NoneValue, AutoValue, \
-    BinaryFormatValues
+from pulumi_snowflake import CompressionValues, NoneValue, AutoValue, BinaryFormatValues
+from pulumi_snowflake.stage import StageCsvFileFormat
 
 
 class StageFormatOptionsTests(unittest.TestCase):
