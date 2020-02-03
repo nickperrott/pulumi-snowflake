@@ -7,8 +7,6 @@ class AWSStorageIntegrationProvider(Provider):
     Dynamic provider for Snowflake Storage Integration resources.
     """
 
-    connection_provider: ConnectionProvider
-
     def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "STORAGE INTEGRATION", [
             IdentifierAttribute("type", True),

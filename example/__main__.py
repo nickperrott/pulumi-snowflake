@@ -1,5 +1,6 @@
 import pulumi
 from pulumi_snowflake.fileformat import FileFormat, FileFormatType
+from pulumi_snowflake.stage import Stage, StageFileFormat
 from pulumi_snowflake.storageintegration import AWSStorageIntegration
 
 # Enter your snowflake DB name and (optionally) Schema here
@@ -27,3 +28,11 @@ pulumi.export('FileFormatType', myRes.type)
 pulumi.export('FileFormatName', myRes.name)
 pulumi.export('FileFormatDatabase', myRes.database)
 pulumi.export('FileFormatSchema', myRes.schema)
+
+myStage = Stage("MyStage",
+    file_format=StageFileFormat(type="CSV"),
+     database=snowflake_db_name,
+     schema=snowflake_schema_name
+)
+
+pulumi.export('StageName', myStage.name)

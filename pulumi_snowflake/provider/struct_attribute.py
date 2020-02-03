@@ -10,19 +10,42 @@ class StructAttribute(BaseAttribute):
         self.fields = fields
 
     def generate_sql(self, value) -> str:
-        field_sql_statements = map(lambda f: self.generate_field_sql(value, f), self.fields)
+        print("GENERATE")
+        print(value)
+
+        populated_fields = self.get_populated_fields(value)
+
+        print("POP FIELDS")
+        print(populated_fields)
+
+        field_sql_statements = map(lambda f: self.generate_field_sql(value, f), populated_fields)
+
+        print("DONE WITH SQL")
+
         field_sql_str = ", ".join(field_sql_statements)
         return f"{self.sql_name} = ({field_sql_str})"
 
     def generate_field_sql(self, value, attribute: BaseAttribute):
-        return attribute.generate_sql(getattr(value, attribute.name))
+        print("DOING " + attribute.name)
+        return attribute.generate_sql(value[attribute.name])
 
     def generate_bindings(self, value) -> Tuple:
-        bindings = list(map(lambda f: f.generate_bindings(getattr(value, f.name) ), self.fields))
+        populated_fields = self.get_populated_fields(value)
+        bindings = list(map(lambda f: f.generate_bindings(value[f.name]), populated_fields))
         bindings = list(filter(lambda b: b is not None, bindings))
         tuples = tuple(element for tupl in bindings for element in tupl)
         return tuples
 
     def generate_outputs(self, value):
-        return { f.name: getattr(value, f.name) for f in self.fields }
+        return { f.name: value[f.name] for f in self.fields }
 
+    def check_required_fields(self, value):
+        required_fields = filter(lambda f: f.is_required(), self.fields)
+
+        for field in required_fields:
+            if field.is_required() and value.get(field.name) is None:
+                raise Exception(f"Required field {field.name} cannot be None")
+
+    def get_populated_fields(self, value):
+        self.check_required_fields(value)
+        return list(filter(lambda f: value.get(f.name) is not None, self.fields))
