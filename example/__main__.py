@@ -31,8 +31,8 @@ pulumi.export('FileFormatSchema', myRes.schema)
 
 myStage = Stage("MyStage",
     file_format=StageFileFormat(type="CSV"),
-     database=snowflake_db_name,
-     schema=snowflake_schema_name
+    database=snowflake_db_name,
+    schema=snowflake_schema_name
 )
 
 pulumi.export('StageName', myStage.name)

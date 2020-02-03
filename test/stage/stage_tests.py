@@ -1,8 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake.stage.stage import StageFileFormat
-from pulumi_snowflake.stage.stage_provider import StageProvider
+from pulumi_snowflake.stage import StageProvider
 
 
 class StageTests(unittest.TestCase):
@@ -19,12 +18,14 @@ class StageTests(unittest.TestCase):
                 'type': None
             },
             "comment": "test_comment",
-            "name": "test_stage"
+            "name": "test_stage",
+            "database": "test_database",
+            "schema": "test_schema"
         })
 
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
-                f"CREATE STAGE test_stage",
+                f"CREATE STAGE test_database.test_schema.test_stage",
                 f"FILE_FORMAT = (FORMAT_NAME = %s)",
                 f"COMMENT = %s"
             ]), ('test_file_format', 'test_comment'))

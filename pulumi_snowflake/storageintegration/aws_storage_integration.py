@@ -4,6 +4,7 @@ from pulumi import Input, Output, ResourceOptions
 
 from pulumi_snowflake import ConnectionProvider, Credentials
 from .storage_integration import StorageIntegration
+from .aws_storage_integration_provider import AWSStorageIntegrationProvider
 
 
 class AWSStorageIntegration(StorageIntegration):

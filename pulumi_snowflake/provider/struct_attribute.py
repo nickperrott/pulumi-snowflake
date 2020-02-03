@@ -10,23 +10,12 @@ class StructAttribute(BaseAttribute):
         self.fields = fields
 
     def generate_sql(self, value) -> str:
-        print("GENERATE")
-        print(value)
-
         populated_fields = self.get_populated_fields(value)
-
-        print("POP FIELDS")
-        print(populated_fields)
-
         field_sql_statements = map(lambda f: self.generate_field_sql(value, f), populated_fields)
-
-        print("DONE WITH SQL")
-
         field_sql_str = ", ".join(field_sql_statements)
         return f"{self.sql_name} = ({field_sql_str})"
 
     def generate_field_sql(self, value, attribute: BaseAttribute):
-        print("DOING " + attribute.name)
         return attribute.generate_sql(value[attribute.name])
 
     def generate_bindings(self, value) -> Tuple:

@@ -3,9 +3,8 @@ from typing import Optional
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 
-from pulumi_snowflake import SnowflakeConnectionProvider
-from pulumi_snowflake.stage.stage_provider import StageProvider
-from pulumi_snowflake.storageintegration import AWSStorageIntegrationProvider
+from .stage_provider import StageProvider
+from pulumi_snowflake import ConnectionProvider, Credentials
 
 
 class StageFileFormat:
@@ -40,7 +39,7 @@ class Stage(Resource):
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-        connection_provider = SnowflakeConnectionProvider.create_from_config()
+        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
         super().__init__(StageProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
