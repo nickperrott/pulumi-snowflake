@@ -2,46 +2,31 @@ from typing import Optional, Union, List
 
 from pulumi import Input
 
-
-class CompressionValues:
-    AUTO = "AUTO"
-    GZIP = "GZIP"
-    BZ2 = "BZ2"
-    BROTLI = "BROTLI"
-    ZSTD = "ZSTD"
-    DEFLATE = "DEFLATE"
-    RAW_DEFLATE = "RAW_DEFLATE"
-    NONE = "NONE"
-
-class BinaryFormatValues:
-    HEX = "HEX"
-    BASE64 = "BASE64"
-    UTF8 = "UTF8"
+from pulumi_snowflake.auto_value import AutoValue
+from pulumi_snowflake.fileformat import FileFormatType
+from pulumi_snowflake.none_value import NoneValue
 
 
-class NoneValue:
+class StageFileFormat:
+    """
+    Base class for file formats used by a stage.
+    """
     pass
 
-def eq_is_none(self, other):
-    return isinstance(other, NoneValue)
 
-NoneValue.__eq__ = eq_is_none
+class StageNamedFileFormat(StageFileFormat):
+    """
+    Represents a named file format to be used by a stage.
+    """
 
-
-class AutoValue:
-    pass
-
-def eq_is_auto(self, other):
-    return isinstance(other, AutoValue)
-
-AutoValue.__eq__ = eq_is_auto
+    def __init__(self, format_name: Input[Optional[str]]):
+        self.format_name = format_name
 
 
-
-class StageFormatTypeOptions:
-    pass
-
-class StageCsvFormatTypeOptions:
+class StageCsvFileFormat(StageFileFormat):
+    """
+    Represents a named CSV file format used by a stage.
+    """
     def __init__(self,
                  compression: Input[Optional[str]] = None,
                  record_delimiter: Input[Optional[Union[str, NoneValue]]] = None,
@@ -105,6 +90,8 @@ class StageCsvFormatTypeOptions:
         :param pulumi.Input[Optional[str]] encoding: String (constant) that specifies the character set of the source
             data when loading data into a table.
         """
+        super().__init__()
+        self.type = FileFormatType.CSV
         self.compression = compression
         self.record_delimiter = record_delimiter
         self.field_delimiter = field_delimiter

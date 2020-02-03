@@ -4,6 +4,10 @@ from pulumi_snowflake.validation import Validation
 
 
 class StageProvider(Provider):
+    """
+    Dynamic provider for Snowflake Stage resources.
+    """
+
     def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "STAGE", [
             StructAttribute("file_format", False, [

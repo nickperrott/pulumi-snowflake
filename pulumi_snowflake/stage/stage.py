@@ -3,27 +3,32 @@ from typing import Optional
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 
+from . import StageFileFormat
 from .stage_provider import StageProvider
 from pulumi_snowflake import ConnectionProvider, Credentials
 
 
-class StageFileFormat:
-    format_name: Input[Optional[str]]
-    type: Input[Optional[str]]
-    #TODO format type options
-
-    def __init__(self,
-                 format_name: Input[Optional[str]] = None,
-                 type: Input[Optional[str]] = None):
-        self.format_name = format_name
-        self.type = type
-
-
 class Stage(Resource):
-    file_format: Optional[StageFileFormat]
-    comment: Output[Optional[str]]
+    """
+    Represents a Snowflake Stage.  See
+    https://docs.snowflake.net/manuals/sql-reference/sql/create-stage.html
+    for more details of parameters.
+    """
 
-    #TODO comments below
+    file_format: Output[Optional[dict]]
+    """
+    Specifies the file format for the stage, which can be either.
+    """
+
+    copy_options: Output[Optional[dict]]
+    """
+    Specifies one (or more) copy options for the stage.
+    """
+
+    comment: Output[Optional[str]]
+    """
+    Specifies a comment for the stage.
+    """
 
     def __init__(self,
                  resource_name: str,
@@ -35,7 +40,8 @@ class Stage(Resource):
                  opts: Optional[ResourceOptions] = None):
         """
         :param str resource_name: The logical name of the resource.
-        :param StageFileFormat file_format:
+        :param StageFileFormat file_format: Specifies the file format for the stage, which can be either.
+        :param StageFileFormat copy_options: Specifies one (or more) copy options for the stage.
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """

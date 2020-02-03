@@ -2,7 +2,7 @@ from typing import Optional
 
 from pulumi import Input
 
-class CopyOptions:
+class StageCopyOptions:
     """
     Represents options for copying data, used as part of a COPY statement or for creating a STAGE resource.  See
     https://docs.snowflake.net/manuals/sql-reference/sql/copy-into-table.html#copy-options-copyoptions for more details.
@@ -28,7 +28,7 @@ class CopyOptions:
         failed to load in the statement result.
         :param pulumi.Input[Optional[str]] match_by_column_name: String that specifies whether to load semi-structured
         data into columns in the target table that match corresponding columns represented in the data.  Should be one
-        of `MatchByColumnNameValues`.
+        of `StageMatchByColumnNameValues`.
         :param pulumi.Input[bool] enforce_length: Boolean that specifies whether to truncate text strings that exceed
         the target column length.
         :param pulumi.Input[bool] truncate_columns:  Boolean that specifies whether to truncate text strings that exceed

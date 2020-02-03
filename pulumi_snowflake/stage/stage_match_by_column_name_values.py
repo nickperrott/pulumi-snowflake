@@ -1,4 +1,4 @@
-class MatchByColumnNameValues:
+class StageMatchByColumnNameValues:
     """
     Enum of possible methods for matching column name values when copying data.  See
     https://docs.snowflake.net/manuals/sql-reference/sql/copy-into-table.html#copy-options-copyoptions for more details.

@@ -1,8 +1,6 @@
 import unittest
 
-from pulumi_snowflake import OnCopyErrorValues, MatchByColumnNameValues
-from pulumi_snowflake.copy_options import CopyOptions
-from pulumi_snowflake.format_type_options import StageCsvFormatTypeOptions, CompressionValues, NoneValue, AutoValue, \
+from pulumi_snowflake.stage.stage_format_type_options import StageCsvFileFormat, CompressionValues, NoneValue, AutoValue, \
     BinaryFormatValues
 
 
@@ -10,7 +8,7 @@ class StageFormatOptionsTests(unittest.TestCase):
 
     def test_when_pass_csv_values_then_generates_dict(self):
         self.maxDiff = None
-        format_options = StageCsvFormatTypeOptions(
+        format_options = StageCsvFileFormat(
             compression=CompressionValues.GZIP,
             record_delimiter=':',
             field_delimiter=NoneValue(),
