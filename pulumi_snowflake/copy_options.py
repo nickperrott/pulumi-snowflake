@@ -50,14 +50,15 @@ class CopyOptions:
         self.load_uncertain_files = load_uncertain_files
 
     def as_dict(self):
-        return {
-            "size_limit": self.size_limit,
-            "on_error": self.on_error,
-            "purge": self.purge,
-            "return_failed_only": self.return_failed_only,
-            "match_by_column_name": self.match_by_column_name,
-            "enforce_length": self.enforce_length,
-            "truncate_columns": self.truncate_columns,
-            "force": self.force,
-            "load_uncertain_files": self.load_uncertain_files,
-        }
+        fields = [
+            "size_limit",
+            "on_error",
+            "purge",
+            "return_failed_only",
+            "match_by_column_name",
+            "enforce_length",
+            "truncate_columns",
+            "force",
+            "load_uncertain_files"
+        ]
+        return { field: getattr(self, field) for field in fields }
