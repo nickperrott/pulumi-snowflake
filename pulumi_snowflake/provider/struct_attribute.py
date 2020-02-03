@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from pulumi_snowflake.snowflakeprovider import SnowflakeObjectAttribute
+from .base_attribute import BaseAttribute
 
 
-class StructAttribute(SnowflakeObjectAttribute):
+class StructAttribute(BaseAttribute):
 
     def __init__(self, name: str, required: bool, fields):
         super().__init__(name, required)
@@ -14,7 +14,7 @@ class StructAttribute(SnowflakeObjectAttribute):
         field_sql_str = ", ".join(field_sql_statements)
         return f"{self.sql_name} = ({field_sql_str})"
 
-    def generate_field_sql(self, value, attribute: SnowflakeObjectAttribute):
+    def generate_field_sql(self, value, attribute: BaseAttribute):
         return attribute.generate_sql(getattr(value, attribute.name))
 
     def generate_bindings(self, value) -> Tuple:

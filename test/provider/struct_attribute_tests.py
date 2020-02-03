@@ -1,7 +1,6 @@
 import unittest
 
-from pulumi_snowflake.snowflakeprovider import StringAttribute, BooleanAttribute
-from pulumi_snowflake.snowflakeprovider.struct_attribute import StructAttribute
+from pulumi_snowflake.provider import StringAttribute, BooleanAttribute, StructAttribute
 
 class TestStructObject:
 

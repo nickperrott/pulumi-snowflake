@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake.storageintegration.storage_integration import StorageIntegration
-from pulumi_snowflake.storageintegration.aws_storage_integration_provider import AWSStorageIntegrationProvider
+from pulumi_snowflake.storageintegration import StorageIntegration
+from pulumi_snowflake.storageintegration import AWSStorageIntegrationProvider
 
 
 class StorageIntegrationProviderTests(unittest.TestCase):
