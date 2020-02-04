@@ -14,6 +14,20 @@ class StageProvider(Provider):
 
     def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "STAGE", [
+            StringAttribute("url"),
+            IdentifierAttribute("storage_integration"),
+            StructAttribute("credentials", False, [
+                StringAttribute("aws_key_id"),
+                StringAttribute("aws_secret_key"),
+                StringAttribute("aws_token"),
+                StringAttribute("aws_role"),
+                StringAttribute("azure_sas_token"),
+            ]),
+            StructAttribute("encryption", False, [
+                ValueOrNoneAttribute(StringAttribute("type")),
+                StringAttribute("master_key"),
+                StringAttribute("kms_key_id"),
+            ]),
             StructAttribute("file_format", False, [
                 StringAttribute("format_name"),
                 IdentifierAttribute("type"),

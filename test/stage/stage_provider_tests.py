@@ -145,7 +145,7 @@ class StageTests(unittest.TestCase):
         provider = StageProvider(mock_connection_provider)
         provider.create({
             "file_format": None,
-            "copy_options":{
+            "copy_options": {
                 "on_error": StageOnCopyErrorValues.skip_file_percent(45),
                 "size_limit": 345,
                 "purge": True,
@@ -179,6 +179,65 @@ class StageTests(unittest.TestCase):
             )
         ])
 
+    def test_when_external_stage_given_then_appears_in_sql(self):
+
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = StageProvider(mock_connection_provider)
+        provider.create({
+            "file_format": None,
+            "url": "s3://test-url",
+            "storage_integration": "test_storage_integration",
+            "credentials": {
+                "aws_key_id": "test_aws_key_id",
+                "aws_secret_key": "test_aws_secret_key",
+                "aws_token": "test_aws_token",
+                "aws_role": "test_aws_role",
+                "azure_sas_token": "test_azure_sas_token",
+            },
+            "encryption": {
+                "type": NoneValue(),
+                "master_key": "test_master_key",
+                "kms_key_id": "test_kms_key_id",
+            },
+            "comment": "test_comment",
+            "name": "test_stage",
+            "database": "test_database",
+            "schema": "test_schema"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE STAGE test_database.test_schema.test_stage",
+                "URL = %s",
+                f"STORAGE_INTEGRATION = test_storage_integration",
+                ", ".join([
+                    f"CREDENTIALS = (AWS_KEY_ID = %s",
+                    f"AWS_SECRET_KEY = %s",
+                    f"AWS_TOKEN = %s",
+                    f"AWS_ROLE = %s",
+                    f"AZURE_SAS_TOKEN = %s)",
+                ]),
+                ", ".join([
+                    f"ENCRYPTION = (TYPE = NONE",
+                    f"MASTER_KEY = %s",
+                    f"KMS_KEY_ID = %s)",
+                ]),
+                f"COMMENT = %s"
+            ]), (
+                    "s3://test-url",
+                    "test_aws_key_id",
+                    "test_aws_secret_key",
+                    "test_aws_token",
+                    "test_aws_role",
+                    "test_azure_sas_token",
+                    "test_master_key",
+                    "test_kms_key_id",
+                    "test_comment"
+                )
+            )
+        ])
 
 
     # HELPERS

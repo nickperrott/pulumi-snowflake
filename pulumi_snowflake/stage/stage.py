@@ -3,6 +3,8 @@ from typing import Optional
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 
+from .external_stage_credentials import ExternalStageCredentials
+from .external_stage_encryption import ExternalStageEncryption
 from .stage_file_format import StageFileFormat
 from .stage_provider import StageProvider
 from .stage_copy_options import StageCopyOptions
@@ -14,6 +16,28 @@ class Stage(Resource):
     Represents a Snowflake Stage.  See
     https://docs.snowflake.net/manuals/sql-reference/sql/create-stage.html
     for more details of parameters.
+    """
+
+    url: Output[Optional[str]]
+    """
+    Specifies the URL for the external location used to store data files for loading/unloading.
+    """
+
+    storage_integration: Output[Optional[str]]
+    """
+    Specifies the name of the storage integration used to delegate authentication responsibility for external cloud
+    storage to a Snowflake identity and access management (IAM) entity.
+    """
+
+    credentials: Output[Optional[ExternalStageCredentials]]
+    """
+    Specifies the security credentials for connecting to AWS and accessing the private/protected S3 bucket where the
+    files to load/unload are staged.
+    """
+
+    encryption: Output[Optional[ExternalStageEncryption]]
+    """
+    Specifies the encryption settings used to encrypt files unloaded to external storage.
     """
 
     file_format: Output[Optional[dict]]
@@ -34,6 +58,10 @@ class Stage(Resource):
     def __init__(self,
                  resource_name: str,
                  database: Input[str],
+                 url: Input[Optional[str]] = None,
+                 storage_integration: Input[Optional[str]] = None,
+                 credentials: Optional[ExternalStageCredentials] = None,
+                 encryption: Optional[ExternalStageEncryption] = None,
                  file_format: Optional[StageFileFormat] = None,
                  copy_options: Optional[StageCopyOptions] = None,
                  name: Input[Optional[str]] = None,
@@ -42,8 +70,17 @@ class Stage(Resource):
                  opts: Optional[ResourceOptions] = None):
         """
         :param str resource_name: The logical name of the resource.
-        :param StageFileFormat file_format: Specifies the file format for the stage, which can be either.
-        :param StageFileFormat copy_options: Specifies one (or more) copy options for the stage.
+        :param pulumi.Input[str] database:
+        :param pulumi.Input[Optional[str]] url:
+        :param pulumi.Input[Optional[str]] storage_integration: Specifies the name of the storage integration used to
+            delegate authentication responsibility for external cloud storage to a Snowflake identity and access
+            management (IAM) entity
+        :param Optional[ExternalStageCredentials] credentials: Specifies the security credentials for connecting
+            to AWS and accessing the private/protected S3 bucket where the files to load/unload are staged.
+        :param Optional[ExternalStageEncryption] encryption: Specifies the encryption settings used to encrypt
+            files unloaded to external storage.
+        :param StageFileFormat Optional[file_format]: Specifies the file format for the stage, which can be either.
+        :param StageFileFormat Optional[copy_options]: Specifies one (or more) copy options for the stage.
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
@@ -51,6 +88,10 @@ class Stage(Resource):
         super().__init__(StageProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
+            'url': url,
+            'storage_integration': storage_integration,
+            'credentials': credentials.as_dict() if credentials else None,
+            'encryption': encryption.as_dict() if encryption else None,
             'copy_options': copy_options.as_dict() if copy_options is not None else None,
             'file_format': file_format.as_dict() if file_format is not None else None,
             'name': name,
