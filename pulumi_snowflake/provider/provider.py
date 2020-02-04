@@ -23,10 +23,12 @@ class Provider(ResourceProvider):
     def __init__(self,
                  connection_provider: ConnectionProvider,
                  sql_name: str,
-                 attributes: List[BaseAttribute]):
+                 attributes: List[BaseAttribute],
+                 create_params: List[str] = None):
         self.connection_provider = connection_provider
         self.sql_name = sql_name
         self.attributes = attributes
+        self.create_params = create_params
         Validation.validate_object_name(sql_name)
 
 
@@ -132,15 +134,28 @@ class Provider(ResourceProvider):
         outputs = {a.name: inputs.get(a.name) for a in self.attributes}
         return outputs
 
+    def _generate_create_params(self, inputs):
+        if not self.create_params:
+            return ""
+
+        params_present = filter(lambda p: inputs.get(p) == True, self.create_params)
+        params_caps = map(lambda p: p.upper(), params_present)
+
+        return " ".join(params_caps)
+
     def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs):
         """
         Generates the SQL statement which creates the object
         """
         
         qualified_name = self.get_full_object_name(validated_name, inputs)
+        create_params = self._generate_create_params(inputs)
+
+        create_header = f"CREATE {create_params} {self.sql_name} {qualified_name}" if len(create_params) > 0 else \
+                        f"CREATE {self.sql_name} {qualified_name}"
 
         statements = [
-            f"CREATE {self.sql_name} {qualified_name}",
+            create_header,
             *list(map(lambda a: a.generate_sql(inputs.get(a.name)), attributesWithValues))
         ]
 

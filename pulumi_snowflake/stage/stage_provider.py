@@ -76,6 +76,9 @@ class StageProvider(Provider):
                 BooleanAttribute("force"),
             ]),
             StringAttribute("comment", False)
+        ],
+        [
+            "temporary"
         ])
 
     def generate_outputs(self, name, inputs, outs):
