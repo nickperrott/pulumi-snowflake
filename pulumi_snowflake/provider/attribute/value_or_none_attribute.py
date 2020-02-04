@@ -1,10 +1,9 @@
-from typing import Tuple
-
 from .base_attribute import BaseAttribute
-from ... import NoneValue
+from .value_or_token_attribute import ValueOrTokenAttribute
+from ... import NoneToken
 
 
-class ValueOrNoneAttribute(BaseAttribute):
+class ValueOrNoneAttribute(ValueOrTokenAttribute):
     """
     Represents a SQL attribute which can take some value, or the special value NONE.  The value NONE should be
     represented by an instance of the `NoneType` class rather than Python `None`, as this indicates a lack of value.
@@ -13,17 +12,4 @@ class ValueOrNoneAttribute(BaseAttribute):
     """
 
     def __init__(self, attribute: BaseAttribute):
-        super().__init__(attribute.name, attribute.required)
-        self.attribute = attribute
-
-    def generate_sql(self, value) -> str:
-        if value == NoneValue():
-            return f"{self.sql_name} = NONE"
-        else:
-            return self.attribute.generate_sql(value)
-
-    def generate_bindings(self, value) -> Tuple:
-        if value == NoneValue():
-            return None
-        else:
-            return self.attribute.generate_bindings(value)
+        super().__init__(attribute, NoneToken())

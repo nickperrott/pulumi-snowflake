@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake import CompressionValues, NoneValue, AutoValue, BinaryFormatValues, StageOnCopyErrorValues, \
+from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryFormatValues, StageOnCopyErrorValues, \
     StageMatchByColumnNameValues
 from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.stage import StageProvider
@@ -48,18 +48,18 @@ class StageTests(unittest.TestCase):
                 "type": FileFormatType.AVRO,
                 "compression": CompressionValues.GZIP,
                 "record_delimiter": ':',
-                "field_delimiter": NoneValue(),
+                "field_delimiter": NoneToken(),
                 "file_extension": 'csv',
                 "skip_header": 100,
                 "skip_blank_lines": False,
-                "date_format": AutoValue(),
+                "date_format": AutoToken(),
                 "time_format": 'hhmm',
-                "timestamp_format": AutoValue(),
+                "timestamp_format": AutoToken(),
                 "binary_format": BinaryFormatValues.BASE64,
                 "escape": "/",
-                "escape_unenclosed_field": NoneValue(),
+                "escape_unenclosed_field": NoneToken(),
                 "trim_space": True,
-                "field_optionally_enclosed_by": NoneValue(),
+                "field_optionally_enclosed_by": NoneToken(),
                 "null_if": ["N","NULL"],
                 "error_on_column_count_mismatch": False,
                 "validate_utf8": True,
@@ -197,7 +197,7 @@ class StageTests(unittest.TestCase):
                 "azure_sas_token": "test_azure_sas_token",
             },
             "encryption": {
-                "type": NoneValue(),
+                "type": NoneToken(),
                 "master_key": "test_master_key",
                 "kms_key_id": "test_kms_key_id",
             },

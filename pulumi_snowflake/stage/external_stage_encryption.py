@@ -2,13 +2,13 @@ from typing import Union, Optional
 
 from pulumi import Input
 
-from pulumi_snowflake import NoneValue
+from pulumi_snowflake import NoneToken
 
 
 class ExternalStageEncryption:
 
     def __init__(self,
-                 type: Input[Optional[Union[str,NoneValue]]] = None,
+                 type: Input[Optional[Union[str, NoneToken]]] = None,
                  master_key: Input[Optional[str]] = None,
                  kms_key_id: Input[Optional[str]] = None,
                  ):

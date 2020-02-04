@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake import NoneValue
+from pulumi_snowflake import NoneToken
 from pulumi_snowflake.provider import StringAttribute
 from pulumi_snowflake.provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
 
@@ -16,12 +16,12 @@ class ValueOrNoneTests(unittest.TestCase):
 
     def test_when_value_is_none_generate_sql_is_correct(self):
         attr = ValueOrNoneAttribute(StringAttribute("myfield", True))
-        sql = attr.generate_sql(NoneValue())
+        sql = attr.generate_sql(NoneToken())
         self.assertEqual(sql, "MYFIELD = NONE")
 
     def test_when_value_is_none_bindings_are_correct(self):
         attr = ValueOrNoneAttribute(StringAttribute("myfield", True))
-        bindings = attr.generate_bindings(NoneValue())
+        bindings = attr.generate_bindings(NoneToken())
         self.assertEqual(bindings, None)
 
     def test_when_value_is_str_generate_sql_is_correct(self):

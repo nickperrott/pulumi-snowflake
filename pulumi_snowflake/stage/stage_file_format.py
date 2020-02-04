@@ -2,8 +2,8 @@ from typing import Optional, Union, List
 
 from pulumi import Input
 
-from pulumi_snowflake.auto_value import AutoValue
-from pulumi_snowflake.none_value import NoneValue
+from pulumi_snowflake.auto_token import AutoToken
+from pulumi_snowflake.none_token import NoneToken
 
 
 class StageFileFormat:
@@ -14,19 +14,19 @@ class StageFileFormat:
                  format_name: Input[Optional[str]] = None,
                  type: Input[Optional[str]] = None,
                  compression: Input[Optional[str]] = None,
-                 record_delimiter: Input[Optional[Union[str, NoneValue]]] = None,
-                 field_delimiter: Input[Optional[Union[str, NoneValue]]] = None,
-                 file_extension: Input[Optional[Union[str,NoneValue]]] = None,
+                 record_delimiter: Input[Optional[Union[str, NoneToken]]] = None,
+                 field_delimiter: Input[Optional[Union[str, NoneToken]]] = None,
+                 file_extension: Input[Optional[Union[str, NoneToken]]] = None,
                  skip_header: Input[Optional[int]] = None,
                  skip_blank_lines: Input[Optional[bool]] = None,
-                 date_format: Input[Optional[Union[str, AutoValue]]] = None,
-                 time_format: Input[Optional[Union[str, AutoValue]]] = None,
-                 timestamp_format: Input[Optional[Union[str, AutoValue]]] = None,
+                 date_format: Input[Optional[Union[str, AutoToken]]] = None,
+                 time_format: Input[Optional[Union[str, AutoToken]]] = None,
+                 timestamp_format: Input[Optional[Union[str, AutoToken]]] = None,
                  binary_format: Input[Optional[str]] = None,
-                 escape: Input[Optional[Union[str, NoneValue]]] = None,
-                 escape_unenclosed_field: Input[Optional[Union[str, NoneValue]]] = None,
+                 escape: Input[Optional[Union[str, NoneToken]]] = None,
+                 escape_unenclosed_field: Input[Optional[Union[str, NoneToken]]] = None,
                  trim_space: Input[Optional[bool]] = None,
-                 field_optionally_enclosed_by: Input[Optional[Union[str, NoneValue]]] = None,
+                 field_optionally_enclosed_by: Input[Optional[Union[str, NoneToken]]] = None,
                  null_if: Input[Optional[List[str]]] = None,
                  error_on_column_count_mismatch: Input[Optional[bool]] = None,
                  validate_utf8: Input[Optional[bool]] = None,
@@ -51,30 +51,30 @@ class StageFileFormat:
             `FileFormatType`.
         :param pulumi.Input[Optional[str]] compression: String (constant) that specifies the current compression
             algorithm for the data files to be loaded.  Should be one of `CompressionValues`
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] record_delimiter: One or more singlebyte or multibyte
+        :param pulumi.Input[Optional[Union[str, NoneToken]]] record_delimiter: One or more singlebyte or multibyte
             characters that separate records in an input file (data loading) or unloaded file (data unloading).
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] field_delimiter: One or more singlebyte or multibyte
+        :param pulumi.Input[Optional[Union[str, NoneToken]]] field_delimiter: One or more singlebyte or multibyte
             characters that separate fields in an input file (data loading) or unloaded file (data unloading),
-        :param pulumi.Input[Optional[Union[str,NoneValue]]] file_extension: Specifies the extension for files unloaded
+        :param pulumi.Input[Optional[Union[str,NoneToken]]] file_extension: Specifies the extension for files unloaded
             to a stage. Accepts any extension. The user is responsible for specifying a file extension that can be read
             by any desired software or services.
         :param pulumi.Input[Optional[int]] skip_header: Number of lines at the start of the file to skip.
         :param pulumi.Input[Optional[bool]] skip_blank_lines: Boolean that specifies to skip any blank lines encountered
             in the data files; otherwise, blank lines produce an end-of-record error (default behavior).,
-        :param pulumi.Input[Optional[Union[str, AutoValue]]] date_format: Defines the format of date values in the data
+        :param pulumi.Input[Optional[Union[str, AutoToken]]] date_format: Defines the format of date values in the data
             files (data loading) or table (data unloading).
-        :param pulumi.Input[Optional[Union[str, AutoValue]]] time_format: Defines the format of time values in the data
+        :param pulumi.Input[Optional[Union[str, AutoToken]]] time_format: Defines the format of time values in the data
             files (data loading) or table (data unloading).
-        :param pulumi.Input[Optional[Union[str, AutoValue]]] timestamp_format: Defines the format of timestamp values in
+        :param pulumi.Input[Optional[Union[str, AutoToken]]] timestamp_format: Defines the format of timestamp values in
             the data files (data loading) or table (data unloading).
         :param pulumi.Input[Optional[str]] binary_format: Defines the encoding format for binary input or output.
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] escape: Single character string used as the escape
+        :param pulumi.Input[Optional[Union[str, NoneToken]]] escape: Single character string used as the escape
             character for any field values.  Should be one of `BinaryFormatValues`.
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] escape_unenclosed_field: Single character string used as
+        :param pulumi.Input[Optional[Union[str, NoneToken]]] escape_unenclosed_field: Single character string used as
             the escape character for unenclosed field values only.
         :param pulumi.Input[Optional[bool]] trim_space: Boolean that specifies whether to remove white space from
             fields.
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] field_optionally_enclosed_by: Character used to enclose
+        :param pulumi.Input[Optional[Union[str, NoneToken]]] field_optionally_enclosed_by: Character used to enclose
             strings.
         :param pulumi.Input[Optional[List[str]]] null_if: String used to convert to and from SQL NULL.
         :param pulumi.Input[Optional[bool]] error_on_column_count_mismatch: Boolean that specifies whether to generate a
