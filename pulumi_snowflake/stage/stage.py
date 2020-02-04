@@ -5,6 +5,7 @@ from pulumi.dynamic import Resource
 
 from .stage_file_format import StageFileFormat
 from .stage_provider import StageProvider
+from .stage_copy_options import StageCopyOptions
 from pulumi_snowflake import ConnectionProvider, Credentials
 
 
@@ -33,7 +34,8 @@ class Stage(Resource):
     def __init__(self,
                  resource_name: str,
                  database: Input[str],
-                 file_format: Optional[StageFileFormat],
+                 file_format: Optional[StageFileFormat] = None,
+                 copy_options: Optional[StageCopyOptions] = None,
                  name: Input[Optional[str]] = None,
                  schema: Input[str] = None,
                  comment: Input[Optional[str]] = None,
@@ -49,6 +51,7 @@ class Stage(Resource):
         super().__init__(StageProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
+            'copy_options': copy_options.as_dict() if copy_options is not None else None,
             'file_format': file_format.as_dict() if file_format is not None else None,
             'name': name,
             'comment': comment,
