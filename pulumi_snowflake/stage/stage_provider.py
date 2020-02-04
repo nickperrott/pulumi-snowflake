@@ -4,6 +4,8 @@ from pulumi_snowflake.provider import StringAttribute, IdentifierAttribute, Stru
 from pulumi_snowflake.provider.attribute.integer_attribute import IntegerAttribute
 from pulumi_snowflake.provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
 from pulumi_snowflake.provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
+from pulumi_snowflake.provider.attribute.value_or_token_attribute import ValueOrTokenAttribute
+from pulumi_snowflake.utf8_token import UTF8Token
 from pulumi_snowflake.validation import Validation
 
 
@@ -50,7 +52,7 @@ class StageProvider(Provider):
                 BooleanAttribute("validate_utf8"),
                 BooleanAttribute("empty_field_as_null"),
                 BooleanAttribute("skip_byte_order_mark"),
-                StringAttribute("encoding"),
+                ValueOrTokenAttribute(StringAttribute("encoding"), UTF8Token()),
                 BooleanAttribute("disable_snowflake_data"),
                 BooleanAttribute("strip_null_values"),
                 BooleanAttribute("strip_outer_element"),

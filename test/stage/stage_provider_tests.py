@@ -5,6 +5,7 @@ from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryForm
     StageMatchByColumnNameValues
 from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.stage import StageProvider
+from pulumi_snowflake.utf8_token import UTF8Token
 from test.on_copy_error_values import OnCopyErrorValuesTests
 
 
@@ -65,7 +66,7 @@ class StageTests(unittest.TestCase):
                 "validate_utf8": True,
                 "empty_field_as_null": False,
                 "skip_byte_order_mark": True,
-                "encoding": 'UTF-8',
+                "encoding": UTF8Token(),
                 "disable_snowflake_data": True,
                 "strip_null_values": False,
                 "strip_outer_element": True,
@@ -109,7 +110,7 @@ class StageTests(unittest.TestCase):
                     f"VALIDATE_UTF8 = TRUE",
                     f"EMPTY_FIELD_AS_NULL = FALSE",
                     f"SKIP_BYTE_ORDER_MARK = TRUE",
-                    f"ENCODING = %s",
+                    f"ENCODING = UTF8",
                     f"DISABLE_SNOWFLAKE_DATA = TRUE",
                     f"STRIP_NULL_VALUES = FALSE",
                     f"STRIP_OUTER_ELEMENT = TRUE",
@@ -130,7 +131,6 @@ class StageTests(unittest.TestCase):
                     'hhmm',
                     "/",
                     "N", "NULL",
-                    'UTF-8',
                      'test_comment',
                 )
             )
