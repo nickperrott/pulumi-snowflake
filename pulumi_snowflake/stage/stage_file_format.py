@@ -3,35 +3,20 @@ from typing import Optional, Union, List
 from pulumi import Input
 
 from pulumi_snowflake.auto_value import AutoValue
-from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.none_value import NoneValue
 
 
 class StageFileFormat:
     """
-    Base class for file formats used by a stage.
-    """
-    pass
-
-
-class StageNamedFileFormat(StageFileFormat):
-    """
-    Represents a named file format to be used by a stage.
-    """
-
-    def __init__(self, format_name: Input[Optional[str]]):
-        self.format_name = format_name
-
-
-class StageCsvFileFormat(StageFileFormat):
-    """
-    Represents a named CSV file format used by a stage.
+    Represents the file format options used when creating a stage.
     """
     def __init__(self,
+                 format_name: Input[Optional[str]] = None,
+                 type: Input[Optional[str]] = None,
                  compression: Input[Optional[str]] = None,
                  record_delimiter: Input[Optional[Union[str, NoneValue]]] = None,
                  field_delimiter: Input[Optional[Union[str, NoneValue]]] = None,
-                 file_extension: Input[Optional[Union[str, NoneValue]]] = None,
+                 file_extension: Input[Optional[Union[str,NoneValue]]] = None,
                  skip_header: Input[Optional[int]] = None,
                  skip_blank_lines: Input[Optional[bool]] = None,
                  date_format: Input[Optional[Union[str, AutoValue]]] = None,
@@ -48,15 +33,29 @@ class StageCsvFileFormat(StageFileFormat):
                  empty_field_as_null: Input[Optional[bool]] = None,
                  skip_byte_order_mark: Input[Optional[bool]] = None,
                  encoding: Input[Optional[str]] = None,
+                 enable_octal: Input[Optional[bool]] = None,
+                 allow_duplicate: Input[Optional[bool]] = None,
+                 strip_outer_array: Input[Optional[bool]] = None,
+                 strip_null_values: Input[Optional[bool]] = None,
+                 ignore_utf8_errors: Input[Optional[bool]] = None,
+                 snappy_compression: Input[Optional[bool]] = None,
+                 binary_as_text: Input[Optional[bool]] = None,
+                 preserve_space: Input[Optional[bool]] = None,
+                 strip_outer_element: Input[Optional[bool]] = None,
+                 disable_snowflake_data: Input[Optional[bool]] = None,
+                 disable_auto_convert: Input[Optional[bool]] = None,
                  ):
         """
+        :param pulumi.Input[Optional[str]] format_name: Specifies an existing named file format to use for the stage.
+        :param pulumi.Input[Optional[str]] type: Specifies the type of files for the stage.  Should be one of
+            `FileFormatType`.
         :param pulumi.Input[Optional[str]] compression: String (constant) that specifies the current compression
             algorithm for the data files to be loaded.  Should be one of `CompressionValues`
         :param pulumi.Input[Optional[Union[str, NoneValue]]] record_delimiter: One or more singlebyte or multibyte
             characters that separate records in an input file (data loading) or unloaded file (data unloading).
         :param pulumi.Input[Optional[Union[str, NoneValue]]] field_delimiter: One or more singlebyte or multibyte
             characters that separate fields in an input file (data loading) or unloaded file (data unloading),
-        :param pulumi.Input[Optional[Union[str, NoneValue]]] file_extension: Specifies the extension for files unloaded
+        :param pulumi.Input[Optional[Union[str,NoneValue]]] file_extension: Specifies the extension for files unloaded
             to a stage. Accepts any extension. The user is responsible for specifying a file extension that can be read
             by any desired software or services.
         :param pulumi.Input[Optional[int]] skip_header: Number of lines at the start of the file to skip.
@@ -89,9 +88,31 @@ class StageCsvFileFormat(StageFileFormat):
             order mark), if present in a data file.
         :param pulumi.Input[Optional[str]] encoding: String (constant) that specifies the character set of the source
             data when loading data into a table.
+        :param pulumi.Input[Optional[bool]] enable_octal: Boolean that enables parsing of octal numbers.
+        :param pulumi.Input[Optional[bool]] allow_duplicate: Boolean that specifies to allow duplicate object field
+            names (only the last one will be preserved).
+        :param pulumi.Input[Optional[bool]] strip_outer_array: Boolean that instructs the JSON parser to remove outer
+            brackets (i.e `[ ]`).
+        :param pulumi.Input[Optional[bool]] strip_null_values: Boolean that instructs the JSON parser to remove object
+            fields or array elements containing null values.
+        :param pulumi.Input[Optional[bool]] ignore_utf8_errors: Boolean that specifies whether UTF-8 encoding errors
+            produce error conditions.
+        :param pulumi.Input[Optional[bool]] snappy_compression: Boolean that specifies whether unloaded file(s) are
+            compressed using the SNAPPY algorithm.
+        :param pulumi.Input[Optional[bool]] binary_as_text: Boolean that specifies whether to interpret columns with no
+            defined logical data type as UTF-8 text.
+        :param pulumi.Input[Optional[bool]] preserve_space: Boolean that specifies whether the XML parser preserves
+            leading and trailing spaces in element content.
+        :param pulumi.Input[Optional[bool]] strip_outer_element: Boolean that specifies whether the XML parser strips
+            out the outer XML element, exposing 2nd level elements as separate documents.
+        :param pulumi.Input[Optional[bool]] disable_snowflake_data: Boolean that specifies whether the XML parser
+            disables recognition of Snowflake semi-structured data tags.
+        :param pulumi.Input[Optional[bool]] disable_auto_convert: Boolean that specifies whether the XML parser disables
+            automatic conversion of numeric and Boolean values from text to native representation.
         """
         super().__init__()
-        self.type = FileFormatType.CSV
+        self.format_name = format_name
+        self.type = type
         self.compression = compression
         self.record_delimiter = record_delimiter
         self.field_delimiter = field_delimiter
@@ -112,10 +133,23 @@ class StageCsvFileFormat(StageFileFormat):
         self.empty_field_as_null = empty_field_as_null
         self.skip_byte_order_mark = skip_byte_order_mark
         self.encoding = encoding
+        self.enable_octal = enable_octal
+        self.allow_duplicate = allow_duplicate
+        self.strip_outer_array = strip_outer_array
+        self.strip_null_values = strip_null_values
+        self.ignore_utf8_errors = ignore_utf8_errors
+        self.snappy_compression = snappy_compression
+        self.binary_as_text = binary_as_text
+        self.preserve_space = preserve_space
+        self.strip_outer_element = strip_outer_element
+        self.disable_snowflake_data = disable_snowflake_data
+        self.disable_auto_convert = disable_auto_convert
 
 
     def as_dict(self):
         fields = [
+            "format_name",
+            "type",
             "compression",
             "record_delimiter",
             "field_delimiter",
@@ -135,6 +169,17 @@ class StageCsvFileFormat(StageFileFormat):
             "validate_utf8",
             "empty_field_as_null",
             "skip_byte_order_mark",
-            "encoding"
+            "encoding",
+            "enable_octal",
+            "allow_duplicate",
+            "strip_outer_array",
+            "strip_null_values",
+            "ignore_utf8_errors",
+            "snappy_compression",
+            "binary_as_text",
+            "preserve_space",
+            "strip_outer_element",
+            "disable_snowflake_data",
+            "disable_auto_convert",
         ]
         return {field: getattr(self, field) for field in fields}

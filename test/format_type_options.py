@@ -1,14 +1,18 @@
 import unittest
 
-from pulumi_snowflake import CompressionValues, NoneValue, AutoValue, BinaryFormatValues
+from pulumi_snowflake import CompressionValues, AutoValue, NoneValue, BinaryFormatValues
+from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.stage import StageCsvFileFormat
+from pulumi_snowflake.stage.stage_file_format import StageFileFormat2
 
 
 class StageFormatOptionsTests(unittest.TestCase):
 
-    def test_when_pass_csv_values_then_generates_dict(self):
+    def test_when_pass_values_then_generates_dict(self):
         self.maxDiff = None
-        format_options = StageCsvFileFormat(
+        format_options = StageFileFormat2(
+            format_name="test-format-name",
+            type=FileFormatType.AVRO,
             compression=CompressionValues.GZIP,
             record_delimiter=':',
             field_delimiter=NoneValue(),
@@ -28,9 +32,23 @@ class StageFormatOptionsTests(unittest.TestCase):
             validate_utf8=True,
             empty_field_as_null=False,
             skip_byte_order_mark=True,
-            encoding='UTF-8'
+            encoding='UTF-8',
+            disable_snowflake_data=True,
+            strip_null_values=False,
+            strip_outer_element=True,
+            strip_outer_array=False,
+            enable_octal=True,
+            preserve_space=False,
+            snappy_compression=True,
+            ignore_utf8_errors=False,
+            allow_duplicate=True,
+            disable_auto_convert=False,
+            binary_as_text=True,
         )
-        self.assertDictEqual(format_options.as_dict(), {
+        actual = format_options.as_dict()
+        expected = {
+            "format_name": "test-format-name",
+            "type": FileFormatType.AVRO,
             "compression": CompressionValues.GZIP,
             "record_delimiter": ':',
             "field_delimiter": NoneValue(),
@@ -50,5 +68,17 @@ class StageFormatOptionsTests(unittest.TestCase):
             "validate_utf8": True,
             "empty_field_as_null": False,
             "skip_byte_order_mark": True,
-            "encoding": 'UTF-8'
-        })
+            "encoding": 'UTF-8',
+            "disable_snowflake_data": True,
+            "strip_null_values": False,
+            "strip_outer_element": True,
+            "strip_outer_array": False,
+            "enable_octal": True,
+            "preserve_space": False,
+            "snappy_compression": True,
+            "ignore_utf8_errors": False,
+            "allow_duplicate": True,
+            "disable_auto_convert": False,
+            "binary_as_text": True,
+        }
+        self.assertDictEqual(expected, actual)
