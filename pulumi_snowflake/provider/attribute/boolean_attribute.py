@@ -8,7 +8,7 @@ class BooleanAttribute(BaseAttribute):
     Represents a boolean SQL attribute.  Values are Python `bool`s which are converted to the SQL `TRUE` or `FALSE`.
     """
 
-    def __init__(self, name: str, required: bool):
+    def __init__(self, name: str, required: bool = False):
         super().__init__(name, required)
 
     def generate_sql(self, value) -> str:

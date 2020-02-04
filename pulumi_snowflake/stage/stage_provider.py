@@ -1,5 +1,9 @@
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.provider import StringAttribute, IdentifierAttribute, StructAttribute, Provider
+from pulumi_snowflake.provider import StringAttribute, IdentifierAttribute, StructAttribute, Provider, BooleanAttribute, \
+    StringListAttribute
+from pulumi_snowflake.provider.attribute.integer_attribute import IntegerAttribute
+from pulumi_snowflake.provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
+from pulumi_snowflake.provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
 from pulumi_snowflake.validation import Validation
 
 
@@ -11,8 +15,39 @@ class StageProvider(Provider):
     def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "STAGE", [
             StructAttribute("file_format", False, [
-                StringAttribute("format_name", False),
-                IdentifierAttribute("type", False)
+                StringAttribute("format_name"),
+                IdentifierAttribute("type"),
+                IdentifierAttribute("compression"),
+                ValueOrNoneAttribute(StringAttribute("record_delimiter")),
+                ValueOrNoneAttribute(StringAttribute("field_delimiter")),
+                StringAttribute("file_extension"),
+                IntegerAttribute("skip_header"),
+                BooleanAttribute("skip_blank_lines"),
+                ValueOrAutoAttribute(StringAttribute("date_format")),
+                ValueOrAutoAttribute(StringAttribute("time_format")),
+                ValueOrAutoAttribute(StringAttribute("timestamp_format")),
+                IdentifierAttribute("binary_format"),
+                ValueOrNoneAttribute(StringAttribute("escape")),
+                ValueOrNoneAttribute(StringAttribute("escape_unenclosed_field")),
+                BooleanAttribute("trim_space"),
+                ValueOrNoneAttribute(StringAttribute("field_optionally_enclosed_by")),
+                StringListAttribute("null_if"),
+                BooleanAttribute("error_on_column_count_mismatch"),
+                BooleanAttribute("validate_utf8"),
+                BooleanAttribute("empty_field_as_null"),
+                BooleanAttribute("skip_byte_order_mark"),
+                StringAttribute("encoding"),
+                BooleanAttribute("disable_snowflake_data"),
+                BooleanAttribute("strip_null_values"),
+                BooleanAttribute("strip_outer_element"),
+                BooleanAttribute("strip_outer_array"),
+                BooleanAttribute("enable_octal"),
+                BooleanAttribute("preserve_space"),
+                BooleanAttribute("snappy_compression"),
+                BooleanAttribute("ignore_utf8_errors"),
+                BooleanAttribute("allow_duplicate"),
+                BooleanAttribute("disable_auto_convert"),
+                BooleanAttribute("binary_as_text"),
             ]),
             StringAttribute("comment", False)
         ])

@@ -5,7 +5,7 @@ from .base_attribute import BaseAttribute
 
 class StructAttribute(BaseAttribute):
 
-    def __init__(self, name: str, required: bool, fields):
+    def __init__(self, name: str, required: bool=False, fields=[]):
         super().__init__(name, required)
         self.fields = fields
 

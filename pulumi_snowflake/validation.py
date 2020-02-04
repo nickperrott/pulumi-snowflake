@@ -24,3 +24,14 @@ class Validation:
             raise Exception(f'Invalid Snowflake object name: {id}')
 
         return id
+
+    @staticmethod
+    def validate_integer(id: str):
+        """ Validates an integer string.
+        """
+        pattern = re.compile("^([0-9])+$")
+
+        if not pattern.match(id):
+            raise Exception(f'Invalid Snowflake integer: {id}')
+
+        return id

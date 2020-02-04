@@ -16,7 +16,7 @@ class BaseAttribute(ABC):
     were used in the SQL string.  For example, `('name1','name2')`.
     """
 
-    def __init__(self, name: str, required: bool):
+    def __init__(self, name: str, required: bool = False):
         Validation.validate_identifier(name)
         self.name = name
         self.sql_name = name.upper()

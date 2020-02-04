@@ -10,7 +10,7 @@ class IdentifierAttribute(BaseAttribute):
     quotes).
     """
 
-    def __init__(self, name: str, required: bool):
+    def __init__(self, name: str, required: bool = False):
         super().__init__(name, required)
 
     def generate_sql(self, value) -> str:
