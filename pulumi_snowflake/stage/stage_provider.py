@@ -49,6 +49,16 @@ class StageProvider(Provider):
                 BooleanAttribute("disable_auto_convert"),
                 BooleanAttribute("binary_as_text"),
             ]),
+            StructAttribute("copy_options", False, [
+                IdentifierAttribute("on_error"),
+                IntegerAttribute("size_limit"),
+                BooleanAttribute("purge"),
+                BooleanAttribute("return_failed_only"),
+                IdentifierAttribute("match_by_column_name"),
+                BooleanAttribute("enforce_length"),
+                BooleanAttribute("truncatecolumns"),
+                BooleanAttribute("force"),
+            ]),
             StringAttribute("comment", False)
         ])
 

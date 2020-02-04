@@ -1,9 +1,11 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake import CompressionValues, NoneValue, AutoValue, BinaryFormatValues
+from pulumi_snowflake import CompressionValues, NoneValue, AutoValue, BinaryFormatValues, StageOnCopyErrorValues, \
+    StageMatchByColumnNameValues
 from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.stage import StageProvider
+from test.on_copy_error_values import OnCopyErrorValuesTests
 
 
 class StageTests(unittest.TestCase):
@@ -133,6 +135,51 @@ class StageTests(unittest.TestCase):
                 )
             )
         ])
+
+
+    def test_when_copy_options_given_then_appears_in_sql(self):
+
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = StageProvider(mock_connection_provider)
+        provider.create({
+            "file_format": None,
+            "copy_options":{
+                "on_error": StageOnCopyErrorValues.skip_file_percent(45),
+                "size_limit": 345,
+                "purge": True,
+                "return_failed_only": False,
+                "match_by_column_name": StageMatchByColumnNameValues.CASE_INSENSITIVE,
+                "enforce_length": True,
+                "truncatecolumns": False,
+                "force": True,
+            },
+            "comment": "test_comment",
+            "name": "test_stage",
+            "database": "test_database",
+            "schema": "test_schema"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE STAGE test_database.test_schema.test_stage",
+                ", ".join([
+                    f"COPY_OPTIONS = (ON_ERROR = SKIP_FILE_45%",
+                    f"SIZE_LIMIT = 345",
+                    f"PURGE = TRUE",
+                    f"RETURN_FAILED_ONLY = FALSE",
+                    f"MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE",
+                    f"ENFORCE_LENGTH = TRUE",
+                    f"TRUNCATECOLUMNS = FALSE",
+                    f"FORCE = TRUE)",
+                ]),
+                f"COMMENT = %s"
+            ]), ('test_comment',)
+            )
+        ])
+
+
 
     # HELPERS
 
