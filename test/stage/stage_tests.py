@@ -31,6 +31,29 @@ class StageTests(unittest.TestCase):
             ]), ('test_file_format', 'test_comment'))
         ])
 
+
+    def test_when_file_format_not_given_then_input_is_none(self):
+
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = StageProvider(mock_connection_provider)
+        provider.create({
+            "file_format": None,
+            "comment": "test_comment",
+            "name": "test_stage",
+            "database": "test_database",
+            "schema": "test_schema"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE STAGE test_database.test_schema.test_stage",
+                f"COMMENT = %s"
+            ]), ('test_comment',))
+        ])
+
+
     # HELPERS
 
     def get_mock_connection_provider(self, mock_cursor):

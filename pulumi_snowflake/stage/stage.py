@@ -49,10 +49,7 @@ class Stage(Resource):
         super().__init__(StageProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
-            'file_format': {
-                'format_name': file_format.format_name,
-                'type': file_format.type
-            },
+            'file_format': file_format.as_dict() if file_format is not None else None,
             'name': name,
             'comment': comment,
             'schema': schema

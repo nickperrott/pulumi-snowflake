@@ -8,5 +8,4 @@ from .stage import StageCopyOptions
 from .stage import StageFileFormat
 from .stage import StageOnCopyErrorValues
 from .stage import StageMatchByColumnNameValues
-from .stage import StageCsvFileFormat
-from .stage import StageNamedFileFormat
+from .stage import StageFileFormat

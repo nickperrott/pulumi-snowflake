@@ -2,15 +2,14 @@ import unittest
 
 from pulumi_snowflake import CompressionValues, AutoValue, NoneValue, BinaryFormatValues
 from pulumi_snowflake.fileformat import FileFormatType
-from pulumi_snowflake.stage import StageCsvFileFormat
-from pulumi_snowflake.stage.stage_file_format import StageFileFormat2
+from pulumi_snowflake.stage import StageFileFormat
 
 
 class StageFormatOptionsTests(unittest.TestCase):
 
     def test_when_pass_values_then_generates_dict(self):
         self.maxDiff = None
-        format_options = StageFileFormat2(
+        format_options = StageFileFormat(
             format_name="test-format-name",
             type=FileFormatType.AVRO,
             compression=CompressionValues.GZIP,
