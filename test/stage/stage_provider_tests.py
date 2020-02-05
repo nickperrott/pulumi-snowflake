@@ -1,10 +1,9 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryFormatValues, StageOnCopyErrorValues, \
-    StageMatchByColumnNameValues
+from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryFormatValues
 from pulumi_snowflake.fileformat import FileFormatType
-from pulumi_snowflake.stage import StageProvider
+from pulumi_snowflake.stage import StageProvider, StageMatchByColumnNameValues, StageOnCopyErrorValues
 from pulumi_snowflake.utf8_token import UTF8Token
 
 

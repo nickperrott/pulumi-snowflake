@@ -1,7 +1,6 @@
 import unittest
 
-from pulumi_snowflake import StageOnCopyErrorValues, StageMatchByColumnNameValues
-from pulumi_snowflake.stage import StageCopyOptions
+from pulumi_snowflake.stage import StageCopyOptions, StageOnCopyErrorValues, StageMatchByColumnNameValues
 
 
 class StageCopyOptionsTests(unittest.TestCase):

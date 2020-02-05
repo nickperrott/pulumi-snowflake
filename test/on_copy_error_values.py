@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake import StageOnCopyErrorValues
+from pulumi_snowflake.stage import StageOnCopyErrorValues
 
 
 class OnCopyErrorValuesTests(unittest.TestCase):
