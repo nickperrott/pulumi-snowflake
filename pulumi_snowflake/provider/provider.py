@@ -2,9 +2,9 @@ from typing import List
 
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
-from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.validation import Validation
-from pulumi_snowflake.random_id import RandomId
+from ..connection_provider import ConnectionProvider
+from ..validation import Validation
+from ..random_id import RandomId
 from .attribute import BaseAttribute
 
 

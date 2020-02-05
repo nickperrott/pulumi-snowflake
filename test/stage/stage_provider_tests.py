@@ -6,10 +6,9 @@ from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryForm
 from pulumi_snowflake.fileformat import FileFormatType
 from pulumi_snowflake.stage import StageProvider
 from pulumi_snowflake.utf8_token import UTF8Token
-from test.on_copy_error_values import OnCopyErrorValuesTests
 
 
-class StageTests(unittest.TestCase):
+class StageProviderTests(unittest.TestCase):
 
     def test_create_stage(self):
 
@@ -76,24 +75,24 @@ class StageTests(unittest.TestCase):
                 "type": FileFormatType.AVRO,
                 "compression": CompressionValues.GZIP,
                 "record_delimiter": ':',
-                "field_delimiter": NoneToken(),
+                "field_delimiter": NoneToken().as_dict(),
                 "file_extension": 'csv',
                 "skip_header": 100,
                 "skip_blank_lines": False,
-                "date_format": AutoToken(),
+                "date_format": AutoToken().as_dict(),
                 "time_format": 'hhmm',
-                "timestamp_format": AutoToken(),
+                "timestamp_format": AutoToken().as_dict(),
                 "binary_format": BinaryFormatValues.BASE64,
                 "escape": "/",
-                "escape_unenclosed_field": NoneToken(),
+                "escape_unenclosed_field": NoneToken().as_dict(),
                 "trim_space": True,
-                "field_optionally_enclosed_by": NoneToken(),
+                "field_optionally_enclosed_by": NoneToken().as_dict(),
                 "null_if": ["N","NULL"],
                 "error_on_column_count_mismatch": False,
                 "validate_utf8": True,
                 "empty_field_as_null": False,
                 "skip_byte_order_mark": True,
-                "encoding": UTF8Token(),
+                "encoding": UTF8Token().as_dict(),
                 "disable_snowflake_data": True,
                 "strip_null_values": False,
                 "strip_outer_element": True,
@@ -192,7 +191,7 @@ class StageTests(unittest.TestCase):
             call("\n".join([
                 f"CREATE STAGE test_database.test_schema.test_stage",
                 ", ".join([
-                    f"COPY_OPTIONS = (ON_ERROR = SKIP_FILE_45%",
+                    f"COPY_OPTIONS = (ON_ERROR = %s",
                     f"SIZE_LIMIT = 345",
                     f"PURGE = TRUE",
                     f"RETURN_FAILED_ONLY = FALSE",
@@ -202,7 +201,7 @@ class StageTests(unittest.TestCase):
                     f"FORCE = TRUE)",
                 ]),
                 f"COMMENT = %s"
-            ]), ('test_comment',)
+            ]), ('SKIP_FILE_45%', 'test_comment',)
             )
         ])
 
@@ -224,7 +223,7 @@ class StageTests(unittest.TestCase):
                 "azure_sas_token": "test_azure_sas_token",
             },
             "encryption": {
-                "type": NoneToken(),
+                "type": NoneToken().as_dict(),
                 "master_key": "test_master_key",
                 "kms_key_id": "test_kms_key_id",
             },

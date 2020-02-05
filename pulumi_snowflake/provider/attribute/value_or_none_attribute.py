@@ -1,6 +1,6 @@
 from .base_attribute import BaseAttribute
 from .value_or_token_attribute import ValueOrTokenAttribute
-from ... import NoneToken
+from ...none_token import NoneToken
 
 
 class ValueOrNoneAttribute(ValueOrTokenAttribute):

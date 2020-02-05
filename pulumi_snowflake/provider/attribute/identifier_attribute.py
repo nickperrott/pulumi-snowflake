@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from .base_attribute import BaseAttribute
-from pulumi_snowflake.validation import Validation
+from ...validation import Validation
 
 class IdentifierAttribute(BaseAttribute):
     """

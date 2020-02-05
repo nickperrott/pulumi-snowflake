@@ -1,12 +1,16 @@
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.provider import StringAttribute, IdentifierAttribute, StructAttribute, Provider, BooleanAttribute, \
-    StringListAttribute
-from pulumi_snowflake.provider.attribute.integer_attribute import IntegerAttribute
-from pulumi_snowflake.provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
-from pulumi_snowflake.provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
-from pulumi_snowflake.provider.attribute.value_or_token_attribute import ValueOrTokenAttribute
-from pulumi_snowflake.utf8_token import UTF8Token
-from pulumi_snowflake.validation import Validation
+from ..provider.attribute.string_attribute import StringAttribute
+from ..provider.attribute.identifier_attribute import IdentifierAttribute
+from ..provider.attribute.struct_attribute import StructAttribute
+from ..provider.attribute.boolean_attribute import BooleanAttribute
+from ..provider.attribute.string_list_attribute import StringListAttribute
+from ..provider.attribute.integer_attribute import IntegerAttribute
+from ..provider.attribute.value_or_token_attribute import ValueOrTokenAttribute
+from ..provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
+from ..provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
+from ..provider.provider import Provider
+from ..utf8_token import UTF8Token
+from ..validation import Validation
 
 
 class StageProvider(Provider):
@@ -66,7 +70,7 @@ class StageProvider(Provider):
                 BooleanAttribute("binary_as_text"),
             ]),
             StructAttribute("copy_options", False, [
-                IdentifierAttribute("on_error"),
+                StringAttribute("on_error"),
                 IntegerAttribute("size_limit"),
                 BooleanAttribute("purge"),
                 BooleanAttribute("return_failed_only"),

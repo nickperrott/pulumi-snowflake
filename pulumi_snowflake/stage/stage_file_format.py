@@ -2,8 +2,8 @@ from typing import Optional, Union, List
 
 from pulumi import Input
 
-from pulumi_snowflake.auto_token import AutoToken
-from pulumi_snowflake.none_token import NoneToken
+from ..auto_token import AutoToken
+from ..none_token import NoneToken
 
 
 class StageFileFormat:

@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake.provider.attribute.integer_attribute import IntegerAttribute
+from pulumi_snowflake.provider.attribute import IntegerAttribute
 
 
 class IntegerAttributeTests(unittest.TestCase):
@@ -17,12 +17,8 @@ class IntegerAttributeTests(unittest.TestCase):
 
     def test_when_value_not_number_then_generate_sql_throws_exception(self):
         attr = IntegerAttribute("myint", True)
-        self.assertRaises(Exception, attr.generate_sql, "123")
+        self.assertRaises(Exception, attr.generate_sql, "123d")
 
     def test_when_value_not_number_then_generate_bindings_throws_exception(self):
         attr = IntegerAttribute("myint", True)
-        self.assertRaises(Exception, attr.generate_bindings, "123")
-
-    def test_when_value_boolean_then_generate_sql_throws_exception(self):
-        attr = IntegerAttribute("myint", True)
-        self.assertRaises(Exception, attr.generate_sql, True)
+        self.assertRaises(Exception, attr.generate_bindings, "123d")

@@ -1,5 +1,7 @@
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.provider import IdentifierAttribute, StringAttribute, Provider
+from ..provider.attribute.identifier_attribute import IdentifierAttribute
+from ..provider.attribute.string_attribute import StringAttribute
+from ..provider.provider import Provider
 from pulumi_snowflake.validation import Validation
 
 
@@ -24,6 +26,7 @@ class FileFormatProvider(Provider):
         return {
             "database": inputs["database"],
             "schema": inputs.get("schema"),
+            "full_name": self.get_full_object_name(name, inputs),
             **outs
         }
 

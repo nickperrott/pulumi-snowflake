@@ -2,7 +2,7 @@ from typing import Union, Optional
 
 from pulumi import Input
 
-from pulumi_snowflake import NoneToken
+from ..none_token import NoneToken
 
 
 class ExternalStageEncryption:

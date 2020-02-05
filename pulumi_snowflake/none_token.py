@@ -1,4 +1,4 @@
-from pulumi_snowflake.provider.attribute.value_or_token_attribute import Token
+from .token import Token
 
 
 class NoneToken(Token):

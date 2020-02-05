@@ -1,6 +1,6 @@
 from .base_attribute import BaseAttribute
 from .value_or_token_attribute import ValueOrTokenAttribute
-from ... import AutoToken
+from ...auto_token import AutoToken
 
 
 class ValueOrAutoAttribute(ValueOrTokenAttribute):

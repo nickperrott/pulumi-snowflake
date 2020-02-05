@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake.stage.external_stage_credentials import ExternalStageCredentials
+from pulumi_snowflake.stage import ExternalStageCredentials
 
 
 class ExternalStageCredentialsTests(unittest.TestCase):

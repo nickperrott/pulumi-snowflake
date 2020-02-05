@@ -1,5 +1,9 @@
 from pulumi_snowflake import ConnectionProvider
-from pulumi_snowflake.provider import IdentifierAttribute, StringAttribute, BooleanAttribute, StringListAttribute, Provider
+from ..provider.attribute.identifier_attribute import IdentifierAttribute
+from ..provider.attribute.string_attribute import StringAttribute
+from ..provider.attribute.boolean_attribute import BooleanAttribute
+from ..provider.attribute.string_list_attribute import StringListAttribute
+from ..provider.provider import Provider
 
 
 class AWSStorageIntegrationProvider(Provider):

@@ -2,7 +2,8 @@ from typing import Optional
 
 from pulumi import Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
-from pulumi_snowflake import ConnectionProvider, Credentials
+from ..connection_provider import ConnectionProvider
+from ..credentials import Credentials
 from .file_format_provider import FileFormatProvider
 
 
@@ -16,6 +17,11 @@ class FileFormat(Resource):
     name: Output[str]
     """
     The name of the file format in Snowflake.
+    """
+
+    full_name: Output[str]
+    """
+    The fully-qualified name of the file format in Snowflake, including database and schema.
     """
 
     type: Output[str]
@@ -54,6 +60,7 @@ class FileFormat(Resource):
             'database': database,
             'resource_name': resource_name,
             'name': name,
+            'full_name': None,
             'type': type,
             'schema': schema
         }, opts)

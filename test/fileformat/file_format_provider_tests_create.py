@@ -48,9 +48,12 @@ class FileFormatProviderTests(unittest.TestCase):
         provider = FileFormatProvider(mock_connection_provider)
         result = provider.create(self.get_standard_inputs())
 
+        fullName = f"{self.get_standard_inputs()['database']}..{self.get_standard_inputs()['name']}"
+
         self.assertDictEqual(result.outs, {
             "comment": None,
             "name": self.get_standard_inputs()["name"],
+            "full_name": fullName,
             "type": self.get_standard_inputs()["type"],
             "database": self.get_standard_inputs()["database"],
             "schema": None
@@ -66,8 +69,11 @@ class FileFormatProviderTests(unittest.TestCase):
             "schema": "test_schema",
         })
 
+        fullName = f"{self.get_standard_inputs()['database']}.test_schema.{self.get_standard_inputs()['name']}"
+
         self.assertDictEqual(result.outs, {
             "name": self.get_standard_inputs()["name"],
+            "full_name": fullName,
             "type": self.get_standard_inputs()["type"],
             "database": self.get_standard_inputs()["database"],
             "schema": "test_schema",

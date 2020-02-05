@@ -8,7 +8,8 @@ from .external_stage_encryption import ExternalStageEncryption
 from .stage_file_format import StageFileFormat
 from .stage_provider import StageProvider
 from .stage_copy_options import StageCopyOptions
-from pulumi_snowflake import ConnectionProvider, Credentials
+from ..connection_provider import ConnectionProvider
+from ..credentials import Credentials
 
 
 class Stage(Resource):
@@ -85,7 +86,7 @@ class Stage(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
-        super().__init__(StageProvider(connection_provider), resource_name, {
+        super().__init__(StageProvider(connection_provider), resource_name, self.serialize_inputs_to_dict({
             'resource_name': resource_name,
             'database': database,
             'url': url,
@@ -97,4 +98,26 @@ class Stage(Resource):
             'name': name,
             'comment': comment,
             'schema': schema
-        }, opts)
+        }), opts)
+
+    def serialize_inputs_to_dict(self, parent_dict):
+        """
+        Pulumi serializes inputs before passing them to the provider, however this package aims to present a
+        strongly-typed object-oriented interface.  This method recursively finds values which can be represented as
+        dictionaries (such as objects with an `as_dict` method) and serializes them.
+        """
+
+        def value_to_dict_value(value):
+
+            if hasattr(value, "as_dict") and callable(value.as_dict):
+                value = value.as_dict()
+
+            if isinstance(value, dict):
+                return self.serialize_inputs_to_dict(value)
+
+            return value
+
+        return {
+            k: value_to_dict_value(parent_dict[k]) for k in parent_dict
+        }
+

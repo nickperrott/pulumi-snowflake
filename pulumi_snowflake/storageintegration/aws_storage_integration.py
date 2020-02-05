@@ -2,7 +2,8 @@ from typing import List, Optional
 
 from pulumi import Input, Output, ResourceOptions
 
-from pulumi_snowflake import ConnectionProvider, Credentials
+from ..connection_provider import ConnectionProvider
+from ..credentials import Credentials
 from .storage_integration import StorageIntegration
 from .aws_storage_integration_provider import AWSStorageIntegrationProvider
 

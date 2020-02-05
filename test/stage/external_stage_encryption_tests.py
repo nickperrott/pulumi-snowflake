@@ -1,7 +1,7 @@
 import unittest
 
 from pulumi_snowflake import NoneToken
-from pulumi_snowflake.stage.external_stage_encryption import ExternalStageEncryption
+from pulumi_snowflake.stage import ExternalStageEncryption
 
 
 class ExternalStageEncryptionTests(unittest.TestCase):

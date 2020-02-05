@@ -2,7 +2,7 @@ import unittest
 
 from pulumi_snowflake import AutoToken
 from pulumi_snowflake.provider import StringAttribute
-from pulumi_snowflake.provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
+from pulumi_snowflake.provider import ValueOrAutoAttribute
 
 
 class ValueOrAutoTests(unittest.TestCase):
@@ -16,12 +16,12 @@ class ValueOrAutoTests(unittest.TestCase):
 
     def test_when_value_is_auto_generate_sql_is_correct(self):
         attr = ValueOrAutoAttribute(StringAttribute("myfield", True))
-        sql = attr.generate_sql(AutoToken())
+        sql = attr.generate_sql(AutoToken().as_dict())
         self.assertEqual(sql, "MYFIELD = AUTO")
 
     def test_when_value_is_auto_bindings_are_correct(self):
         attr = ValueOrAutoAttribute(StringAttribute("myfield", True))
-        bindings = attr.generate_bindings(AutoToken())
+        bindings = attr.generate_bindings(AutoToken().as_dict())
         self.assertEqual(bindings, None)
 
     def test_when_value_is_str_generate_sql_is_correct(self):

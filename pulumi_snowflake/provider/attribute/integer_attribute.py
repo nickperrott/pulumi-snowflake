@@ -14,16 +14,13 @@ class IntegerAttribute(BaseAttribute):
 
     def generate_sql(self, value) -> str:
         self.validate_int(value)
-        return f"{self.sql_name} = {value}"
+        return f"{self.sql_name} = {int(value)}"
 
     def generate_bindings(self, value) -> Tuple:
         self.validate_int(value)
         return None
 
     def validate_int(self, value):
-        if not isinstance(value, int):
-            raise Exception("Argument to `IntegerAttribute` must be an integer")
-
-        valueAsString = str(value)
+        valueAsString = str(int(value))
         Validation.validate_integer(valueAsString)
 

@@ -1,4 +1,4 @@
-from pulumi_snowflake.token import Token
+from .token import Token
 
 
 class AutoToken(Token):

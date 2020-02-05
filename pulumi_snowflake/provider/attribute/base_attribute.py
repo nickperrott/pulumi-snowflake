@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
 
-from pulumi_snowflake.validation import Validation
+from ...validation import Validation
 
 
 class BaseAttribute(ABC):

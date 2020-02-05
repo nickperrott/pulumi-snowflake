@@ -1,7 +1,7 @@
 import unittest
 
 from pulumi_snowflake.provider import StringAttribute
-from pulumi_snowflake.provider.attribute.value_or_token_attribute import ValueOrTokenAttribute
+from pulumi_snowflake.provider import ValueOrTokenAttribute
 from pulumi_snowflake.token import Token
 
 
@@ -13,13 +13,15 @@ class ValueOrTokenTests(unittest.TestCase):
         self.assertEqual(attr.required, True)
 
     def test_when_value_is_token_generate_sql_is_correct(self):
-        attr = ValueOrTokenAttribute(StringAttribute("myfield", True), Token("TOKEN"))
-        sql = attr.generate_sql(Token("TOKEN"))
+        token = Token("TOKEN")
+        attr = ValueOrTokenAttribute(StringAttribute("myfield", True), token)
+        sql = attr.generate_sql(token.as_dict())
         self.assertEqual(sql, "MYFIELD = TOKEN")
 
     def test_when_value_is_token_bindings_are_correct(self):
-        attr = ValueOrTokenAttribute(StringAttribute("myfield", True), Token("TOKEN"))
-        bindings = attr.generate_bindings(Token("TOKEN"))
+        token = Token("TOKEN")
+        attr = ValueOrTokenAttribute(StringAttribute("myfield", True), token)
+        bindings = attr.generate_bindings(token.as_dict())
         self.assertEqual(bindings, None)
 
     def test_when_value_is_str_generate_sql_is_correct(self):

@@ -4,8 +4,4 @@ from .compression_values import CompressionValues
 from .connection_provider import ConnectionProvider
 from .credentials import Credentials
 from .none_token import NoneToken
-from .stage import StageCopyOptions
-from .stage import StageFileFormat
-from .stage import StageOnCopyErrorValues
-from .stage import StageMatchByColumnNameValues
-from .stage import StageFileFormat
+from .utf8_token import UTF8Token
