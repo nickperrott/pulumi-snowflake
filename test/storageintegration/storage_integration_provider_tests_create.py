@@ -17,12 +17,14 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = {self.get_standard_inputs()['type']}",
-                f"STORAGE_PROVIDER = {self.get_standard_inputs()['storage_provider']}",
+                f"TYPE = %s",
+                f"STORAGE_PROVIDER = %s",
                 "STORAGE_AWS_ROLE_ARN = %s",
                 "ENABLED = TRUE",
                 "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
             ]), (
+                self.get_standard_inputs()['type'],
+                self.get_standard_inputs()['storage_provider'],
                 self.get_standard_inputs()['storage_aws_role_arn'],
                 self.get_standard_inputs()['storage_allowed_locations'][0],
                 self.get_standard_inputs()['storage_allowed_locations'][1]
@@ -53,12 +55,14 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = {self.get_standard_inputs()['type']}",
-                f"STORAGE_PROVIDER = {self.get_standard_inputs()['storage_provider']}",
+                f"TYPE = %s",
+                f"STORAGE_PROVIDER = %s",
                 "STORAGE_AWS_ROLE_ARN = %s",
                 "ENABLED = FALSE",
                 "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
             ]), (
+                self.get_standard_inputs()['type'],
+                self.get_standard_inputs()['storage_provider'],
                 self.get_standard_inputs()['storage_aws_role_arn'],
                 self.get_standard_inputs()['storage_allowed_locations'][0],
                 self.get_standard_inputs()['storage_allowed_locations'][1]
@@ -79,12 +83,14 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = {self.get_standard_inputs()['type']}",
-                f"STORAGE_PROVIDER = {self.get_standard_inputs()['storage_provider']}",
+                f"TYPE = %s",
+                f"STORAGE_PROVIDER = %s",
                 "STORAGE_AWS_ROLE_ARN = %s",
                 "ENABLED = TRUE",
                 "STORAGE_ALLOWED_LOCATIONS = (%s)"
             ]), (
+                self.get_standard_inputs()['type'],
+                self.get_standard_inputs()['storage_provider'],
                 self.get_standard_inputs()['storage_aws_role_arn'],
                 'allowed_loc'
             ))
@@ -98,18 +104,6 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         result = provider.create(self.get_standard_inputs())
 
         self.assertEqual(result.id, self.get_standard_inputs()["name"])
-
-    def test_when_give_invalid_identifier_fields_then_error_thrown(self):
-        fields = [ 'type', 'storage_provider' ]
-
-        for field in fields:
-            mock_connection_provider = self.get_mock_connection_provider(Mock())
-            provider = AWSStorageIntegrationProvider(mock_connection_provider)
-
-            self.assertRaises(Exception, provider.create, {
-                **self.get_standard_inputs(),
-                field: 'invalid-identifier',
-            })
 
     def test_when_optional_fields_given_then_appear_in_outputs(self):
         fieldValues = {
@@ -165,13 +159,15 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             mock_cursor.execute.assert_has_calls([
                 call("\n".join([
                     f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                    f"TYPE = {self.get_standard_inputs()['type']}",
-                    f"STORAGE_PROVIDER = {self.get_standard_inputs()['storage_provider']}",
+                    f"TYPE = %s",
+                    f"STORAGE_PROVIDER = %s",
                     "STORAGE_AWS_ROLE_ARN = %s",
                     "ENABLED = TRUE",
                     "STORAGE_ALLOWED_LOCATIONS = (%s,%s)",
                     fieldSql[field]
                 ]), (
+                    self.get_standard_inputs()['type'],
+                    self.get_standard_inputs()['storage_provider'],
                     self.get_standard_inputs()['storage_aws_role_arn'],
                     *self.get_standard_inputs()['storage_allowed_locations'],
                     *fieldBindings[field]
@@ -215,19 +211,6 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             'name': None,
             'resource_name': None
         })
-
-    def test_when_required_field_missing_then_error_thrown(self):
-
-        fields = [ 'enabled', 'storage_aws_role_arn', 'storage_allowed_locations', 'type', 'storage_provider' ]
-
-        for field in fields:
-            mock_connection_provider = self.get_mock_connection_provider(Mock())
-            provider = AWSStorageIntegrationProvider(mock_connection_provider)
-
-            self.assertRaises(Exception, provider.create, {
-                **self.get_standard_inputs(),
-                field: None
-            })
 
     # HELPERS
 

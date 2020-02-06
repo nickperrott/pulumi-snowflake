@@ -81,6 +81,7 @@ class Stage(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
+
         super().__init__(StageProvider(connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,

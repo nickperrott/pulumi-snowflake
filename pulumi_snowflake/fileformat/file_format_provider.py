@@ -1,6 +1,5 @@
 from pulumi_snowflake import ConnectionProvider
-from ..provider.attribute.identifier_attribute import IdentifierAttribute
-from ..provider.attribute.string_attribute import StringAttribute
+from ..provider.attribute.key_value_attribute import KeyValueAttribute
 from ..provider.provider import Provider
 from pulumi_snowflake.validation import Validation
 
@@ -14,8 +13,8 @@ class FileFormatProvider(Provider):
 
     def __init__(self, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "FILE FORMAT", [
-            IdentifierAttribute("type", True),
-            StringAttribute("comment", False)
+            KeyValueAttribute("type"),
+            KeyValueAttribute("comment")
         ])
 
 

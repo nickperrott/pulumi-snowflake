@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, Any
 
 from ...validation import Validation
 
@@ -32,6 +32,9 @@ class BaseAttribute(ABC):
     @abstractmethod
     def generate_bindings(self, value) -> Tuple:
         pass
+
+    def generate_sql_and_bindings(self, value) -> Tuple[str,Tuple]:
+        return (self.generate_sql(value),self.generate_bindings(value))
 
     def generate_outputs(self, value):
         return value

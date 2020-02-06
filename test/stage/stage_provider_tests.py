@@ -112,8 +112,8 @@ class StageProviderTests(unittest.TestCase):
                 f"CREATE STAGE test_database.test_schema.test_stage",
                 ", ".join([
                     f"FILE_FORMAT = (FORMAT_NAME = %s",
-                    f"TYPE = AVRO",
-                    f"COMPRESSION = GZIP",
+                    f"TYPE = %s",
+                    f"COMPRESSION = %s",
                     f"RECORD_DELIMITER = %s",
                     f"FIELD_DELIMITER = %s",
                     f"FILE_EXTENSION = %s",
@@ -122,7 +122,7 @@ class StageProviderTests(unittest.TestCase):
                     f"DATE_FORMAT = %s",
                     f"TIME_FORMAT = %s",
                     f"TIMESTAMP_FORMAT = %s",
-                    f"BINARY_FORMAT = BASE64",
+                    f"BINARY_FORMAT = %s",
                     f"ESCAPE = %s",
                     f"ESCAPE_UNENCLOSED_FIELD = %s",
                     f"TRIM_SPACE = TRUE",
@@ -147,21 +147,8 @@ class StageProviderTests(unittest.TestCase):
                 ]),
                 f"COMMENT = %s"
             ]), (
-                    'test-format-name',
-                    ':',
-                    'NONE',
-                    'csv',
-                    'NONE',
-                    'hhmm',
-                    'NONE',
-                    '/',
-                    'NONE',
-                    'NONE',
-                    'N',
-                    'NULL',
-                    'NONE',
-                    'test_comment'
-                )
+                    'test-format-name', 'AVRO', 'GZIP', ':', 'NONE', 'csv', 'NONE', 'hhmm', 'NONE',
+                    'BASE64', '/', 'NONE', 'NONE', 'N', 'NULL', 'NONE', 'test_comment')
             )
         ])
 
@@ -198,13 +185,13 @@ class StageProviderTests(unittest.TestCase):
                     f"SIZE_LIMIT = 345",
                     f"PURGE = TRUE",
                     f"RETURN_FAILED_ONLY = FALSE",
-                    f"MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE",
+                    f"MATCH_BY_COLUMN_NAME = %s",
                     f"ENFORCE_LENGTH = TRUE",
                     f"TRUNCATECOLUMNS = FALSE",
                     f"FORCE = TRUE)",
                 ]),
                 f"COMMENT = %s"
-            ]), ('SKIP_FILE_45%', 'test_comment',)
+            ]), ('SKIP_FILE_45%', 'CASE_INSENSITIVE', 'test_comment',)
             )
         ])
 
@@ -240,7 +227,7 @@ class StageProviderTests(unittest.TestCase):
             call("\n".join([
                 f"CREATE STAGE test_database.test_schema.test_stage",
                 "URL = %s",
-                f"STORAGE_INTEGRATION = test_storage_integration",
+                f"STORAGE_INTEGRATION = %s",
                 ", ".join([
                     f"CREDENTIALS = (AWS_KEY_ID = %s",
                     f"AWS_SECRET_KEY = %s",
@@ -254,17 +241,11 @@ class StageProviderTests(unittest.TestCase):
                     f"KMS_KEY_ID = %s)",
                 ]),
                 f"COMMENT = %s"
-            ]), (
-                    "s3://test-url",
-                    "test_aws_key_id",
-                    "test_aws_secret_key",
-                    "test_aws_token",
-                    "test_aws_role",
-                    "test_azure_sas_token",
-                    'NONE',
-                    "test_master_key",
-                    "test_kms_key_id",
-                    "test_comment"
+            ]),
+                (
+                    's3://test-url', 'test_storage_integration', 'test_aws_key_id', 'test_aws_secret_key',
+                    'test_aws_token', 'test_aws_role', 'test_azure_sas_token', 'NONE', 'test_master_key',
+                    'test_kms_key_id', 'test_comment'
                 )
             )
         ])
