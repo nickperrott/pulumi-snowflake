@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake.fileformat import FileFormatProvider, FileFormatType
+from pulumi_snowflake.fileformat import FileFormatProvider
 
 
 class FileFormatProviderTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = {FileFormatType.CSV}"
+                f"TYPE = CSV"
             ]))
         ])
 
@@ -37,7 +37,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = {FileFormatType.CSV}"
+                f"TYPE = CSV"
             ]))
         ])
 
@@ -105,7 +105,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = {FileFormatType.CSV}"
+                f"TYPE = CSV"
             ]))
         ])
 
@@ -174,7 +174,7 @@ class FileFormatProviderTests(unittest.TestCase):
     def get_standard_inputs(self):
         return {
             'database': 'test_database_name',
-            'type': FileFormatType.CSV,
+            'type': 'CSV',
             'resource_name': 'pulumi_test_file_format',
             'name': 'test_file_format'
         }

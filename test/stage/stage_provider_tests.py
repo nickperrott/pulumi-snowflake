@@ -1,10 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake import CompressionValues, NoneToken, AutoToken, BinaryFormatValues
-from pulumi_snowflake.fileformat import FileFormatType
-from pulumi_snowflake.stage import StageProvider, StageMatchByColumnNameValues, StageOnCopyErrorValues
-from pulumi_snowflake.utf8_token import UTF8Token
+from pulumi_snowflake.stage import StageProvider
 
 
 class StageProviderTests(unittest.TestCase):
@@ -71,27 +68,27 @@ class StageProviderTests(unittest.TestCase):
         provider.create({
             "file_format": {
                 "format_name": "test-format-name",
-                "type": FileFormatType.AVRO,
-                "compression": CompressionValues.GZIP,
+                "type": "AVRO",
+                "compression": "GZIP",
                 "record_delimiter": ':',
-                "field_delimiter": NoneToken().as_dict(),
+                "field_delimiter": "NONE",
                 "file_extension": 'csv',
                 "skip_header": 100,
                 "skip_blank_lines": False,
-                "date_format": AutoToken().as_dict(),
+                "date_format": "NONE",
                 "time_format": 'hhmm',
-                "timestamp_format": AutoToken().as_dict(),
-                "binary_format": BinaryFormatValues.BASE64,
+                "timestamp_format": "NONE",
+                "binary_format": "BASE64",
                 "escape": "/",
-                "escape_unenclosed_field": NoneToken().as_dict(),
+                "escape_unenclosed_field": "NONE",
                 "trim_space": True,
-                "field_optionally_enclosed_by": NoneToken().as_dict(),
+                "field_optionally_enclosed_by": "NONE",
                 "null_if": ["N","NULL"],
                 "error_on_column_count_mismatch": False,
                 "validate_utf8": True,
                 "empty_field_as_null": False,
                 "skip_byte_order_mark": True,
-                "encoding": UTF8Token().as_dict(),
+                "encoding": "NONE",
                 "disable_snowflake_data": True,
                 "strip_null_values": False,
                 "strip_outer_element": True,
@@ -118,24 +115,24 @@ class StageProviderTests(unittest.TestCase):
                     f"TYPE = AVRO",
                     f"COMPRESSION = GZIP",
                     f"RECORD_DELIMITER = %s",
-                    f"FIELD_DELIMITER = NONE",
+                    f"FIELD_DELIMITER = %s",
                     f"FILE_EXTENSION = %s",
                     f"SKIP_HEADER = 100",
                     f"SKIP_BLANK_LINES = FALSE",
-                    f"DATE_FORMAT = AUTO",
+                    f"DATE_FORMAT = %s",
                     f"TIME_FORMAT = %s",
-                    f"TIMESTAMP_FORMAT = AUTO",
+                    f"TIMESTAMP_FORMAT = %s",
                     f"BINARY_FORMAT = BASE64",
                     f"ESCAPE = %s",
-                    f"ESCAPE_UNENCLOSED_FIELD = NONE",
+                    f"ESCAPE_UNENCLOSED_FIELD = %s",
                     f"TRIM_SPACE = TRUE",
-                    f"FIELD_OPTIONALLY_ENCLOSED_BY = NONE",
+                    f"FIELD_OPTIONALLY_ENCLOSED_BY = %s",
                     f"NULL_IF = (%s,%s)",
                     f"ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE",
                     f"VALIDATE_UTF8 = TRUE",
                     f"EMPTY_FIELD_AS_NULL = FALSE",
                     f"SKIP_BYTE_ORDER_MARK = TRUE",
-                    f"ENCODING = UTF8",
+                    f"ENCODING = %s",
                     f"DISABLE_SNOWFLAKE_DATA = TRUE",
                     f"STRIP_NULL_VALUES = FALSE",
                     f"STRIP_OUTER_ELEMENT = TRUE",
@@ -150,13 +147,20 @@ class StageProviderTests(unittest.TestCase):
                 ]),
                 f"COMMENT = %s"
             ]), (
-                    "test-format-name",
+                    'test-format-name',
                     ':',
+                    'NONE',
                     'csv',
+                    'NONE',
                     'hhmm',
-                    "/",
-                    "N", "NULL",
-                     'test_comment',
+                    'NONE',
+                    '/',
+                    'NONE',
+                    'NONE',
+                    'N',
+                    'NULL',
+                    'NONE',
+                    'test_comment'
                 )
             )
         ])
@@ -171,11 +175,11 @@ class StageProviderTests(unittest.TestCase):
         provider.create({
             "file_format": None,
             "copy_options": {
-                "on_error": StageOnCopyErrorValues.skip_file_percent(45),
+                "on_error": "SKIP_FILE_45%",
                 "size_limit": 345,
                 "purge": True,
                 "return_failed_only": False,
-                "match_by_column_name": StageMatchByColumnNameValues.CASE_INSENSITIVE,
+                "match_by_column_name": "CASE_INSENSITIVE",
                 "enforce_length": True,
                 "truncatecolumns": False,
                 "force": True,
@@ -222,7 +226,7 @@ class StageProviderTests(unittest.TestCase):
                 "azure_sas_token": "test_azure_sas_token",
             },
             "encryption": {
-                "type": NoneToken().as_dict(),
+                "type": "NONE",
                 "master_key": "test_master_key",
                 "kms_key_id": "test_kms_key_id",
             },
@@ -245,7 +249,7 @@ class StageProviderTests(unittest.TestCase):
                     f"AZURE_SAS_TOKEN = %s)",
                 ]),
                 ", ".join([
-                    f"ENCRYPTION = (TYPE = NONE",
+                    f"ENCRYPTION = (TYPE = %s",
                     f"MASTER_KEY = %s",
                     f"KMS_KEY_ID = %s)",
                 ]),
@@ -257,6 +261,7 @@ class StageProviderTests(unittest.TestCase):
                     "test_aws_token",
                     "test_aws_role",
                     "test_azure_sas_token",
+                    'NONE',
                     "test_master_key",
                     "test_kms_key_id",
                     "test_comment"

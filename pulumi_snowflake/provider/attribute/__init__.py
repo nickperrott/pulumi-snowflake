@@ -5,6 +5,3 @@ from .integer_attribute import IntegerAttribute
 from .string_attribute import StringAttribute
 from .string_list_attribute import StringListAttribute
 from .struct_attribute import StructAttribute
-from .value_or_auto_attribute import ValueOrAutoAttribute
-from .value_or_none_attribute import ValueOrNoneAttribute
-from .value_or_token_attribute import ValueOrTokenAttribute

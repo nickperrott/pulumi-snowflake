@@ -5,11 +5,7 @@ from ..provider.attribute.struct_attribute import StructAttribute
 from ..provider.attribute.boolean_attribute import BooleanAttribute
 from ..provider.attribute.string_list_attribute import StringListAttribute
 from ..provider.attribute.integer_attribute import IntegerAttribute
-from ..provider.attribute.value_or_token_attribute import ValueOrTokenAttribute
-from ..provider.attribute.value_or_none_attribute import ValueOrNoneAttribute
-from ..provider.attribute.value_or_auto_attribute import ValueOrAutoAttribute
 from ..provider.provider import Provider
-from ..utf8_token import UTF8Token
 from ..validation import Validation
 
 
@@ -30,7 +26,7 @@ class StageProvider(Provider):
                 StringAttribute("azure_sas_token"),
             ]),
             StructAttribute("encryption", False, [
-                ValueOrNoneAttribute(StringAttribute("type")),
+                StringAttribute("type"),
                 StringAttribute("master_key"),
                 StringAttribute("kms_key_id"),
             ]),
@@ -38,25 +34,25 @@ class StageProvider(Provider):
                 StringAttribute("format_name"),
                 IdentifierAttribute("type"),
                 IdentifierAttribute("compression"),
-                ValueOrNoneAttribute(StringAttribute("record_delimiter")),
-                ValueOrNoneAttribute(StringAttribute("field_delimiter")),
+                StringAttribute("record_delimiter"),
+                StringAttribute("field_delimiter"),
                 StringAttribute("file_extension"),
                 IntegerAttribute("skip_header"),
                 BooleanAttribute("skip_blank_lines"),
-                ValueOrAutoAttribute(StringAttribute("date_format")),
-                ValueOrAutoAttribute(StringAttribute("time_format")),
-                ValueOrAutoAttribute(StringAttribute("timestamp_format")),
+                StringAttribute("date_format"),
+                StringAttribute("time_format"),
+                StringAttribute("timestamp_format"),
                 IdentifierAttribute("binary_format"),
-                ValueOrNoneAttribute(StringAttribute("escape")),
-                ValueOrNoneAttribute(StringAttribute("escape_unenclosed_field")),
+                StringAttribute("escape"),
+                StringAttribute("escape_unenclosed_field"),
                 BooleanAttribute("trim_space"),
-                ValueOrNoneAttribute(StringAttribute("field_optionally_enclosed_by")),
+                StringAttribute("field_optionally_enclosed_by"),
                 StringListAttribute("null_if"),
                 BooleanAttribute("error_on_column_count_mismatch"),
                 BooleanAttribute("validate_utf8"),
                 BooleanAttribute("empty_field_as_null"),
                 BooleanAttribute("skip_byte_order_mark"),
-                ValueOrTokenAttribute(StringAttribute("encoding"), UTF8Token()),
+                StringAttribute("encoding"),
                 BooleanAttribute("disable_snowflake_data"),
                 BooleanAttribute("strip_null_values"),
                 BooleanAttribute("strip_outer_element"),

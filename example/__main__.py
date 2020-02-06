@@ -1,11 +1,8 @@
 import pulumi
 
-from pulumi_snowflake.stage import StageOnCopyErrorValues, StageMatchByColumnNameValues
-from pulumi_snowflake import CompressionValues, NoneToken, AutoToken
-from pulumi_snowflake.fileformat import FileFormat, FileFormatType
-from pulumi_snowflake.stage import Stage, StageFileFormat, StageCopyOptions
+from pulumi_snowflake.fileformat import FileFormat
+from pulumi_snowflake.stage import Stage
 from pulumi_snowflake.storageintegration import AWSStorageIntegration
-from pulumi_snowflake.utf8_token import UTF8Token
 
 
 # Enter your snowflake DB name and (optionally) Schema here
@@ -26,7 +23,7 @@ my_file_format = FileFormat("MyFileFormat",
                             name=None,
                             database=snowflake_db_name,
                             schema=snowflake_schema_name,
-                            type=FileFormatType.CSV
+                            type="CSV"
                             )
 
 pulumi.export('FileFormatType', my_file_format.type)
@@ -36,23 +33,31 @@ pulumi.export('FileFormatSchema', my_file_format.schema)
 
 my_stage = Stage("MyStage",
                  name=my_storage_integration.name.apply(lambda n: f"MyStage_{n}"),
-                 file_format=StageFileFormat(
-                     type="CSV",
-                     null_if=["NULL","n"],
-                     compression=CompressionValues.GZIP,
-                     record_delimiter=';',
-                     field_delimiter=NoneToken(),
-                     encoding=UTF8Token(),
-                     date_format=AutoToken(),
-                     skip_header=1
-                 ),
+                 file_format={
+                     "type": "CSV",
+                     "null_if": ["NULL","n"],
+                     "compression": "gzip",
+                     "record_delimiter": ';',
+                     "field_delimiter": "NONE",
+                     "encoding": "UTF8",
+                     "date_format": "AUTO",
+                     "skip_header": 1
+                 },
                  database=snowflake_db_name,
                  schema=snowflake_schema_name,
-                 copy_options=StageCopyOptions(
-                         size_limit=100,
-                         on_error=StageOnCopyErrorValues.skip_file_percent(20),
-                         match_by_column_name=StageMatchByColumnNameValues.CASE_INSENSITIVE,
-                     ),
-                 )
+                 copy_options={
+                     "size_limit":100,
+                     "on_error": "skip_file_45%",
+                     "match_by_column_name": "case_insensitive",
+                }
+            )
+
+# Boolean: check python type
+# Identifier: special function if necessary
+# integer: detect from type
+# string: detect from type
+# string list (or list in general): detect from type
+# struct: detect if it's a dict
+# auto, none etc can be strings?
 
 pulumi.export('StageName', my_stage.name)

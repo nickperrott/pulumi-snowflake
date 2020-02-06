@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from pulumi_snowflake.fileformat import FileFormatProvider, FileFormatType
+from pulumi_snowflake.fileformat import FileFormatProvider
 
 
 class FileFormatProviderTests(unittest.TestCase):
@@ -9,10 +9,10 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_type_and_database_are_unchanged_then_no_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name"
         }, {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name"
         })
 
@@ -22,10 +22,10 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_type_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name"
         }, {
-            "type": FileFormatType.JSON,
+            "type": "JSON",
             "database": "database_name"
         })
 
@@ -35,10 +35,10 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_database_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name"
         }, {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name_changed"
         })
 
@@ -48,11 +48,11 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_name_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name",
             "name": "name_old"
         }, {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name",
             "name": "name_new"
         })
@@ -63,11 +63,11 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_name_not_given_in_news_then_no_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name",
             "name": "name_old"
         }, {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name"
         })
 
@@ -77,11 +77,11 @@ class FileFormatProviderTests(unittest.TestCase):
     def test_when_schema_changed_then_needs_change(self):
         provider = FileFormatProvider(Mock())
         result = provider.diff("test_file_format", {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name",
             "schema": "schema_old"
         }, {
-            "type": FileFormatType.CSV,
+            "type": "CSV",
             "database": "database_name",
             "schema": "schema_new"
         })
