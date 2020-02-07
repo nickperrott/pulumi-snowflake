@@ -28,8 +28,25 @@ Currently this package supports a the following resources:
 * The `pulumi_snowflake.storage_integration.AWSStorageIntegration` class is a Pulumi resource for managing [storage integration objects with AWS parameters](https://docs.snowflake.net/manuals/sql-reference/sql/create-storage-integration.html).
 * The `pulumi_snowflake.stage.Stage` class is a Pulumi resource for managing [Snowflake staging areas](https://docs.snowflake.net/manuals/sql-reference/sql/create-stage.html)
 
-
 ## Development
+
+The directory structure is as follows:
+
+```
+├── example                     # An example of a Pulumi program using this package with AWS
+├── pulumi_snowflake            # The main package source
+│   ├── baseprovider            # The dynamic provider base class and related classes
+│   │   └── attribute
+│   ├── fileformat              # The File Format resource and dynamic provider
+│   ├── stage                   # The Stage resource and dynamic provider
+│   └── storageintegration      # The Storage Integration resource and dynamic provider
+└── test                        # Unit tests
+    ├── fileformat
+    ├── provider
+    │   └── attribute
+    ├── stage
+    └── storageintegration
+```
 
 ### Unit tests
 
