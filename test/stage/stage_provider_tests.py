@@ -11,7 +11,7 @@ class StageProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = StageProvider(mock_connection_provider)
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "file_format": {
                 'format_name': 'test_file_format',
@@ -37,7 +37,7 @@ class StageProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = StageProvider(mock_connection_provider)
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "temporary": True,
             "file_format": {
@@ -64,7 +64,7 @@ class StageProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = StageProvider(mock_connection_provider)
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "file_format": {
                 "format_name": "test-format-name",
@@ -158,7 +158,7 @@ class StageProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = StageProvider(mock_connection_provider)
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "file_format": None,
             "copy_options": {
@@ -200,7 +200,7 @@ class StageProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = StageProvider(mock_connection_provider)
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "file_format": None,
             "url": "s3://test-url",
@@ -259,3 +259,9 @@ class StageProviderTests(unittest.TestCase):
         mock_connection_provider = Mock()
         mock_connection_provider.get.return_value = mockConnection
         return mock_connection_provider
+
+    def get_mock_provider(self):
+        mock_provider = Mock()
+        mock_provider.database = None
+        mock_provider.schema = None
+        return mock_provider

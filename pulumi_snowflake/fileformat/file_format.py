@@ -2,8 +2,9 @@ from typing import Optional
 
 from pulumi import Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
+
+from ..provider import Provider
 from ..connection_provider import ConnectionProvider
-from ..credentials import Credentials
 from .file_format_provider import FileFormatProvider
 
 
@@ -41,10 +42,11 @@ class FileFormat(Resource):
 
     def __init__(self,
                  resource_name: str,
-                 database: Input[str],
-                 type: Input[str],
+                 database: Input[str] = None,
+                 type: Input[str] = None,
                  name: Input[str] = None,
                  schema: Input[str] = None,
+                 provider: Provider = None,
                  opts: Optional[ResourceOptions] = None):
         """
         :param str resource_name: The logical name of the resource.
@@ -55,8 +57,9 @@ class FileFormat(Resource):
         :param pulumi.Input[str] type: The name of the schema in which to create the file format.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
-        super().__init__(FileFormatProvider(connection_provider), resource_name, {
+        provider = provider if provider else Provider()
+        connection_provider = ConnectionProvider(provider=provider)
+        super().__init__(FileFormatProvider(provider, connection_provider), resource_name, {
             'database': database,
             'resource_name': resource_name,
             'name': name,

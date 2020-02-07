@@ -1,38 +1,36 @@
 import pulumi
 
+from pulumi_snowflake import Provider
 from pulumi_snowflake.fileformat import FileFormat
 from pulumi_snowflake.stage import Stage
 from pulumi_snowflake.storageintegration import AWSStorageIntegration
 
 
 # Enter your snowflake DB name and (optionally) Schema here
-snowflake_db_name = "FIRSTTEST"
-snowflake_schema_name = "FIRSTSCHEMA"
+my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
 
 my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
-                                               enabled=True,
-                                               storage_aws_role_arn='myarn',
-                                               storage_allowed_locations=['s3://allowloc']
-                                               )
+    enabled=True,
+    storage_aws_role_arn='myarn',
+    storage_allowed_locations=['s3://allowloc'],
+    provider=my_provider
+)
 
-pulumi.export('StorageIntegrationName', my_storage_integration.name)
-pulumi.export('StorageIntegrationType', my_storage_integration.type)
-pulumi.export('StorageIntegrationArn', my_storage_integration.storage_aws_role_arn)
+
+# The resource below does not provide a database and schema, so it uses the provider values
 
 my_file_format = FileFormat("MyFileFormat",
-                            name=None,
-                            database=snowflake_db_name,
-                            schema=snowflake_schema_name,
-                            type="CSV"
-                            )
+    name=None,
+    type="CSV",
+    provider=my_provider
+)
 
-pulumi.export('FileFormatType', my_file_format.type)
-pulumi.export('FileFormatName', my_file_format.name)
-pulumi.export('FileFormatDatabase', my_file_format.database)
-pulumi.export('FileFormatSchema', my_file_format.schema)
+# The resource below provides an explicit database and schema which overrides the provider values
 
 my_stage = Stage("MyStage",
                  name=my_storage_integration.name.apply(lambda n: f"MyStage_{n}"),
+                 database="SECONDDATABASE",
+                 schema="SECONDSCHEMA",
                  file_format={
                      "type": "CSV",
                      "null_if": ["NULL","n"],
@@ -43,21 +41,22 @@ my_stage = Stage("MyStage",
                      "date_format": "AUTO",
                      "skip_header": 1
                  },
-                 database=snowflake_db_name,
-                 schema=snowflake_schema_name,
                  copy_options={
                      "size_limit":100,
                      "on_error": "skip_file_45%",
                      "match_by_column_name": "case_insensitive",
-                }
+                },
+                provider=my_provider
             )
 
-# Boolean: check python type
-# Identifier: special function if necessary
-# integer: detect from type
-# string: detect from type
-# string list (or list in general): detect from type
-# struct: detect if it's a dict
-# auto, none etc can be strings?
+
+pulumi.export('StorageIntegrationName', my_storage_integration.name)
+pulumi.export('StorageIntegrationType', my_storage_integration.type)
+pulumi.export('StorageIntegrationArn', my_storage_integration.storage_aws_role_arn)
+
+pulumi.export('FileFormatType', my_file_format.type)
+pulumi.export('FileFormatName', my_file_format.name)
+pulumi.export('FileFormatDatabase', my_file_format.database)
+pulumi.export('FileFormatSchema', my_file_format.schema)
 
 pulumi.export('StageName', my_stage.name)

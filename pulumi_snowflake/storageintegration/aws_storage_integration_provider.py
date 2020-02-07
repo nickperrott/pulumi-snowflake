@@ -1,15 +1,16 @@
-from pulumi_snowflake import ConnectionProvider
-from ..provider.attribute.key_value_attribute import KeyValueAttribute
-from ..provider.provider import Provider
+from ..connection_provider import ConnectionProvider
+from ..provider import Provider
+from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
+from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
-class AWSStorageIntegrationProvider(Provider):
+class AWSStorageIntegrationProvider(BaseDynamicProvider):
     """
     Dynamic provider for Snowflake Storage Integration resources.
     """
 
-    def __init__(self, connection_provider: ConnectionProvider):
-        super().__init__(connection_provider, "STORAGE INTEGRATION", [
+    def __init__(self, provider_params: Provider, connection_provider: ConnectionProvider):
+        super().__init__(provider_params, connection_provider, "STORAGE INTEGRATION", [
             KeyValueAttribute("type"),
             KeyValueAttribute("storage_provider"),
             KeyValueAttribute("storage_aws_role_arn"),

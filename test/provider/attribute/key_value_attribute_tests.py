@@ -1,6 +1,6 @@
 import unittest
 
-from pulumi_snowflake.provider.attribute.key_value_attribute import KeyValueAttribute
+from pulumi_snowflake.baseprovider.attribute import KeyValueAttribute
 
 
 class KeyValueAttributeTests(unittest.TestCase):

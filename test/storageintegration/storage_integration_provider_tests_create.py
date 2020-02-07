@@ -11,7 +11,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create(self.get_standard_inputs())
 
         mock_cursor.execute.assert_has_calls([
@@ -35,18 +35,21 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             **self.get_standard_inputs()
         })
 
-        self.assertDictEqual(result.outs, self.get_standard_outputs())
+        self.assertDictEqual(result.outs, {
+            **self.get_standard_outputs(),
+            "full_name": "test_name"
+        })
 
     def test_when_call_create_with_enabled_false_then_sql_is_generated(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             **self.get_standard_inputs(),
             'enabled': False
@@ -74,7 +77,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             **self.get_standard_inputs(),
             'storage_allowed_locations': [ 'allowed_loc' ]
@@ -100,7 +103,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create(self.get_standard_inputs())
 
         self.assertEqual(result.id, self.get_standard_inputs()["name"])
@@ -114,7 +117,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
         for field in fieldValues.keys():
             mock_connection_provider = self.get_mock_connection_provider(Mock())
-            provider = AWSStorageIntegrationProvider(mock_connection_provider)
+            provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
             result = provider.create({
                 **self.get_standard_inputs(),
@@ -122,6 +125,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             })
             self.assertDictEqual(result.outs, {
                 **self.get_standard_outputs(),
+                "full_name": "test_name",
                 field: fieldValues[field]
             })
 
@@ -147,7 +151,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         for field in fieldValues.keys():
             mock_cursor = Mock()
             mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
-            provider = AWSStorageIntegrationProvider(mock_connection_provider)
+            provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
             inputs = {
                 **self.get_standard_inputs(),
@@ -179,7 +183,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
         resourceName = 'test_resource_name'
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             **self.get_standard_inputs(),
             'resource_name': resourceName,
@@ -193,7 +197,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_connection_provider = self.get_mock_connection_provider(Mock())
 
         resourceName = 'test_resource_name'
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
             **self.get_standard_inputs(),
@@ -204,7 +208,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
     def test_when_neither_resource_name_nor_name_given_then_error_thrown(self):
         mock_connection_provider = self.get_mock_connection_provider(Mock())
-        provider = AWSStorageIntegrationProvider(mock_connection_provider)
+        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
             **self.get_standard_inputs(),
@@ -237,3 +241,11 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             'storage_blocked_locations': None,
             'comment': None
         }
+
+    # HELPERS
+
+    def get_mock_provider(self):
+        mock_provider = Mock()
+        mock_provider.database = None
+        mock_provider.schema = None
+        return mock_provider
