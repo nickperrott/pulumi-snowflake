@@ -22,6 +22,92 @@ class FileFormatProviderTests(unittest.TestCase):
             ]), ("CSV",))
         ])
 
+
+    def test_when_call_create_with_options_then_sql_is_generated(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            **self.get_standard_inputs(),
+            "compression": "GZIP",
+            "record_delimiter": "g",
+            "field_delimiter": "h",
+            "file_extension": "gfd",
+            "skip_header": 123,
+            "skip_blank_lines": True,
+            "date_format": "dd",
+            "time_format": "mm",
+            "timestamp_format": "ts",
+            "binary_format": "HEX",
+            "escape": "esc",
+            "escape_unenclosed_field": "esuf",
+            "trim_space": False,
+            "field_optionally_enclosed_by": "f",
+            "null_if": ["nf","nu"],
+            "error_on_column_count_mismatch": True,
+            "replace_invalid_characters": False,
+            "validate_utf8": True,
+            "empty_field_as_null": False,
+            "skip_byte_order_mark": True,
+            "encoding": "UTF8",
+            "enable_octal": True,
+            "allow_duplicate": False,
+            "strip_outer_array": True,
+            "strip_null_values": False,
+            "ignore_utf8_errors": True,
+            "skip_byte_order_mark": False,
+            "binary_as_text": True,
+            "snappy_compression": False,
+            "preserve_space": True,
+            "strip_outer_element": False,
+            "disable_snowflake_data": True,
+            "disable_auto_convert": False,
+        })
+
+        fullName = f"{self.get_standard_inputs()['database']}..{self.get_standard_inputs()['name']}"
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE FILE FORMAT {fullName}",
+                f"TYPE = %s",
+                f"COMPRESSION = %s",
+                f"RECORD_DELIMITER = %s",
+                f"FIELD_DELIMITER = %s",
+                f"FILE_EXTENSION = %s",
+                f"SKIP_HEADER = 123",
+                f"SKIP_BLANK_LINES = TRUE",
+                f"DATE_FORMAT = %s",
+                f"TIME_FORMAT = %s",
+                f"TIMESTAMP_FORMAT = %s",
+                f"BINARY_FORMAT = %s",
+                f"ESCAPE = %s",
+                f"ESCAPE_UNENCLOSED_FIELD = %s",
+                f"TRIM_SPACE = FALSE",
+                f"FIELD_OPTIONALLY_ENCLOSED_BY = %s",
+                f"NULL_IF = (%s,%s)",
+                f"ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE",
+                f"REPLACE_INVALID_CHARACTERS = FALSE",
+                f"VALIDATE_UTF8 = TRUE",
+                f"EMPTY_FIELD_AS_NULL = FALSE",
+                f"SKIP_BYTE_ORDER_MARK = TRUE",
+                f"ENCODING = %s",
+                f"ENABLE_OCTAL = TRUE",
+                f"ALLOW_DUPLICATE = FALSE",
+                f"STRIP_OUTER_ARRAY = TRUE",
+                f"STRIP_NULL_VALUES = FALSE",
+                f"IGNORE_UTF8_ERRORS = TRUE",
+                f"SKIP_BYTE_ORDER_MARK = FALSE",
+                f"BINARY_AS_TEXT = TRUE",
+                f"SNAPPY_COMPRESSION = FALSE",
+                f"PRESERVE_SPACE = TRUE",
+                f"STRIP_OUTER_ELEMENT = FALSE",
+                f"DISABLE_SNOWFLAKE_DATA = TRUE",
+                f"DISABLE_AUTO_CONVERT = FALSE",
+            ]), ("CSV","GZIP","g","h","gfd","dd","mm","ts","HEX","esc","esuf","f","nf","nu","UTF8"))
+        ])
+
+
     def test_when_call_create_with_schema_then_executes_in_schema(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
