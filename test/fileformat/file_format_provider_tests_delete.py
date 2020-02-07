@@ -12,7 +12,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mock_connection_provider)
+        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test_file_format", {
             "database": "database_name"
         })
@@ -25,7 +25,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mock_connection_provider)
+        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test_file_format", {
             "database": "database_name",
             "schema": None
@@ -39,7 +39,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mock_connection_provider)
+        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test_file_format", {
             "database": "database_name",
             "schema": "schema_name"
@@ -53,7 +53,7 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = FileFormatProvider(mock_connection_provider)
+        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.delete, "invalid-id", {
             "database": "database_name"
@@ -67,3 +67,9 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_connection_provider = Mock()
         mock_connection_provider.get.return_value = mock_connection
         return mock_connection_provider
+
+    def get_mock_provider(self):
+        mock_provider = Mock()
+        mock_provider.database = None
+        mock_provider.schema = None
+        return mock_provider

@@ -1,9 +1,11 @@
 config:
   aws:region: eu-west-1
   pulumi-snowflake-example:snowflakeAccountName: zr85610.eu-west-1
+  pulumi-snowflake-example:snowflakeDatabase: FIRSTTEST
   pulumi-snowflake-example:snowflakePassword:
     secure: AAABAMNv+BWJ1LEvYxp2Q83DG3bDIEzoVwP87e8Jzedet4Y4T1swXe2qvrKdzLnZE4oxj6Fmb9mw
   pulumi-snowflake-example:snowflakeRole:
     secure: AAABAFzYG0NgnrBgnhAjxIcPrQDEWjhzGyIybj2ILMqbwUCsjfB74oSIHlY=
+  pulumi-snowflake-example:snowflakeSchema: FIRSTSCHEMA
   pulumi-snowflake-example:snowflakeUsername:
     secure: AAABAO98NTe/dA+/J4NLXeyHIuJCsU4tY5zoQd6kzl/AjbERnlDqhX9u

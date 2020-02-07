@@ -4,10 +4,12 @@ import re
 class Validation:
 
     @staticmethod
-    def validate_identifier(id: str):
+    def validate_identifier(id: str, allow_none: bool = True):
         """ Validates a Snowflake identifier.  See
             https://docs.snowflake.net/manuals/sql-reference/identifiers-syntax.html
         """
+        if allow_none and id is None: return id
+
         pattern = re.compile("^([A-Z,a-z,0-9$_%])+$")
 
         if not pattern.match(id):

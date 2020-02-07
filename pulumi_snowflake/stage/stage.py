@@ -3,8 +3,8 @@ from typing import Optional
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 from .stage_provider import StageProvider
+from ..provider import Provider
 from ..connection_provider import ConnectionProvider
-from ..credentials import Credentials
 
 
 class Stage(Resource):
@@ -53,7 +53,8 @@ class Stage(Resource):
 
     def __init__(self,
                  resource_name: str,
-                 database: Input[str],
+                 database: Input[str] = None,
+                 schema: Input[str] = None,
                  url: Input[Optional[str]] = None,
                  storage_integration: Input[Optional[str]] = None,
                  credentials: Optional[dict] = None,
@@ -61,8 +62,8 @@ class Stage(Resource):
                  file_format: Optional[dict] = None,
                  copy_options: Optional[dict] = None,
                  name: Input[Optional[str]] = None,
-                 schema: Input[str] = None,
                  comment: Input[Optional[str]] = None,
+                 provider: Provider = None,
                  opts: Optional[ResourceOptions] = None):
         """
         :param str resource_name: The logical name of the resource.
@@ -80,9 +81,9 @@ class Stage(Resource):
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
-
-        super().__init__(StageProvider(connection_provider), resource_name, {
+        provider = provider if provider else Provider()
+        connection_provider = ConnectionProvider(provider=provider)
+        super().__init__(StageProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
             'url': url,

@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from pulumi_snowflake.provider.attribute.base_attribute import BaseAttribute
+from pulumi_snowflake.baseprovider.attribute.base_attribute import BaseAttribute
 
 
 class KeyValueAttribute(BaseAttribute):

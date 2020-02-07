@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from pulumi import Input, Output, ResourceOptions
 
+from ..provider import Provider
 from ..connection_provider import ConnectionProvider
-from ..credentials import Credentials
 from .storage_integration import StorageIntegration
 from .aws_storage_integration_provider import AWSStorageIntegrationProvider
 
@@ -35,6 +35,7 @@ class AWSStorageIntegration(StorageIntegration):
                  storage_provider: Input[str] = DEFAULT_STORAGE_PROVIDER,
                  storage_blocked_locations: Input[Optional[List[str]]] = None,
                  comment: Input[Optional[str]] = None,
+                 provider: Provider = None,
                  opts: Optional[ResourceOptions] = None):
         """
         :param str resource_name: The logical name of the resource.
@@ -50,8 +51,9 @@ class AWSStorageIntegration(StorageIntegration):
         :param pulumi.Input[str] comment: Comment string for the integration.
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
-        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
-        super().__init__(AWSStorageIntegrationProvider(connection_provider), resource_name, {
+        provider = provider if provider else Provider()
+        connection_provider = ConnectionProvider(provider=provider)
+        super().__init__(AWSStorageIntegrationProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,
             'enabled': enabled,
