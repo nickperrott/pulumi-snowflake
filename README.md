@@ -22,7 +22,7 @@ pulumi config set --secret snowflakeRole [snowflake role]
 
 ## Resources
 
-Currently this package supports a the following resources:
+Currently this package supports the following resources:
 
 * The `pulumi_snowflake.fileformat.FileFormat` class is a Pulumi resource for managing [Snowflake file format objects](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).
 * The `pulumi_snowflake.storage_integration.AWSStorageIntegration` class is a Pulumi resource for managing [storage integration objects with AWS parameters](https://docs.snowflake.net/manuals/sql-reference/sql/create-storage-integration.html).
@@ -30,6 +30,7 @@ Currently this package supports a the following resources:
 * The `pulumi_snowflake.database.Database` class is a Pulumi resource for managing [Snowflake databases](https://docs.snowflake.net/manuals/sql-reference/sql/create-database.html)
 * The `pulumi_snowflake.schema.Schema` class is a Pulumi resource for managing [Snowflake schemas](https://docs.snowflake.net/manuals/sql-reference/sql/create-schema.html)
 * The `pulumi_snowflake.warehouse.Warehouse` class is a Pulumi resource for managing [Snowflake warehouses](https://docs.snowflake.net/manuals/sql-reference/sql/create-warehouse.html)
+* The `pulumi_snowflake.pipe.Pipe` class is a Pulumi resource for managing [Snowflake pipes](https://docs.snowflake.net/manuals/sql-reference/sql/create-pipe.html)
 
 ## Development
 
@@ -42,6 +43,7 @@ The directory structure is as follows:
 │   │   └── attribute
 │   ├── database                # The Database resource and dynamic provider
 │   ├── fileformat              # The File Format resource and dynamic provider
+│   ├── pipe                    # The Pipe resource and dynamic provider
 │   ├── schema                  # The Schema resource and dynamic provider
 │   ├── stage                   # The Stage resource and dynamic provider
 │   ├── storageintegration      # The Storage Integration resource and dynamic provider
