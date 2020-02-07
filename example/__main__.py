@@ -3,6 +3,7 @@ import pulumi
 from pulumi_snowflake import Provider
 from pulumi_snowflake.database import Database
 from pulumi_snowflake.fileformat import FileFormat
+from pulumi_snowflake.schema import Schema
 from pulumi_snowflake.stage import Stage
 from pulumi_snowflake.storageintegration import AWSStorageIntegration
 
@@ -29,7 +30,6 @@ my_file_format = FileFormat("MyFileFormat",
 # The resource below provides an explicit database and schema which overrides the provider values
 
 my_stage = Stage("MyStage",
-                 name=my_storage_integration.name.apply(lambda n: f"MyStage_{n}"),
                  database="SECONDDATABASE",
                  schema="SECONDSCHEMA",
                  file_format={
@@ -57,6 +57,13 @@ my_database = Database("MyDatabase",
                        data_retention_time_in_days=1
                        )
 
+my_schema = Schema("MySchema",
+                   database=my_database.name,
+                   comment="A test schema",
+                   transient=True,
+                   data_retention_time_in_days=1
+                   )
+
 pulumi.export('StorageIntegrationName', my_storage_integration.name)
 pulumi.export('StorageIntegrationType', my_storage_integration.type)
 pulumi.export('StorageIntegrationArn', my_storage_integration.storage_aws_role_arn)
@@ -71,3 +78,5 @@ pulumi.export('StageName', my_stage.name)
 pulumi.export('DatabaseName', my_database.name)
 pulumi.export('DatabaseTransient', my_database.transient)
 pulumi.export('DatabaseShare', my_database.share)
+
+pulumi.export('SchemaName', my_schema.name)
