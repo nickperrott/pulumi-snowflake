@@ -27,6 +27,8 @@ Currently this package supports a the following resources:
 * The `pulumi_snowflake.fileformat.FileFormat` class is a Pulumi resource for managing [Snowflake file format objects](https://docs.snowflake.net/manuals/sql-reference/sql/create-file-format.html).
 * The `pulumi_snowflake.storage_integration.AWSStorageIntegration` class is a Pulumi resource for managing [storage integration objects with AWS parameters](https://docs.snowflake.net/manuals/sql-reference/sql/create-storage-integration.html).
 * The `pulumi_snowflake.stage.Stage` class is a Pulumi resource for managing [Snowflake staging areas](https://docs.snowflake.net/manuals/sql-reference/sql/create-stage.html)
+* The `pulumi_snowflake.database.Database` class is a Pulumi resource for managing [Snowflake databases](https://docs.snowflake.net/manuals/sql-reference/sql/create-database.html)
+
 
 ## Development
 
@@ -58,11 +60,11 @@ python setup.py test
 
 ### Generic object provider framework
 
-The dynamic providers for each object type are build on top of some generic classes which make it straightforward to support new object types in the future.  The `Provider` class handles the `create`, `diff` and `delete` methods based on a few parameters which define the Snowflake object.  These objects take a Snowflake connection, the object name, and a list of attributes in their constructor.  For example, the file format object provider is defined like so:
+The dynamic providers for each object type are build on top of some generic classes which make it straightforward to support new object types in the future.  The `BaseDynamicProvider` class handles the `create`, `diff` and `delete` methods based on a few parameters which define the Snowflake object.  These objects take a `Provider` parameters object, a Snowflake connection, the object name, and a list of attributes in their constructor.  For example, the file format object provider is defined like so:
 
 ```python
 class FileFormatProvider(Provider):
-    def __init__(self, connection_provider: ConnectionProvider):
+    def __init__(self, provider: Provider, connection_provider: ConnectionProvider):
         super().__init__(connection_provider, "FILE FORMAT", [
             KeyValueAttribute("type"),
             KeyValueAttribute("comment")

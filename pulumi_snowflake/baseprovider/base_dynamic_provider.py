@@ -32,7 +32,7 @@ class BaseDynamicProvider(ResourceProvider):
         self.sql_name = sql_name
         self.attributes = attributes
         self.create_params = create_params
-        Validation.validate_object_name(sql_name)
+        Validation.validate_object_type(sql_name)
 
     def create(self, inputs):
 

@@ -3,7 +3,8 @@ from typing import Optional
 from pulumi import Output, Input, ResourceOptions
 from pulumi.dynamic import Resource
 
-from pulumi_snowflake import ConnectionProvider, Credentials
+from ..provider import Provider
+from ..connection_provider import ConnectionProvider
 from .database_provider import DatabaseProvider
 
 
@@ -23,7 +24,7 @@ class Database(Resource):
     Specifies a database as transient.
     """
 
-    data_retention_in_days: Output[Optional[int]]
+    data_retention_time_in_days: Output[Optional[int]]
     """
     Specifies the number of days for which Time Travel actions (CLONE and UNDROP) can be performed on the database.
     """
@@ -44,13 +45,18 @@ class Database(Resource):
                  name: Input[Optional[str]] = None,
                  comment: Input[Optional[str]] = None,
                  transient: Input[Optional[bool]] = None,
+                 data_retention_time_in_days: Input[Optional[int]] = None,
                  share: Input[Optional[str]] = None,
+                 provider: Provider = None,
                  opts: Optional[ResourceOptions] = None):
-        connection_provider = ConnectionProvider(credentials=Credentials.create_from_config())
-        super().__init__(DatabaseProvider(connection_provider), resource_name, {
+
+        provider = provider if provider else Provider()
+        connection_provider = ConnectionProvider(provider=provider)
+        super().__init__(DatabaseProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,
             'share': share,
             'transient': transient,
+            'data_retention_time_in_days': data_retention_time_in_days,
             'comment': comment
         }, opts)
