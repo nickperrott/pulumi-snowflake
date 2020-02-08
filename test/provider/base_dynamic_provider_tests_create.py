@@ -341,6 +341,37 @@ class BaseDynamicProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def test_when_name_has_special_chars_then_identifier_is_enquoted(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider.create({
+            "database": "test~db",
+            "schema": "test_schema",
+            "name": "test-name",
+            "resource_name": "test_resource_name"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f'CREATE TESTOBJECT "test~db".test_schema."test-name"'
+            ]))
+        ])
+
+
+    def test_when_name_has_invalid_chars_then_raises_exception(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+
+        self.assertRaises(Exception, provider.create, {
+            "database": "test~db",
+            "schema": "test_schema",
+            "name": 'test"name',
+            "resource_name": "test_resource_name"
+        })
 
     # HELPERS
 

@@ -17,7 +17,7 @@ class BaseAttribute(ABC):
     """
 
     def __init__(self, name: str, required: bool = False):
-        Validation.validate_identifier(name)
+        Validation.validate_field_name(name)
         self.name = name
         self.sql_name = name.upper()
         self.required = required

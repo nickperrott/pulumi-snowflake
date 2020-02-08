@@ -23,11 +23,11 @@ class SchemaProvider(BaseDynamicProvider):
         Schemas are unique since they are the only object scoped to databases.  Their fully-qualified is therefore
         different.
         """
-        Validation.validate_identifier(name)
+        name = Validation.enquote_identifier(name)
 
         if inputs.get("database"):
             database = inputs["database"]
-            Validation.validate_identifier(database)
+            database = Validation.enquote_identifier(database)
             return f"{database}.{name}"
         else:
             return name
