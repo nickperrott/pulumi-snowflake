@@ -32,6 +32,15 @@ Currently this package supports the following resources:
 * The `pulumi_snowflake.warehouse.Warehouse` class is a Pulumi resource for managing [Snowflake warehouses](https://docs.snowflake.net/manuals/sql-reference/sql/create-warehouse.html)
 * The `pulumi_snowflake.pipe.Pipe` class is a Pulumi resource for managing [Snowflake pipes](https://docs.snowflake.net/manuals/sql-reference/sql/create-pipe.html)
 
+### Resource naming
+
+By default, resource names in Snowflake are case-insensitive.  However, [if an identifier uses any special characters,
+it must be enquoted](https://docs.snowflake.net/manuals/sql-reference/identifiers-syntax.html),
+which makes it case-sensitive.  `pulumi-snowflake` will automatically enquote these
+identifiers for you, but be aware that this will make them case-sensitive - for example, a resource with the name
+`FooBar` can be referred to with any case, but an identifier with the name `Foo-Bar` (which contains a special character)
+_must_ be referred to with the same case.
+
 ## Development
 
 The directory structure is as follows:
