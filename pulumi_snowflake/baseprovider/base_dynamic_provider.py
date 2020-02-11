@@ -3,7 +3,7 @@ from typing import List
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
 from .. import Provider
-from ..connection_provider import ConnectionProvider
+from ..connection_provider import Client
 from ..validation import Validation
 from ..random_id import RandomId
 from .attribute import BaseAttribute
@@ -23,7 +23,7 @@ class BaseDynamicProvider(ResourceProvider):
 
     def __init__(self,
                  provider: Provider,
-                 connection_provider: ConnectionProvider,
+                 connection_provider: Client,
                  sql_name: str,
                  attributes: List[BaseAttribute],
                  create_params: List[str] = None):
