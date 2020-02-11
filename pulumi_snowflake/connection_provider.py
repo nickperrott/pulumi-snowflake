@@ -3,7 +3,7 @@ import snowflake.connector
 from .provider import Provider
 
 
-class ConnectionProvider:
+class Client:
     """
     Returns a connection to a Snowflake database.
     """

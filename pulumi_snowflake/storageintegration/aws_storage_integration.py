@@ -3,7 +3,7 @@ from typing import List, Optional
 from pulumi import Input, Output, ResourceOptions
 
 from ..provider import Provider
-from ..connection_provider import ConnectionProvider
+from ..connection_provider import Client
 from .storage_integration import StorageIntegration
 from .aws_storage_integration_provider import AWSStorageIntegrationProvider
 
@@ -52,7 +52,7 @@ class AWSStorageIntegration(StorageIntegration):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         provider = provider if provider else Provider()
-        connection_provider = ConnectionProvider(provider=provider)
+        connection_provider = Client(provider=provider)
         super().__init__(AWSStorageIntegrationProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,
