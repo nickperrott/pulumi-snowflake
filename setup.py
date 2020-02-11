@@ -17,7 +17,7 @@ setuptools.setup(
         'pulumi>=1.0.0',
         'snowflake-connector-python>=2.1.3'
     ],
-    test_requires=[
+    tests_require=[
         'pulumi>=1.0.0',
         'snowflake-connector-python>=2.1.3'
     ],

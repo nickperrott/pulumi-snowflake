@@ -1,99 +1,19 @@
-from pulumi.dynamic import CreateResult, DiffResult, ResourceProvider
-from pulumi_snowflake.random_id import RandomId
-from pulumi_snowflake import SnowflakeConnectionProvider
+from ..connection_provider import ConnectionProvider
+from ..provider import Provider
+from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
+from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 from pulumi_snowflake.validation import Validation
 
 
-class FileFormatProvider(ResourceProvider):
+class FileFormatProvider(BaseDynamicProvider):
     """
-    Dynamic provider for Snowflake FileFormat resources
+    Dynamic provider for Snowflake FileFormat resources.
     """
 
-    connection_provider: SnowflakeConnectionProvider
+    connection_provider: ConnectionProvider
 
-    def __init__(self, connection_provider: SnowflakeConnectionProvider):
-        super().__init__()
-        self.connection_provider = connection_provider
-
-    def create(self, inputs):
-        connection = self.connection_provider.get()
-        cursor = connection.cursor()
-
-        # Snowflake's input binding only works for column values, not identifiers,
-        # so we have to validate them manually and put straight into the SQL
-        validated_database = Validation.validate_identifier(inputs["database"])
-        validated_type = Validation.validate_identifier(inputs["type"])
-        validated_name = self._get_validated_name(inputs)
-        validated_schema = self._get_validated_schema_or_none(inputs)
-        qualified_name = self._get_qualified_object_name(validated_database, validated_name, validated_schema)
-
-        try:
-            cursor.execute('\n'.join([
-                f"CREATE FILE FORMAT {qualified_name}",
-                f"TYPE = {validated_type}"
-            ]))
-        finally:
-            cursor.close()
-
-        connection.close()
-
-        return CreateResult(id_=validated_name, outs={
-            "type": validated_type,
-            "name": validated_name,
-            "database": validated_database,
-            "schema": validated_schema
-        })
-
-    def delete(self, id, props):
-        connection = self.connection_provider.get()
-        cursor = connection.cursor()
-
-        validated_database = Validation.validate_identifier(props["database"])
-        validated_id = Validation.validate_identifier(id)
-        validated_schema = self._get_validated_schema_or_none(props)
-        qualified_name = self._get_qualified_object_name(validated_database, validated_id, validated_schema)
-
-        try:
-            cursor.execute(f"DROP FILE FORMAT {qualified_name}")
-        finally:
-            cursor.close()
-
-        connection.close()
-
-    def diff(self, id, olds, news):
-        fields = ["type", "database", "schema"]
-        changed_fields = []
-
-        for field in fields:
-            if olds.get(field) != news.get(field):
-                changed_fields.append(field)
-
-        if (news.get("name") is not None and olds.get("name") != news.get("name")):
-            changed_fields.append("name")
-        
-        return DiffResult(
-            changes=len(changed_fields) > 0,
-            replaces=changed_fields
-        )
-
-    def _get_validated_name(self, inputs):
-        name = inputs.get("name")
-
-        if name is None:
-            name = f'{inputs["resource_name"]}_{RandomId.generate(7)}'
-
-        return Validation.validate_identifier(name)
-
-    def _get_validated_schema_or_none(self, inputs):
-        schema = inputs.get("schema")
-
-        if schema is not None:
-            return Validation.validate_identifier(schema)
-
-        return None
-
-    def _get_qualified_object_name(self, validated_database, validated_name, validated_schema):
-        qualifiedName = f"{validated_database}.{validated_schema}.{validated_name}" \
-            if validated_schema is not None else \
-            f"{validated_database}..{validated_name}"
-        return qualifiedName
+    def __init__(self, provider_params: Provider, connection_provider: ConnectionProvider):
+        super().__init__(provider_params, connection_provider, "FILE FORMAT", [
+            KeyValueAttribute("type"),
+            KeyValueAttribute("comment")
+        ])

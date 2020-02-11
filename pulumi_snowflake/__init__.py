@@ -1,6 +1,2 @@
-from .snowflake_connection_provider import SnowflakeConnectionProvider
-
-__all__ = [
-    'fileformat',
-    "SnowflakeConnectionProvider"
-]
+from .connection_provider import ConnectionProvider
+from .provider import Provider

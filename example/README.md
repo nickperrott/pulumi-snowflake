@@ -16,10 +16,13 @@ pip install -e ..
 * Set your Snowflake credentials:
 
 ```
-pulumi config set snowflakeAccountName [your Snowflake account name]
-pulumi config set --secret snowflakeUsername [your Snowflake username]
+pulumi config set snowflakeAccountName [snowflake account name]
+pulumi config set --secret snowflakeUsername [snowflake username]
 pulumi config set --secret snowflakePassword [snowflake password]
+pulumi config set --secret snowflakeRole [desired role]
 ```
+
+> Note that `snowflakeRole` is optional, however your role must have adequate privilages to create storage integrations to run this example.  By default, the `SYSADMIN` role does not have these privilages, but `ACCOUNTADMIN` does.
 
 * Set your Snowflake table and schema name in `__main__.py`.
 * Deploy the stack:
