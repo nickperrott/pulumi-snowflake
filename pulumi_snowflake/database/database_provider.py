@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from pulumi_snowflake import ConnectionProvider
+from pulumi_snowflake import Client
 
 from ..baseprovider import BaseDynamicProvider, KeyValueAttribute, BaseAttribute
 from ..provider import Provider
@@ -12,7 +12,7 @@ class DatabaseProvider(BaseDynamicProvider):
     Dynamic provider for Snowflake Database resources.
     """
 
-    def __init__(self, provider_params: Provider, connection_provider: ConnectionProvider):
+    def __init__(self, provider_params: Provider, connection_provider: Client):
         super().__init__(provider_params, connection_provider, "DATABASE", [
             FromShareAttribute("share"),
             KeyValueAttribute("data_retention_time_in_days"),
