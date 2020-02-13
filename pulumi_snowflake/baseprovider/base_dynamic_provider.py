@@ -42,9 +42,9 @@ class BaseDynamicProvider(ResourceProvider):
         attributes_with_values = list(filter(lambda a: inputs.get(a.name) is not None, self.attributes))
 
         # Perform SQL command to create object
-        sql_statements = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs)
+        sql_statement = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs)
         sql_bindings = self._generate_sql_create_bindings(attributes_with_values, inputs)
-        self._execute_sql(sql_statements, sql_bindings)
+        self._execute_sql(sql_statement, sql_bindings)
 
         # Generate provisional outputs from attributes.  Provisional because the call to generate_outputs below allows
         # subclasses to modify them if necessary.
@@ -85,7 +85,7 @@ class BaseDynamicProvider(ResourceProvider):
     def delete(self, id, props):
         validated_name = Validation.validate_identifier(id)
         full_name = self._get_full_object_name(props, validated_name)
-        self._execute_sql([f"DROP {self.sql_name} {full_name}"], None)
+        self._execute_sql(f"DROP {self.sql_name} {full_name}", None)
 
 
     def _check_required_attributes(self, inputs):
@@ -210,7 +210,7 @@ class BaseDynamicProvider(ResourceProvider):
             *list(map(lambda a: a.generate_sql(inputs.get(a.name)), attributesWithValues))
         ]
 
-        return statements
+        return '\n'.join(statements)
 
     def _generate_sql_create_bindings(self, attributesWithValues, inputs):
         """
@@ -227,9 +227,9 @@ class BaseDynamicProvider(ResourceProvider):
 
         try:
             if bindings:
-                cursor.execute('\n'.join(statement), (*bindings,))
+                cursor.execute(statement, (*bindings,))
             else:
-                cursor.execute('\n'.join(statement))
+                cursor.execute(statement)
         finally:
             cursor.close()
 
