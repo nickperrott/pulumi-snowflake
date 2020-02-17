@@ -1,6 +1,8 @@
 import unittest
 
-from pulumi_snowflake.baseprovider.jinja_environment import JinjaEnvironment
+from jinja2.environment import Environment
+
+from pulumi_snowflake.baseprovider.filters import to_sql, to_identifier
 
 
 class JinjaEnvironmentTests(unittest.TestCase):
@@ -82,4 +84,7 @@ class JinjaEnvironmentTests(unittest.TestCase):
     # HELPERS
 
     def get_environment(self):
-        return JinjaEnvironment.create()
+        environment = Environment()
+        environment.filters["sql"] = to_sql
+        environment.filters["sql_identifier"] = to_identifier
+        return environment

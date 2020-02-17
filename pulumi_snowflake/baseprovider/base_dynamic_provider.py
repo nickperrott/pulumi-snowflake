@@ -1,7 +1,9 @@
 from typing import List
 
+from jinja2 import Environment
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
+from .filters import to_sql, to_identifier
 from .. import Provider
 from ..connection_provider import Client
 from ..validation import Validation
@@ -42,7 +44,8 @@ class BaseDynamicProvider(ResourceProvider):
         attributes_with_values = list(filter(lambda a: inputs.get(a.name) is not None, self.attributes))
 
         # Perform SQL command to create object
-        sql_statement = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs)
+        environment = self._create_jinja_environment()
+        sql_statement = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs, environment)
         sql_bindings = self._generate_sql_create_bindings(attributes_with_values, inputs)
         self._execute_sql(sql_statement, sql_bindings)
 
@@ -195,7 +198,7 @@ class BaseDynamicProvider(ResourceProvider):
 
         return " ".join(params_caps)
 
-    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs):
+    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment=None):
         """
         Generates the SQL statement which creates the object.
         """
@@ -234,3 +237,12 @@ class BaseDynamicProvider(ResourceProvider):
             cursor.close()
 
         connection.close()
+
+    def _create_jinja_environment(self):
+        """
+        Convenience method which creates a Jinja environment with additional filters for SQL generation.
+        """
+        environment = Environment()
+        environment.filters["sql"] = to_sql
+        environment.filters["sql_identifier"] = to_identifier
+        return environment
