@@ -35,3 +35,10 @@ class StageProvider(BaseDynamicProvider):
         })
 
         return sql
+
+    def _generate_sql_drop_statement(self, validated_name, inputs, environment):
+        template = environment.from_string("DROP STAGE {{ full_name }}")
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, validated_name)
+        })
+        return sql
