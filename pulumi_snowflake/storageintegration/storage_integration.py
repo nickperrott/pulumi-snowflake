@@ -4,7 +4,7 @@ from pulumi import Output, ResourceOptions, Input
 from pulumi.dynamic import Resource
 
 from ..provider import Provider
-from ..connection_provider import Client
+from ..client import Client
 from .storage_integration_provider import StorageIntegrationProvider
 
 

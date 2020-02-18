@@ -5,7 +5,7 @@ from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
 from .filters import to_sql, to_identifier
 from .. import Provider
-from ..connection_provider import Client
+from ..client import Client
 from ..validation import Validation
 from ..random_id import RandomId
 from .attribute import BaseAttribute

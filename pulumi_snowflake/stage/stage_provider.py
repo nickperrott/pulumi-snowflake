@@ -1,4 +1,4 @@
-from ..connection_provider import Client
+from ..client import Client
 from ..provider import Provider
 from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
 from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
