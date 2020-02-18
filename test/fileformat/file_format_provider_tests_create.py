@@ -161,7 +161,8 @@ class FileFormatProviderTests(unittest.TestCase):
             'database': 'test_database_name',
             'type': 'CSV',
             'resource_name': 'pulumi_test_file_format',
-            'name': 'test_file_format'
+            'name': 'test_file_format',
+            'comment': None
         }
 
     def get_mock_connection_provider(self, mock_cursor):

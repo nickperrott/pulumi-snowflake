@@ -10,7 +10,7 @@ class DatabaseProvider(BaseDynamicProvider):
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, "DATABASE", [])
+        super().__init__(provider_params, connection_provider, "DATABASE")
 
     def _generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(

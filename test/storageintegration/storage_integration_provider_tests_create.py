@@ -112,6 +112,15 @@ class StorageIntegrationProviderTests(unittest.TestCase):
                 **self.get_standard_inputs(),
                 field: fieldValues[field]
             })
+
+
+            print(result.outs)
+            print({
+                **self.get_standard_outputs(),
+                "full_name": "test_name",
+                field: fieldValues[field]
+            })
+
             self.assertDictEqual(result.outs, {
                 **self.get_standard_outputs(),
                 "full_name": "test_name",
@@ -212,14 +221,14 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             'enabled': True,
             'storage_provider': 'S3',
             'storage_aws_role_arn': 'test_role_arn',
-            'storage_allowed_locations': [ 'allowed_loc_1', 'allowed_loc_2' ]
+            'storage_allowed_locations': [ 'allowed_loc_1', 'allowed_loc_2' ],
+            'comment': None,
+            'storage_blocked_locations': None,
         }
 
     def get_standard_outputs(self):
         return {
-            **self.get_standard_inputs(),
-            'storage_blocked_locations': None,
-            'comment': None
+            **self.get_standard_inputs()
         }
 
     # HELPERS

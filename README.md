@@ -38,14 +38,12 @@ The directory structure is as follows:
 ├── example                     # An example of a Pulumi program using this package with AWS
 ├── pulumi_snowflake            # The main package source
 │   ├── baseprovider            # The dynamic provider base class and related classes
-│   │   └── attribute
 │   ├── fileformat              # The File Format resource and dynamic provider
 │   ├── stage                   # The Stage resource and dynamic provider
 │   └── storageintegration      # The Storage Integration resource and dynamic provider
 └── test                        # Unit tests
     ├── fileformat
     ├── provider
-    │   └── attribute
     ├── stage
     └── storageintegration
 ```

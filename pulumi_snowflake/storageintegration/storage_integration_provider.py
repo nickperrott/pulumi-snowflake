@@ -1,6 +1,5 @@
 from ..client import Client
 from ..provider import Provider
-from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
 from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
@@ -10,15 +9,7 @@ class StorageIntegrationProvider(BaseDynamicProvider):
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, "STORAGE INTEGRATION", [
-            KeyValueAttribute("type"),
-            KeyValueAttribute("storage_provider"),
-            KeyValueAttribute("storage_aws_role_arn"),
-            KeyValueAttribute("enabled"),
-            KeyValueAttribute("storage_allowed_locations"),
-            KeyValueAttribute("storage_blocked_locations"),
-            KeyValueAttribute("comment"),
-        ])
+        super().__init__(provider_params, connection_provider, "STORAGE INTEGRATION")
 
     def _generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(

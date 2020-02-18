@@ -178,7 +178,9 @@ class BaseDynamicProviderTests(unittest.TestCase):
 
         self.assertDictEqual(result.outs, {
             "full_name": "test_name",
-            "name": "test_name"
+            "name": "test_name",
+            "database": None,
+            "schema": None,
         })
 
 

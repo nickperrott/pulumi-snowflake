@@ -1,6 +1,5 @@
 from ..client import Client
 from ..provider import Provider
-from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
 from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
@@ -10,15 +9,7 @@ class StageProvider(BaseDynamicProvider):
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, "STAGE", [
-            KeyValueAttribute("url"),
-            KeyValueAttribute("storage_integration"),
-            KeyValueAttribute("credentials"),
-            KeyValueAttribute("encryption"),
-            KeyValueAttribute("file_format"),
-            KeyValueAttribute("copy_options"),
-            KeyValueAttribute("comment")
-        ],
+        super().__init__(provider_params, connection_provider, "STAGE",
         [
             "temporary"
         ])
