@@ -45,7 +45,7 @@ class BaseDynamicProvider(ResourceProvider):
 
         # Perform SQL command to create object
         environment = self._create_jinja_environment()
-        sql_statement = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs, environment)
+        sql_statement = self._generate_sql_create_statement(validated_name, inputs, environment)
         self._execute_sql(sql_statement)
 
         # Generate provisional outputs from attributes.  Provisional because the call to generate_outputs below allows
@@ -138,14 +138,6 @@ class BaseDynamicProvider(ResourceProvider):
         else:
             return name
 
-    def _get_validated_schema_or_none(self, inputs):
-        schema = inputs.get("schema")
-
-        if schema is not None:
-            return Validation.validate_identifier(schema)
-
-        return None
-
     def _generate_outputs(self, name, inputs, outs):
         """
         Appends the schema, database and fully-qualified object name to the outputs.
@@ -197,22 +189,9 @@ class BaseDynamicProvider(ResourceProvider):
 
         return " ".join(params_caps)
 
-    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment=None):
-        """
-        Generates the SQL statement which creates the object.
-        """
-
-        qualified_name = self._get_full_object_name(inputs, validated_name)
-        create_params = self._generate_create_params(inputs)
-        create_header = f"CREATE {create_params} {self.sql_name} {qualified_name}" if len(create_params) > 0 else \
-                        f"CREATE {self.sql_name} {qualified_name}"
-
-        statements = [
-            create_header,
-            *list(map(lambda a: a.generate_sql(inputs.get(a.name)), attributesWithValues))
-        ]
-
-        return '\n'.join(statements)
+    def _generate_sql_create_statement(self, validated_name, inputs, environment=None):
+        raise Exception("The BaseDynamicProvider class cannot be used directly, please create a subclass and "
+                        "implement _generate_sql_create_statement")
 
     def _execute_sql(self, statement):
         connection = self.connection_provider.get()

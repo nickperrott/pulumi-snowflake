@@ -23,7 +23,7 @@ class StageProvider(BaseDynamicProvider):
             "temporary"
         ])
 
-    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment):
+    def _generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(
 """CREATE{% if temporary %} TEMPORARY{% endif %} STAGE {{ full_name }}
 {% if url %}URL = {{ url | sql }}

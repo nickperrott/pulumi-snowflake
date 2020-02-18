@@ -20,7 +20,7 @@ class StorageIntegrationProvider(BaseDynamicProvider):
             KeyValueAttribute("comment"),
         ])
 
-    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment):
+    def _generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(
 """CREATE STORAGE INTEGRATION {{ full_name }}
 {% if type %}TYPE = {{ type | sql }}
