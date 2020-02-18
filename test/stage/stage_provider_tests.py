@@ -32,6 +32,26 @@ class StageProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def test_create_stage_with_minimal_fields(self):
+
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = StageProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "file_format": None,
+            "comment": None,
+            "name": "test_stage",
+            "database": "test_database",
+            "schema": "test_schema"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE STAGE test_database.test_schema.test_stage",
+                ""
+            ]))
+        ])
 
     def test_when_temporary_is_true_then_appears_in_create_statement(self):
 
