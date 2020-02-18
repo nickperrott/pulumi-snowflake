@@ -17,3 +17,22 @@ class FileFormatProvider(BaseDynamicProvider):
             KeyValueAttribute("type"),
             KeyValueAttribute("comment")
         ])
+
+
+    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment):
+        template = environment.from_string(
+"""CREATE FILE FORMAT {{ full_name }}
+{% if type %}TYPE = {{ type | sql }}
+{% endif %}
+{%- if comment %}COMMENT = {{ comment | sql }}
+{% endif %}""")
+
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, validated_name),
+            **inputs
+        })
+
+        return sql
+
+    def _generate_sql_create_bindings(self, attributesWithValues, inputs):
+        return tuple()
