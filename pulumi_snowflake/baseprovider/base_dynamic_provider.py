@@ -46,8 +46,7 @@ class BaseDynamicProvider(ResourceProvider):
         # Perform SQL command to create object
         environment = self._create_jinja_environment()
         sql_statement = self._generate_sql_create_statement(attributes_with_values, validated_name, inputs, environment)
-        sql_bindings = self._generate_sql_create_bindings(attributes_with_values, inputs)
-        self._execute_sql(sql_statement, sql_bindings)
+        self._execute_sql(sql_statement)
 
         # Generate provisional outputs from attributes.  Provisional because the call to generate_outputs below allows
         # subclasses to modify them if necessary.
@@ -88,7 +87,7 @@ class BaseDynamicProvider(ResourceProvider):
     def delete(self, id, props):
         validated_name = Validation.validate_identifier(id)
         full_name = self._get_full_object_name(props, validated_name)
-        self._execute_sql(f"DROP {self.sql_name} {full_name}", None)
+        self._execute_sql(f"DROP {self.sql_name} {full_name}")
 
 
     def _check_required_attributes(self, inputs):
@@ -215,24 +214,12 @@ class BaseDynamicProvider(ResourceProvider):
 
         return '\n'.join(statements)
 
-    def _generate_sql_create_bindings(self, attributesWithValues, inputs):
-        """
-        Generates the list of binding values for all attributes
-        """
-        bindingTuplesList = list(map(lambda a: a.generate_bindings(inputs.get(a.name)), attributesWithValues))
-        bindingTuplesList = filter(lambda t: t is not None, bindingTuplesList)
-        bindings = [item for sublist in bindingTuplesList for item in sublist]
-        return bindings
-
-    def _execute_sql(self, statement, bindings):
+    def _execute_sql(self, statement):
         connection = self.connection_provider.get()
         cursor = connection.cursor()
 
         try:
-            if bindings:
-                cursor.execute(statement, (*bindings,))
-            else:
-                cursor.execute(statement)
+            cursor.execute(statement)
         finally:
             cursor.close()
 

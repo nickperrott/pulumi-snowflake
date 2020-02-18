@@ -46,6 +46,3 @@ class StorageIntegrationProvider(BaseDynamicProvider):
         })
 
         return sql
-
-    def _generate_sql_create_bindings(self, attributesWithValues, inputs):
-        return tuple()
