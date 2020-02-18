@@ -68,9 +68,9 @@ class StorageIntegration(Resource):
     def __init__(self,
                  resource_name: str,
                  enabled: Input[bool],
-                 storage_aws_role_arn: Input[Optional[str]],
-                 azure_tenant_id: Input[Optional[str]],
                  storage_allowed_locations: Input[List[str]],
+                 storage_aws_role_arn: Input[Optional[str]] = None,
+                 azure_tenant_id: Input[Optional[str]] = None,
                  name: str = None,
                  type: Input[str] = DEFAULT_STORAGE_INTEGRATION_TYPE,
                  storage_provider: Input[Optional[str]] = None,
@@ -96,6 +96,7 @@ class StorageIntegration(Resource):
         """
         provider = provider if provider else Provider()
         connection_provider = Client(provider=provider)
+
         super().__init__(StorageIntegrationProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,

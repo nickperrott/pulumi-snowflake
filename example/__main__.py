@@ -14,6 +14,7 @@ my_storage_integration = StorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc'],
+    storage_provider="S3",
     provider=my_provider
 )
 
