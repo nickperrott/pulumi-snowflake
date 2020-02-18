@@ -9,7 +9,7 @@ class StageProvider(BaseDynamicProvider):
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, "STAGE")
+        super().__init__(provider_params, connection_provider)
 
     def _generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(

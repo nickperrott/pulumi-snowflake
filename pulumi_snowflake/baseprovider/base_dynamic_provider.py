@@ -22,12 +22,9 @@ class BaseDynamicProvider(ResourceProvider):
 
     def __init__(self,
                  provider: Provider,
-                 connection_provider: Client,
-                 sql_name: str):
+                 connection_provider: Client):
         self.provider_params = provider
         self.connection_provider = connection_provider
-        self.sql_name = sql_name
-        Validation.validate_object_type(sql_name)
 
     def _generate_sql_create_statement(self, validated_name, inputs, environment=None):
         raise Exception("The BaseDynamicProvider class cannot be used directly, please create a subclass and "
