@@ -4,7 +4,7 @@ from ..baseprovider.attribute.key_value_attribute import KeyValueAttribute
 from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
-class AWSStorageIntegrationProvider(BaseDynamicProvider):
+class StorageIntegrationProvider(BaseDynamicProvider):
     """
     Dynamic provider for Snowflake Storage Integration resources.
     """

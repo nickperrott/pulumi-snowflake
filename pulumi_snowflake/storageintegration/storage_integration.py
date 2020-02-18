@@ -1,7 +1,12 @@
 from typing import Optional, List
 
-from pulumi import Output, ResourceOptions
-from pulumi.dynamic import Resource, ResourceProvider
+from pulumi import Output, ResourceOptions, Input
+from pulumi.dynamic import Resource
+
+from ..provider import Provider
+from ..connection_provider import Client
+from .storage_integration_provider import StorageIntegrationProvider
+
 
 class StorageIntegration(Resource):
     """
@@ -45,11 +50,58 @@ class StorageIntegration(Resource):
     Comment string for the integration.
     """
 
+
+    DEFAULT_STORAGE_PROVIDER = 'S3'
+    """
+    A constant representing the default storage provider.
+    """
+
+    storage_provider: Output[str]
+    """
+    Specifies the cloud storage provider that stores your data files.  At time of writing only S3 is available.
+    """
+
+    storage_aws_role_arn: Output[str]
+    """
+    The ARN of IAM role that grants privileges on the S3 bucket containing data files.
+    """
+
     def __init__(self,
-                 provider: ResourceProvider,
-                 name: str,
-                 props: 'Inputs',
-                 opts: Optional[ResourceOptions] = None) -> None:
-        super().__init__(provider, name, props, opts)
-
-
+                 resource_name: str,
+                 enabled: Input[bool],
+                 storage_aws_role_arn: Input[str],
+                 storage_allowed_locations: Input[List[str]],
+                 name: str = None,
+                 type: Input[str] = DEFAULT_STORAGE_INTEGRATION_TYPE,
+                 storage_provider: Input[str] = DEFAULT_STORAGE_PROVIDER,
+                 storage_blocked_locations: Input[Optional[List[str]]] = None,
+                 comment: Input[Optional[str]] = None,
+                 provider: Provider = None,
+                 opts: Optional[ResourceOptions] = None):
+        """
+        :param str resource_name: The logical name of the resource.
+        :param pulumi.Input[bool] enabled: Whether or not the storage integration is available for use.
+        :param pulumi.Input[str] storage_aws_role_arn: The ARN of IAM role that grants privileges on the S3 bucket
+                                 containing data files.
+        :param pulumi.Input[List[str]] storage_allowed_locations: Explicitly limits external stages that use the
+                                 integration to reference one or more storage locations.
+        :param pulumi.Input[Optional[List[str]]] storage_blocked_locations: Explicitly prohibits external stages that
+                                 use the integration from referencing one or more storage locations.
+        :param pulumi.Input[str] type: The storage integration type.
+        :param pulumi.Input[str] storage_provider: The cloud storage provider.
+        :param pulumi.Input[str] comment: Comment string for the integration.
+        :param pulumi.ResourceOptions opts: Options for the resource.
+        """
+        provider = provider if provider else Provider()
+        connection_provider = Client(provider=provider)
+        super().__init__(StorageIntegrationProvider(provider, connection_provider), resource_name, {
+            'resource_name': resource_name,
+            'name': name,
+            'enabled': enabled,
+            'storage_aws_role_arn': storage_aws_role_arn,
+            'storage_allowed_locations': storage_allowed_locations,
+            'storage_blocked_locations': storage_blocked_locations,
+            'type': type,
+            'storage_provider': storage_provider,
+            'comment': comment
+        }, opts)
