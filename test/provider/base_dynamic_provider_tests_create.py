@@ -357,6 +357,49 @@ class BaseDynamicProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def test_when_invalid_identifier_then_raises_exception(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        class TestIdProvider(BaseDynamicProvider):
+            def __init__(self, provider_params, connection_provider):
+                super().__init__(provider_params, connection_provider)
+
+            def _generate_sql_create_statement(self, validated_name, inputs, environment):
+                template = environment.from_string("{{ test_id | sql_identifier }}")
+                sql = template.render(**inputs)
+                return sql
+
+        provider = TestIdProvider(self.get_mock_provider(), mock_connection_provider)
+
+        self.assertRaises(Exception, provider.create, {
+            "test_id": "My-Id",
+            "name": "test_name",
+            "resource_name": "test_resource_name",
+            "database": "test_input_db",
+        })
+
+    def test_when_invalid_string_then_raises_exception(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        class TestIdProvider(BaseDynamicProvider):
+            def __init__(self, provider_params, connection_provider):
+                super().__init__(provider_params, connection_provider)
+
+            def _generate_sql_create_statement(self, validated_name, inputs, environment):
+                template = environment.from_string("{{ test_str | sql }}")
+                sql = template.render(**inputs)
+                return sql
+
+        provider = TestIdProvider(self.get_mock_provider(), mock_connection_provider)
+
+        self.assertRaises(Exception, provider.create, {
+            "test_str": "my_test_string'; DROP TABLE USERS --",
+            "name": "test_name",
+            "resource_name": "test_resource_name",
+            "database": "test_input_db"
+        })
 
     # HELPERS
 

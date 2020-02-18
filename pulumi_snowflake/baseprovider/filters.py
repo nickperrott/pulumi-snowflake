@@ -1,5 +1,6 @@
 from typing import Tuple
 
+from pulumi_snowflake.validation import Validation
 
 """
 Utility class for creating a Jinja environment which adds additional filters for SQL conversion.  The filters
@@ -10,9 +11,8 @@ are:
     sql_identifier  Converts a value to a Snowflake identifier.
 """
 
-
 def to_identifier(value):
-    #TODO: will check if valid identifier and put double quotes around if necessary
+    Validation.validate_identifier(value)
     return value
 
 def to_sql(value, allow_none=True):
@@ -58,7 +58,7 @@ def dict_to_sql(value):
     return f"({values_string})"
 
 def string_to_sql(value):
-    # TODO: This needs to be validated to ensure it is a valid string (i.e. no single quotes except escaped ones)
+    Validation.validate_string(value)
     return f"'{value}'"
 
 def generate_key_value_sql_and_bindings(field_name, value) -> Tuple[str,Tuple]:

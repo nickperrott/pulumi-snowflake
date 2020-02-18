@@ -78,13 +78,13 @@ class DatabaseProviderTests(unittest.TestCase):
             "comment": "test_comment",
             "transient": False,
             "data_retention_time_in_days": 7,
-            "share": "test.share"
+            "share": "testshare"
         })
 
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE DATABASE test_db",
-                f"FROM SHARE test.share",
+                f"FROM SHARE testshare",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
                 f"COMMENT = 'test_comment'",
                 ""
