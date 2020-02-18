@@ -10,7 +10,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT')
         provider.delete("test_name", {
             "database": "test_db",
             "schema": "test_schema",
@@ -28,7 +28,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT')
         provider.delete("test_name", {
             "name": "test_name",
         })
@@ -47,7 +47,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT')
         provider.delete("test_name", {
             "name": "test_name"
         })

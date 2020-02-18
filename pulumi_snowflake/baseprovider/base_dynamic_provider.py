@@ -23,12 +23,10 @@ class BaseDynamicProvider(ResourceProvider):
     def __init__(self,
                  provider: Provider,
                  connection_provider: Client,
-                 sql_name: str,
-                 create_params: List[str] = None):
+                 sql_name: str):
         self.provider_params = provider
         self.connection_provider = connection_provider
         self.sql_name = sql_name
-        self.create_params = create_params
         Validation.validate_object_type(sql_name)
 
     def create(self, inputs):
@@ -165,15 +163,6 @@ class BaseDynamicProvider(ResourceProvider):
         keys = filter(lambda k: k != 'resource_name' and k != 'name', inputs.keys())
         outputs = {k: inputs.get(k) for k in keys}
         return outputs
-
-    def _generate_create_params(self, inputs):
-        if not self.create_params:
-            return ""
-
-        params_present = filter(lambda p: inputs.get(p) == True, self.create_params)
-        params_caps = map(lambda p: p.upper(), params_present)
-
-        return " ".join(params_caps)
 
     def _generate_sql_create_statement(self, validated_name, inputs, environment=None):
         raise Exception("The BaseDynamicProvider class cannot be used directly, please create a subclass and "
