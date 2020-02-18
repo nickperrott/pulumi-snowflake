@@ -20,13 +20,13 @@ class StorageIntegrationProvider(BaseDynamicProvider):
 {% endif %}
 {%- if storage_aws_role_arn %}STORAGE_AWS_ROLE_ARN = {{ storage_aws_role_arn | sql }}
 {% endif %}
-{%- if azure_tenant_id %}AZURE_TENANT_ID = {{ azure_tenant_id | sql }}
-{% endif %}
 {%- if enabled is defined %}ENABLED = {{ enabled | sql }}
 {% endif %}
 {%- if storage_allowed_locations %}STORAGE_ALLOWED_LOCATIONS = {{ storage_allowed_locations | sql }}
 {% endif %}
 {%- if storage_blocked_locations %}STORAGE_BLOCKED_LOCATIONS = {{ storage_blocked_locations | sql }}
+{% endif %}
+{%- if azure_tenant_id %}AZURE_TENANT_ID = {{ azure_tenant_id | sql }}
 {% endif %}
 {%- if comment %}COMMENT = {{ comment | sql }}
 {% endif %}""")

@@ -3,6 +3,7 @@ from unittest.mock import Mock, call
 
 from pulumi_snowflake.baseprovider import BaseDynamicProvider
 
+
 class TestProvider(BaseDynamicProvider):
 
     def __init__(self, provider_params, connection_provider):

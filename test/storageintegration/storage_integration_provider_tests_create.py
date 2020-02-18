@@ -131,13 +131,15 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         fieldValues = {
             'storage_blocked_locations': ['blocked_loc_1'],
             'storage_blocked_locations': [ 'blocked_loc_1', 'blocked_loc_2' ],
-            'comment': 'a test comment'
+            'comment': 'a test comment',
+            'azure_tenant_id': 'test_tenant'
         }
 
         fieldSql = {
             'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1')",
             'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1','blocked_loc_2')",
-            'comment': "COMMENT = 'a test comment'"
+            'comment': "COMMENT = 'a test comment'",
+            'azure_tenant_id': "AZURE_TENANT_ID = 'test_tenant'"
         }
 
         for field in fieldValues.keys():

@@ -50,12 +50,6 @@ class StorageIntegration(Resource):
     Comment string for the integration.
     """
 
-
-    DEFAULT_STORAGE_PROVIDER = 'S3'
-    """
-    A constant representing the default storage provider.
-    """
-
     storage_provider: Output[str]
     """
     Specifies the cloud storage provider that stores your data files.  At time of writing only S3 is available.
@@ -66,14 +60,20 @@ class StorageIntegration(Resource):
     The ARN of IAM role that grants privileges on the S3 bucket containing data files.
     """
 
+    azure_tenant_id: Output[str]
+    """
+    Specifies the ID for your Office 365 tenant that the allowed and blocked storage accounts belong to.
+    """
+
     def __init__(self,
                  resource_name: str,
                  enabled: Input[bool],
-                 storage_aws_role_arn: Input[str],
+                 storage_aws_role_arn: Input[Optional[str]],
+                 azure_tenant_id: Input[Optional[str]],
                  storage_allowed_locations: Input[List[str]],
                  name: str = None,
                  type: Input[str] = DEFAULT_STORAGE_INTEGRATION_TYPE,
-                 storage_provider: Input[str] = DEFAULT_STORAGE_PROVIDER,
+                 storage_provider: Input[Optional[str]] = None,
                  storage_blocked_locations: Input[Optional[List[str]]] = None,
                  comment: Input[Optional[str]] = None,
                  provider: Provider = None,
@@ -83,6 +83,8 @@ class StorageIntegration(Resource):
         :param pulumi.Input[bool] enabled: Whether or not the storage integration is available for use.
         :param pulumi.Input[str] storage_aws_role_arn: The ARN of IAM role that grants privileges on the S3 bucket
                                  containing data files.
+        :param pulumi.Input[str] storage_aws_role_arn: Specifies the ID for your Office 365 tenant that the allowed and
+                                 blocked storage accounts belong to.
         :param pulumi.Input[List[str]] storage_allowed_locations: Explicitly limits external stages that use the
                                  integration to reference one or more storage locations.
         :param pulumi.Input[Optional[List[str]]] storage_blocked_locations: Explicitly prohibits external stages that
@@ -99,6 +101,7 @@ class StorageIntegration(Resource):
             'name': name,
             'enabled': enabled,
             'storage_aws_role_arn': storage_aws_role_arn,
+            'azure_tenant_id': azure_tenant_id,
             'storage_allowed_locations': storage_allowed_locations,
             'storage_blocked_locations': storage_blocked_locations,
             'type': type,
