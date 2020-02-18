@@ -3,8 +3,7 @@ from typing import Tuple
 from pulumi_snowflake.validation import Validation
 
 """
-Utility class for creating a Jinja environment which adds additional filters for SQL conversion.  The filters
-are:
+This module provides Jinja filters for Snowflake SQL value generation.  The filters are:
 
     sql             Converts a value automatically to a Snowflake SQL string depending on its type, including
                      strings, ints, floats, bools, lists and dicts.

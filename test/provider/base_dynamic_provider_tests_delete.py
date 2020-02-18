@@ -9,7 +9,7 @@ class TestProvider(BaseDynamicProvider):
     def __init__(self, provider_params, connection_provider):
         super().__init__(provider_params, connection_provider)
 
-    def _generate_sql_drop_statement(self, validated_name, inputs, environment):
+    def generate_sql_drop_statement(self, validated_name, inputs, environment):
         template = environment.from_string(
             """DROP TESTOBJECT {{ full_name }}""")
 
