@@ -13,21 +13,18 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create(self.get_standard_inputs())
 
+        (allowed1, allowed2) = self.get_standard_inputs()['storage_allowed_locations']
+
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = TRUE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                self.get_standard_inputs()['storage_allowed_locations'][0],
-                self.get_standard_inputs()['storage_allowed_locations'][1]
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_required_fields_and_name_then_outputs_are_returned(self):
@@ -54,21 +51,18 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             'enabled': False
         })
 
+        (allowed1,allowed2) = self.get_standard_inputs()['storage_allowed_locations']
+
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = FALSE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                self.get_standard_inputs()['storage_allowed_locations'][0],
-                self.get_standard_inputs()['storage_allowed_locations'][1]
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                ""
+            ]))
         ])
 
 
@@ -85,17 +79,13 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = TRUE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                'allowed_loc'
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('allowed_loc')",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_name_then_storage_integration_name_is_returned_as_id(self):
@@ -136,15 +126,9 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         }
 
         fieldSql = {
-            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = (%s)",
-            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = (%s,%s)",
-            'comment': "COMMENT = %s"
-        }
-
-        fieldBindings = {
-            'storage_blocked_locations': ('blocked_loc_1',),
-            'storage_blocked_locations': ( 'blocked_loc_1', 'blocked_loc_2',),
-            'comment': ('a test comment',)
+            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1')",
+            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1','blocked_loc_2')",
+            'comment': "COMMENT = 'a test comment'"
         }
 
         for field in fieldValues.keys():
@@ -159,22 +143,19 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
             provider.create(inputs)
 
+            (allowed1, allowed2) = self.get_standard_inputs()['storage_allowed_locations']
+
             mock_cursor.execute.assert_has_calls([
                 call("\n".join([
                     f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                    f"TYPE = %s",
-                    f"STORAGE_PROVIDER = %s",
-                    "STORAGE_AWS_ROLE_ARN = %s",
+                    f"TYPE = '{self.get_standard_inputs()['type']}'",
+                    f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                    f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                     "ENABLED = TRUE",
-                    "STORAGE_ALLOWED_LOCATIONS = (%s,%s)",
-                    fieldSql[field]
-                ]), (
-                    self.get_standard_inputs()['type'],
-                    self.get_standard_inputs()['storage_provider'],
-                    self.get_standard_inputs()['storage_aws_role_arn'],
-                    *self.get_standard_inputs()['storage_allowed_locations'],
-                    *fieldBindings[field]
-                ))
+                    f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                    fieldSql[field],
+                    ""
+                ]))
             ])
 
     def test_when_call_create_without_name_then_name_is_autogenerated(self):
