@@ -23,9 +23,9 @@ class DatabaseProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE DATABASE test_db",
-                f"",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = 'test_comment'"
+                f"COMMENT = 'test_comment'",
+                ""
             ]))
         ])
 
@@ -43,7 +43,7 @@ class DatabaseProviderTests(unittest.TestCase):
         })
 
         mock_cursor.execute.assert_has_calls([
-            call("\n".join([f"CREATE DATABASE test_db", "", "", ""]))
+            call("\n".join([f"CREATE DATABASE test_db", ""]))
             ])
 
     def test_when_create_database_with_transient_true_then_appears_in_create(self):
@@ -62,9 +62,9 @@ class DatabaseProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE TRANSIENT DATABASE test_db",
-                "",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = 'test_comment'"
+                f"COMMENT = 'test_comment'",
+                ""
             ]))
         ])
 
@@ -86,7 +86,8 @@ class DatabaseProviderTests(unittest.TestCase):
                 f"CREATE DATABASE test_db",
                 f"FROM SHARE test.share",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = 'test_comment'"
+                f"COMMENT = 'test_comment'",
+                ""
             ]))
         ])
 

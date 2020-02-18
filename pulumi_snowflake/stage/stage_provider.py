@@ -22,3 +22,31 @@ class StageProvider(BaseDynamicProvider):
         [
             "temporary"
         ])
+
+    def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment):
+        template = environment.from_string(
+"""CREATE{% if temporary %} TEMPORARY{% endif %} STAGE {{ full_name }}
+{% if url %}URL = {{ url | sql }}
+{% endif %}
+{%- if storage_integration %}STORAGE_INTEGRATION = {{ storage_integration | sql }}
+{% endif %}
+{%- if credentials %}CREDENTIALS = {{ credentials | sql }}
+{% endif %}
+{%- if encryption %}ENCRYPTION = {{ encryption | sql }}
+{% endif %}
+{%- if file_format %}FILE_FORMAT = {{ file_format | sql }}
+{% endif %}
+{%- if copy_options %}COPY_OPTIONS = {{ copy_options | sql }}
+{% endif %}
+{%- if comment %}COMMENT = {{ comment | sql }}
+{% endif %}""")
+
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, validated_name),
+            **inputs
+        })
+
+        return sql
+
+    def _generate_sql_create_bindings(self, attributesWithValues, inputs):
+        return tuple()

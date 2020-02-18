@@ -15,9 +15,12 @@ class DatabaseProvider(BaseDynamicProvider):
     def _generate_sql_create_statement(self, attributesWithValues, validated_name, inputs, environment):
         template = environment.from_string(
 """CREATE{% if transient %} TRANSIENT{% endif %} DATABASE {{ full_name }}
-{% if share %}FROM SHARE {{ share | sql_identifier }}{% endif %}
-{% if data_retention_time_in_days %}DATA_RETENTION_TIME_IN_DAYS = {{ data_retention_time_in_days | sql }}{% endif %}
-{% if comment %}COMMENT = {{ comment | sql }}{% endif %}
+{% if share %}FROM SHARE {{ share | sql_identifier }}
+{% endif %}
+{%- if data_retention_time_in_days %}DATA_RETENTION_TIME_IN_DAYS = {{ data_retention_time_in_days | sql }}
+{% endif %}
+{%- if comment %}COMMENT = {{ comment | sql }}
+{% endif %}
 """)
 
         sql = template.render({
