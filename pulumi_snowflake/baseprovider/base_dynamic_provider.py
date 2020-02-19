@@ -3,7 +3,7 @@ from typing import List
 from jinja2 import Environment
 from pulumi.dynamic import ResourceProvider, CreateResult, DiffResult
 
-from .filters import to_sql, to_identifier
+from .filters import to_sql, to_identifier, dict_to_sql, number_to_sql, bool_to_sql, string_to_sql, list_to_sql
 from .. import Provider
 from ..client import Client
 from ..validation import Validation
@@ -163,9 +163,11 @@ class BaseDynamicProvider(ResourceProvider):
         Creates an outputs dictionary which has the values provided in the inputs, with the exception of
         `name` and `resource_name`  - these are handled separately to allow for autogeneration of names
         """
-        keys = filter(lambda k: k != 'resource_name' and k != 'name', inputs.keys())
-        outputs = {k: inputs.get(k) for k in keys}
-        return outputs
+        return {
+            k: v
+            for k, v in inputs.items()
+            if k not in ['name', 'resource_name']
+        }
 
     def _execute_sql(self, statement):
         connection = self.connection_provider.get()
@@ -185,4 +187,10 @@ class BaseDynamicProvider(ResourceProvider):
         environment = Environment()
         environment.filters["sql"] = to_sql
         environment.filters["sql_identifier"] = to_identifier
+        environment.filters["number_to_sql"] = number_to_sql
+        environment.filters["bool_to_sql"] = bool_to_sql
+        environment.filters["string_to_sql"] = string_to_sql
+        environment.filters["dict_to_sql"] = dict_to_sql
+        environment.filters["list_to_sql"] = list_to_sql
+
         return environment

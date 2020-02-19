@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from pulumi_snowflake.validation import Validation
 
 """
@@ -10,9 +8,11 @@ This module provides Jinja filters for Snowflake SQL value generation.  The filt
     sql_identifier  Converts a value to a Snowflake identifier.
 """
 
+
 def to_identifier(value):
     Validation.validate_identifier(value)
     return value
+
 
 def to_sql(value, allow_none=True):
     """
@@ -36,18 +36,22 @@ def to_sql(value, allow_none=True):
     else:
         raise Exception(f"Cannot convert type '{type(value)}' to SQL representation")
 
+
 def number_to_sql(value):
     if int(value) == value:
         value = int(value)
     return f"{value}"
 
+
 def bool_to_sql(value):
     return "TRUE" if value else "FALSE"
+
 
 def list_to_sql(value):
     all_values = list(map(lambda v: to_sql(v), value))
     values_string = ",".join(all_values)
     return f"({values_string})"
+
 
 def dict_to_sql(value):
     valid_keys = list(filter(lambda k: value[k] is not None, value.keys()))
@@ -56,14 +60,7 @@ def dict_to_sql(value):
     values_string = ",".join(sql_statements)
     return f"({values_string})"
 
+
 def string_to_sql(value):
     Validation.validate_string(value)
     return f"'{value}'"
-
-def generate_key_value_sql_and_bindings(field_name, value) -> Tuple[str,Tuple]:
-    if value is None:
-        return ("", tuple())
-
-    (sql_value,bindings) = to_sql(value)
-    sql = f"{field_name.upper()} = {sql_value}"
-    return (sql,bindings)
