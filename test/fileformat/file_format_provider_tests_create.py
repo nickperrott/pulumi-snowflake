@@ -18,8 +18,9 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = %s"
-            ]), ("CSV",))
+                f"TYPE = 'CSV'",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_schema_then_executes_in_schema(self):
@@ -37,8 +38,9 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = %s"
-            ]), ("CSV",))
+                f"TYPE = 'CSV'",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_name_and_type_then_outputs_are_returned(self):
@@ -105,8 +107,9 @@ class FileFormatProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE FILE FORMAT {fullName}",
-                f"TYPE = %s"
-            ]), ("CSV",))
+                f"TYPE = 'CSV'",
+                ""
+            ]))
         ])
 
         resourceName = self.get_standard_inputs()["resource_name"]
@@ -158,7 +161,8 @@ class FileFormatProviderTests(unittest.TestCase):
             'database': 'test_database_name',
             'type': 'CSV',
             'resource_name': 'pulumi_test_file_format',
-            'name': 'test_file_format'
+            'name': 'test_file_format',
+            'comment': None
         }
 
     def get_mock_connection_provider(self, mock_cursor):

@@ -4,7 +4,7 @@ from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 from .stage_provider import StageProvider
 from ..provider import Provider
-from ..connection_provider import Client
+from ..client import Client
 
 
 class Stage(Resource):

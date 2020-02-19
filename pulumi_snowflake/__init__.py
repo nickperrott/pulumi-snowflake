@@ -1,2 +1,2 @@
-from .connection_provider import Client
+from .client import Client
 from .provider import Provider
