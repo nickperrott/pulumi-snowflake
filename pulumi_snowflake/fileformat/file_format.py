@@ -4,7 +4,7 @@ from pulumi import Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
 
 from ..provider import Provider
-from ..connection_provider import Client
+from ..client import Client
 from .file_format_provider import FileFormatProvider
 
 
