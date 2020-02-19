@@ -95,9 +95,9 @@ class StorageIntegration(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         provider = provider if provider else Provider()
-        connection_provider = Client(provider=provider)
+        client = Client(provider=provider)
 
-        super().__init__(StorageIntegrationProvider(provider, connection_provider), resource_name, {
+        super().__init__(StorageIntegrationProvider(provider, client), resource_name, {
             'resource_name': resource_name,
             'name': name,
             'enabled': enabled,

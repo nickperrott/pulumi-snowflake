@@ -51,8 +51,8 @@ class Database(Resource):
                  opts: Optional[ResourceOptions] = None):
 
         provider = provider if provider else Provider()
-        connection_provider = Client(provider=provider)
-        super().__init__(DatabaseProvider(provider, connection_provider), resource_name, {
+        client = Client(provider=provider)
+        super().__init__(DatabaseProvider(provider, client), resource_name, {
             'resource_name': resource_name,
             'name': name,
             'share': share,
