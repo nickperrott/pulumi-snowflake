@@ -26,6 +26,9 @@ my_storage_integration = StorageIntegration("MyStorageIntegration",
 my_file_format = FileFormat("MyFileFormat",
     name=None,
     type="CSV",
+    field_delimiter=';',
+    file_extension='txt',
+    skip_byte_order_mark=True,
     provider=my_provider
 )
 
