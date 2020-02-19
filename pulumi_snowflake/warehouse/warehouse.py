@@ -3,8 +3,8 @@ from typing import Optional, Union
 from pulumi import Output, Input, ResourceOptions
 from pulumi.dynamic import Resource
 
+from .. import Client
 from ..provider import Provider
-from ..connection_provider import ConnectionProvider
 from .warehouse_provider import WarehouseProvider
 
 
@@ -75,7 +75,7 @@ class Warehouse(Resource):
                  opts: Optional[ResourceOptions] = None):
 
         provider = provider if provider else Provider()
-        connection_provider = ConnectionProvider(provider=provider)
+        connection_provider = Client(provider=provider)
         super().__init__(WarehouseProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'name': name,

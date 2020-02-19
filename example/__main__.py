@@ -3,18 +3,20 @@ import pulumi
 from pulumi_snowflake import Provider
 from pulumi_snowflake.database import Database
 from pulumi_snowflake.fileformat import FileFormat
+from pulumi_snowflake.pipe import Pipe
 from pulumi_snowflake.schema import Schema
 from pulumi_snowflake.stage import Stage
-from pulumi_snowflake.storageintegration import AWSStorageIntegration
+from pulumi_snowflake.storageintegration import StorageIntegration
 from pulumi_snowflake.warehouse import Warehouse, WarehouseScalingPolicyValues, WarehouseSizeValues
 
 # Enter your snowflake DB name and (optionally) Schema here
 my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
 
-my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
+my_storage_integration = StorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc'],
+    storage_provider="S3",
     provider=my_provider
 )
 
@@ -50,7 +52,6 @@ my_stage = Stage("MyStage",
                 provider=my_provider
             )
 
-
 my_database = Database("MyDatabase",
                        comment="A test database",
                        transient=False,
@@ -75,6 +76,14 @@ my_warehouse = Warehouse("MyWarehouse",
                          initially_suspended=True
                          )
 
+# Pipe example - requires Table to be implemented before it will work:
+
+# my_pipe = Pipe("MyPipe",
+#                auto_ingest=False,
+#                comment="A test pipe",
+#                code=my_stage.name.apply(lambda n: f"copy into tablename from @{n}")
+#                )
+
 
 pulumi.export('StorageIntegrationName', my_storage_integration.name)
 pulumi.export('StorageIntegrationType', my_storage_integration.type)
@@ -94,3 +103,5 @@ pulumi.export('DatabaseShare', my_database.share)
 pulumi.export('SchemaName', my_schema.name)
 
 pulumi.export('WarehouseName', my_warehouse.name)
+
+#pulumi.export('PipeName', my_pipe.name)

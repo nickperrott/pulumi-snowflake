@@ -4,7 +4,7 @@ from pulumi import Input, Output, ResourceOptions
 from pulumi.dynamic import Resource
 
 from ..provider import Provider
-from ..connection_provider import Client
+from ..client import Client
 from .file_format_provider import FileFormatProvider
 
 
@@ -58,8 +58,8 @@ class FileFormat(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         provider = provider if provider else Provider()
-        connection_provider = Client(provider=provider)
-        super().__init__(FileFormatProvider(provider, connection_provider), resource_name, {
+        client = Client(provider=provider)
+        super().__init__(FileFormatProvider(provider, client), resource_name, {
             'database': database,
             'resource_name': resource_name,
             'name': name,
