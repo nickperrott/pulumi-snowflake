@@ -3,9 +3,9 @@ from ..provider import Provider
 from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
-class StageProvider(BaseDynamicProvider):
+class StorageIntegrationProvider(BaseDynamicProvider):
     """
-    Dynamic provider for Snowflake Stage resources.
+    Dynamic provider for Snowflake Storage Integration resources.
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
@@ -13,18 +13,20 @@ class StageProvider(BaseDynamicProvider):
 
     def generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(
-"""CREATE{% if temporary %} TEMPORARY{% endif %} STAGE {{ full_name }}
-{% if url %}URL = {{ url | sql }}
+"""CREATE STORAGE INTEGRATION {{ full_name }}
+{% if type %}TYPE = {{ type | sql }}
 {% endif %}
-{%- if storage_integration %}STORAGE_INTEGRATION = {{ storage_integration | sql }}
+{%- if storage_provider %}STORAGE_PROVIDER = {{ storage_provider | sql }}
 {% endif %}
-{%- if credentials %}CREDENTIALS = {{ credentials | sql }}
+{%- if storage_aws_role_arn %}STORAGE_AWS_ROLE_ARN = {{ storage_aws_role_arn | sql }}
 {% endif %}
-{%- if encryption %}ENCRYPTION = {{ encryption | sql }}
+{%- if enabled is defined %}ENABLED = {{ enabled | sql }}
 {% endif %}
-{%- if file_format %}FILE_FORMAT = {{ file_format | sql }}
+{%- if storage_allowed_locations %}STORAGE_ALLOWED_LOCATIONS = {{ storage_allowed_locations | sql }}
 {% endif %}
-{%- if copy_options %}COPY_OPTIONS = {{ copy_options | sql }}
+{%- if storage_blocked_locations %}STORAGE_BLOCKED_LOCATIONS = {{ storage_blocked_locations | sql }}
+{% endif %}
+{%- if azure_tenant_id %}AZURE_TENANT_ID = {{ azure_tenant_id | sql }}
 {% endif %}
 {%- if comment %}COMMENT = {{ comment | sql }}
 {% endif %}""")
@@ -37,7 +39,7 @@ class StageProvider(BaseDynamicProvider):
         return sql
 
     def generate_sql_drop_statement(self, validated_name, inputs, environment):
-        template = environment.from_string("DROP STAGE {{ full_name }}")
+        template = environment.from_string("DROP STORAGE INTEGRATION {{ full_name }}")
         sql = template.render({
             "full_name": self._get_full_object_name(inputs, validated_name)
         })
