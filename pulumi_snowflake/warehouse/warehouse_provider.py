@@ -25,9 +25,9 @@ class WarehouseProvider(BaseDynamicProvider):
 {% endif %}
 {%- if auto_suspend %}AUTO_SUSPEND = {{ auto_suspend | sql }}
 {% endif %}
-{%- if auto_resume %}AUTO_RESUME = {{ auto_resume | sql }}
+{%- if auto_resume is boolean %}AUTO_RESUME = {{ auto_resume | sql }}
 {% endif %}
-{%- if initially_suspended %}INITIALLY_SUSPENDED = {{ initially_suspended | sql }}
+{%- if initially_suspended is boolean %}INITIALLY_SUSPENDED = {{ initially_suspended | sql }}
 {% endif %}
 {%- if comment %}COMMENT = {{ comment | sql }}
 {% endif %}""")

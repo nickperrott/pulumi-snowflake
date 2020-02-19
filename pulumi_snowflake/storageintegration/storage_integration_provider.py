@@ -20,7 +20,7 @@ class StorageIntegrationProvider(BaseDynamicProvider):
 {% endif %}
 {%- if storage_aws_role_arn %}STORAGE_AWS_ROLE_ARN = {{ storage_aws_role_arn | sql }}
 {% endif %}
-{%- if enabled is defined %}ENABLED = {{ enabled | sql }}
+{%- if enabled is boolean %}ENABLED = {{ enabled | sql }}
 {% endif %}
 {%- if storage_allowed_locations %}STORAGE_ALLOWED_LOCATIONS = {{ storage_allowed_locations | sql }}
 {% endif %}
