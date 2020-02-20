@@ -91,6 +91,28 @@ class DatabaseProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def test_when_share_contains_special_chars_then_enquoted(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": "test_db",
+            "comment": None,
+            "transient": None,
+            "data_retention_time_in_days": None,
+            "share": "test-share"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE DATABASE test_db",
+                f'FROM SHARE "test-share"',
+                ""
+            ]))
+        ])
+
+
     # HELPERS
 
     def get_mock_connection_provider(self, mock_cursor):

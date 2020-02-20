@@ -10,8 +10,7 @@ This module provides Jinja filters for Snowflake SQL value generation.  The filt
 
 
 def to_identifier(value):
-    Validation.enquote_identifier(value)
-    return value
+    return Validation.enquote_identifier(value)
 
 
 def to_sql(value, allow_none=True):
