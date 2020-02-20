@@ -18,6 +18,20 @@ class Validation:
         return id
 
     @staticmethod
+    def validate_string(string: str, allow_none: bool = True):
+        """ Validates a Snowflake string.  Strings can contain any character except single quotes, although
+        single quotes may be escaped with a backslash.
+        """
+        if allow_none and string is None: return string
+
+        pattern = re.compile("^(?:[^'\\\\]|\\\\.)*$")
+
+        if not pattern.match(string):
+            raise Exception(f'Invalid Snowflake string: {string}')
+
+        return id
+
+    @staticmethod
     def validate_object_type(id: str):
         """ Validates a Snowflake SQL object name.
         """

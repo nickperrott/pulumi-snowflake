@@ -1,8 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from pulumi_snowflake.storageintegration import StorageIntegration
-from pulumi_snowflake.storageintegration import AWSStorageIntegrationProvider
+from pulumi_snowflake.storageintegration import StorageIntegration, StorageIntegrationProvider
 
 
 class StorageIntegrationProviderTests(unittest.TestCase):
@@ -11,31 +10,28 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create(self.get_standard_inputs())
+
+        (allowed1, allowed2) = self.get_standard_inputs()['storage_allowed_locations']
 
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = TRUE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                self.get_standard_inputs()['storage_allowed_locations'][0],
-                self.get_standard_inputs()['storage_allowed_locations'][1]
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_required_fields_and_name_then_outputs_are_returned(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             **self.get_standard_inputs()
         })
@@ -49,27 +45,24 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             **self.get_standard_inputs(),
             'enabled': False
         })
 
+        (allowed1,allowed2) = self.get_standard_inputs()['storage_allowed_locations']
+
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = FALSE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s,%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                self.get_standard_inputs()['storage_allowed_locations'][0],
-                self.get_standard_inputs()['storage_allowed_locations'][1]
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                ""
+            ]))
         ])
 
 
@@ -77,7 +70,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             **self.get_standard_inputs(),
             'storage_allowed_locations': [ 'allowed_loc' ]
@@ -86,24 +79,20 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                f"TYPE = %s",
-                f"STORAGE_PROVIDER = %s",
-                "STORAGE_AWS_ROLE_ARN = %s",
+                f"TYPE = '{self.get_standard_inputs()['type']}'",
+                f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                 "ENABLED = TRUE",
-                "STORAGE_ALLOWED_LOCATIONS = (%s)"
-            ]), (
-                self.get_standard_inputs()['type'],
-                self.get_standard_inputs()['storage_provider'],
-                self.get_standard_inputs()['storage_aws_role_arn'],
-                'allowed_loc'
-            ))
+                f"STORAGE_ALLOWED_LOCATIONS = ('allowed_loc')",
+                ""
+            ]))
         ])
 
     def test_when_call_create_with_name_then_storage_integration_name_is_returned_as_id(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create(self.get_standard_inputs())
 
         self.assertEqual(result.id, self.get_standard_inputs()["name"])
@@ -117,12 +106,21 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
         for field in fieldValues.keys():
             mock_connection_provider = self.get_mock_connection_provider(Mock())
-            provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+            provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
             result = provider.create({
                 **self.get_standard_inputs(),
                 field: fieldValues[field]
             })
+
+
+            print(result.outs)
+            print({
+                **self.get_standard_outputs(),
+                "full_name": "test_name",
+                field: fieldValues[field]
+            })
+
             self.assertDictEqual(result.outs, {
                 **self.get_standard_outputs(),
                 "full_name": "test_name",
@@ -133,25 +131,21 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         fieldValues = {
             'storage_blocked_locations': ['blocked_loc_1'],
             'storage_blocked_locations': [ 'blocked_loc_1', 'blocked_loc_2' ],
-            'comment': 'a test comment'
+            'comment': 'a test comment',
+            'azure_tenant_id': 'test_tenant'
         }
 
         fieldSql = {
-            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = (%s)",
-            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = (%s,%s)",
-            'comment': "COMMENT = %s"
-        }
-
-        fieldBindings = {
-            'storage_blocked_locations': ('blocked_loc_1',),
-            'storage_blocked_locations': ( 'blocked_loc_1', 'blocked_loc_2',),
-            'comment': ('a test comment',)
+            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1')",
+            'storage_blocked_locations': "STORAGE_BLOCKED_LOCATIONS = ('blocked_loc_1','blocked_loc_2')",
+            'comment': "COMMENT = 'a test comment'",
+            'azure_tenant_id': "AZURE_TENANT_ID = 'test_tenant'"
         }
 
         for field in fieldValues.keys():
             mock_cursor = Mock()
             mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
-            provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+            provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
             inputs = {
                 **self.get_standard_inputs(),
@@ -160,22 +154,19 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
             provider.create(inputs)
 
+            (allowed1, allowed2) = self.get_standard_inputs()['storage_allowed_locations']
+
             mock_cursor.execute.assert_has_calls([
                 call("\n".join([
                     f"CREATE STORAGE INTEGRATION {self.get_standard_inputs()['name']}",
-                    f"TYPE = %s",
-                    f"STORAGE_PROVIDER = %s",
-                    "STORAGE_AWS_ROLE_ARN = %s",
+                    f"TYPE = '{self.get_standard_inputs()['type']}'",
+                    f"STORAGE_PROVIDER = '{self.get_standard_inputs()['storage_provider']}'",
+                    f"STORAGE_AWS_ROLE_ARN = '{self.get_standard_inputs()['storage_aws_role_arn']}'",
                     "ENABLED = TRUE",
-                    "STORAGE_ALLOWED_LOCATIONS = (%s,%s)",
-                    fieldSql[field]
-                ]), (
-                    self.get_standard_inputs()['type'],
-                    self.get_standard_inputs()['storage_provider'],
-                    self.get_standard_inputs()['storage_aws_role_arn'],
-                    *self.get_standard_inputs()['storage_allowed_locations'],
-                    *fieldBindings[field]
-                ))
+                    f"STORAGE_ALLOWED_LOCATIONS = ('{allowed1}','{allowed2}')",
+                    fieldSql[field],
+                    ""
+                ]))
             ])
 
     def test_when_call_create_without_name_then_name_is_autogenerated(self):
@@ -183,7 +174,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
         resourceName = 'test_resource_name'
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             **self.get_standard_inputs(),
             'resource_name': resourceName,
@@ -197,7 +188,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
         mock_connection_provider = self.get_mock_connection_provider(Mock())
 
         resourceName = 'test_resource_name'
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
             **self.get_standard_inputs(),
@@ -208,7 +199,7 @@ class StorageIntegrationProviderTests(unittest.TestCase):
 
     def test_when_neither_resource_name_nor_name_given_then_error_thrown(self):
         mock_connection_provider = self.get_mock_connection_provider(Mock())
-        provider = AWSStorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
+        provider = StorageIntegrationProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
             **self.get_standard_inputs(),
@@ -232,14 +223,14 @@ class StorageIntegrationProviderTests(unittest.TestCase):
             'enabled': True,
             'storage_provider': 'S3',
             'storage_aws_role_arn': 'test_role_arn',
-            'storage_allowed_locations': [ 'allowed_loc_1', 'allowed_loc_2' ]
+            'storage_allowed_locations': [ 'allowed_loc_1', 'allowed_loc_2' ],
+            'comment': None,
+            'storage_blocked_locations': None,
         }
 
     def get_standard_outputs(self):
         return {
-            **self.get_standard_inputs(),
-            'storage_blocked_locations': None,
-            'comment': None
+            **self.get_standard_inputs()
         }
 
     # HELPERS

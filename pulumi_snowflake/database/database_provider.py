@@ -1,10 +1,7 @@
-from typing import Tuple
+from pulumi_snowflake import Client
 
-from pulumi_snowflake import ConnectionProvider
-
-from ..baseprovider import BaseDynamicProvider, KeyValueAttribute, BaseAttribute
+from ..baseprovider import BaseDynamicProvider
 from ..provider import Provider
-from ..validation import Validation
 
 
 class DatabaseProvider(BaseDynamicProvider):
@@ -12,26 +9,30 @@ class DatabaseProvider(BaseDynamicProvider):
     Dynamic provider for Snowflake Database resources.
     """
 
-    def __init__(self, provider_params: Provider, connection_provider: ConnectionProvider):
-        super().__init__(provider_params, connection_provider, "DATABASE", [
-            FromShareAttribute("share"),
-            KeyValueAttribute("data_retention_time_in_days"),
-            KeyValueAttribute("comment")
-        ], [
-            "transient"
-        ])
+    def __init__(self, provider_params: Provider, connection_provider: Client):
+        super().__init__(provider_params, connection_provider, logging_name="Database")
 
+    def generate_sql_create_statement(self, validated_name, inputs, environment):
+        template = environment.from_string(
+"""CREATE{% if transient %} TRANSIENT{% endif %} DATABASE {{ full_name }}
+{% if share %}FROM SHARE {{ share | sql_identifier }}
+{% endif %}
+{%- if data_retention_time_in_days %}DATA_RETENTION_TIME_IN_DAYS = {{ data_retention_time_in_days | sql }}
+{% endif %}
+{%- if comment %}COMMENT = {{ comment | sql }}
+{% endif %}
+""")
 
-class FromShareAttribute(BaseAttribute):
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, validated_name),
+            **inputs
+        })
 
-    def generate_sql(self, value) -> str:
-        if value is not None:
-            Validation.validate_qualified_object_name(value)
-            return f'FROM SHARE {value}'
-        else:
-            return ''
+        return sql
 
-    def generate_bindings(self, value) -> Tuple:
-        return tuple()
-
-
+    def generate_sql_drop_statement(self, validated_name, inputs, environment):
+        template = environment.from_string("DROP DATABASE {{ full_name }}")
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, validated_name)
+        })
+        return sql
