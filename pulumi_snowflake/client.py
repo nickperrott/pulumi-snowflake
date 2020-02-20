@@ -1,9 +1,10 @@
 import snowflake.connector
+from pulumi import info
 
 from .provider import Provider
 
 
-class ConnectionProvider:
+class Client:
     """
     Returns a connection to a Snowflake database.
     """
@@ -15,6 +16,11 @@ class ConnectionProvider:
         self.provider = provider
 
     def get(self):
+
+        info(f"Creating Snowflake connection for account={self.provider.account_name} "
+             f"user={self.provider.username} role={self.provider.role} "
+             f"database={self.provider.database} schema={self.provider.schema}")
+
         return snowflake.connector.connect(
             user=self.provider.username,
             password=self.provider.password,

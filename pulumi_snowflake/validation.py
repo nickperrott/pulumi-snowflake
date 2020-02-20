@@ -6,34 +6,16 @@ class Validation:
     identifier_regex = re.compile("^[A-Za-z\\$\\_][A-Za-z0-9\\$\\_]+$")
 
     @staticmethod
-    def validate_field_name(id: str):
-        """ Validates a Snowflake resource name (e.g. DATA_RETENTION_TIME_IN_DAYS)
+    def validate_string(string: str, allow_none: bool = True):
+        """ Validates a Snowflake string.  Strings can contain any character except single quotes, although
+        single quotes may be escaped with a backslash.
         """
-        if not Validation.identifier_regex.match(id):
-            raise Exception(f'Invalid Snowflake resource type name: {id}')
+        if allow_none and string is None: return string
 
-        return id
+        pattern = re.compile("^(?:[^'\\\\]|\\\\.)*$")
 
-    @staticmethod
-    def validate_object_type(id: str):
-        """ Validates a Snowflake SQL object name, e.g. "FILE FORMAT"
-        """
-        pattern = re.compile("^([A-Z,a-z,0-9$_ ])+$")
-
-        if not pattern.match(id):
-            raise Exception(f'Invalid Snowflake object type: {id}')
-
-        return id
-
-
-    @staticmethod
-    def validate_qualified_object_name(id: str):
-        """ Validates a Snowflake SQL object name.
-        """
-        pattern = re.compile("^([A-Z,a-z,0-9$_\\.])+$")
-
-        if not pattern.match(id):
-            raise Exception(f'Invalid Snowflake qualified object name: {id}')
+        if not pattern.match(string):
+            raise Exception(f'Invalid Snowflake string: {string}')
 
         return id
 

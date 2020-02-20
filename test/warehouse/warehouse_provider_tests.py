@@ -30,16 +30,47 @@ class WarehouseProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE WAREHOUSE test_wh",
-                f"WAREHOUSE_SIZE = %s",
+                f"WAREHOUSE_SIZE = '{WarehouseSizeValues.XSMALL}'",
                 f"MAX_CLUSTER_COUNT = 2",
                 f"MIN_CLUSTER_COUNT = 3",
-                f"SCALING_POLICY = %s",
+                f"SCALING_POLICY = '{WarehouseScalingPolicyValues.STANDARD}'",
                 f"AUTO_SUSPEND = 300",
                 f"AUTO_RESUME = TRUE",
                 f"INITIALLY_SUSPENDED = TRUE",
-                f"COMMENT = %s"
-            ]), (WarehouseSizeValues.XSMALL, WarehouseScalingPolicyValues.STANDARD, 'test comment',))
+                f"COMMENT = 'test comment'",
+                ""
+            ]))
         ])
+
+    def test_create_warehouse_minimal_args(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = WarehouseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": 'test_wh'
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE WAREHOUSE test_wh",
+                ""
+            ]))
+        ])
+
+    def test_delete_warehouse(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = WarehouseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.delete("test_warehouse", {
+            "name": "test_warehouse"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call(f"DROP WAREHOUSE test_warehouse")
+        ])
+
 
     # HELPERS
 

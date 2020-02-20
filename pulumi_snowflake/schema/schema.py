@@ -3,8 +3,8 @@ from typing import Optional
 from pulumi import Output, Input, ResourceOptions
 from pulumi.dynamic import Resource
 
+from .. import Client
 from ..provider import Provider
-from ..connection_provider import ConnectionProvider
 from .schema_provider import SchemaProvider
 
 
@@ -51,8 +51,8 @@ class Schema(Resource):
                  opts: Optional[ResourceOptions] = None):
 
         provider = provider if provider else Provider()
-        connection_provider = ConnectionProvider(provider=provider)
-        super().__init__(SchemaProvider(provider, connection_provider), resource_name, {
+        client = Client(provider=provider)
+        super().__init__(SchemaProvider(provider, client), resource_name, {
             'resource_name': resource_name,
             'name': name,
             'transient': transient,

@@ -1,8 +1,7 @@
 from typing import Tuple
 
-from pulumi_snowflake import ConnectionProvider
-
-from ..baseprovider import BaseDynamicProvider, KeyValueAttribute, BaseAttribute
+from .. import Client
+from ..baseprovider import BaseDynamicProvider
 from ..provider import Provider
 
 
@@ -11,20 +10,33 @@ class PipeProvider(BaseDynamicProvider):
     Dynamic provider for Snowflake Pipe resources.
     """
 
-    def __init__(self, provider_params: Provider, connection_provider: ConnectionProvider):
-        super().__init__(provider_params, connection_provider, "PIPE", [
-            KeyValueAttribute('auto_ingest'),
-            KeyValueAttribute('aws_sns_topic'),
-            KeyValueAttribute('integration'),
-            KeyValueAttribute('comment'),
-            VerbatimAttribute('code')
-        ])
+    def __init__(self, provider_params: Provider, connection_provider: Client):
+        super().__init__(provider_params, connection_provider, logging_name="Pipe")
 
+    def generate_sql_create_statement(self, name, inputs, environment):
+        template = environment.from_string(
+"""CREATE PIPE {{ full_name }}
+{% if auto_ingest is boolean %}AUTO_INGEST = {{ auto_ingest | sql }}
+{% endif %}
+{%- if aws_sns_topic %}AWS_SNS_TOPIC = {{ aws_sns_topic | sql }}
+{% endif %}
+{%- if integration %}INTEGRATION = {{ integration | sql }}
+{% endif %}
+{%- if comment %}COMMENT = {{ comment | sql }}
+{% endif -%}
+AS {{ code }}
+""")
 
-class VerbatimAttribute(BaseAttribute):
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, name),
+            **inputs
+        })
 
-    def generate_sql(self, value) -> str:
-        return f"AS {value}"
+        return sql
 
-    def generate_bindings(self, value) -> Tuple:
-        return tuple()
+    def generate_sql_drop_statement(self, name, inputs, environment):
+        template = environment.from_string("DROP PIPE {{ full_name }}")
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, name)
+        })
+        return sql

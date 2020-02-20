@@ -4,13 +4,29 @@ from unittest.mock import Mock, call
 from pulumi_snowflake.baseprovider import BaseDynamicProvider
 
 
+class TestProvider(BaseDynamicProvider):
+
+    def __init__(self, provider_params, connection_provider):
+        super().__init__(provider_params, connection_provider)
+
+    def generate_sql_drop_statement(self, name, inputs, environment):
+        template = environment.from_string(
+            """DROP TESTOBJECT {{ full_name }}""")
+
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, name)
+        })
+
+        return sql
+
+
 class BaseDynamicProviderTests(unittest.TestCase):
 
     def test_when_database_and_schema_provided_then_fully_qualified_object_name_in_delete(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test_name", {
             "database": "test_db",
             "schema": "test_schema",
@@ -28,7 +44,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test_name", {
             "name": "test_name",
         })
@@ -47,7 +63,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         provider.delete("test_name", {
             "name": "test_name"
         })
@@ -63,7 +79,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.delete("test-name", {
             "database": "test~db",
             "schema": "test_schema",

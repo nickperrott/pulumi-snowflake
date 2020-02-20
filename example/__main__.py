@@ -6,16 +6,17 @@ from pulumi_snowflake.fileformat import FileFormat
 from pulumi_snowflake.pipe import Pipe
 from pulumi_snowflake.schema import Schema
 from pulumi_snowflake.stage import Stage
-from pulumi_snowflake.storageintegration import AWSStorageIntegration
+from pulumi_snowflake.storageintegration import StorageIntegration
 from pulumi_snowflake.warehouse import Warehouse, WarehouseScalingPolicyValues, WarehouseSizeValues
 
 # Enter your snowflake DB name and (optionally) Schema here
 my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
 
-my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
+my_storage_integration = StorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc'],
+    storage_provider="S3",
     provider=my_provider
 )
 
@@ -25,6 +26,9 @@ my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
 my_file_format = FileFormat("MyFileFormat",
     name=None,
     type="CSV",
+    field_delimiter=';',
+    file_extension='txt',
+    skip_byte_order_mark=True,
     provider=my_provider
 )
 
