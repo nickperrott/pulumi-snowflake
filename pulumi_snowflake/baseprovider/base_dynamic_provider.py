@@ -22,7 +22,7 @@ class BaseDynamicProvider(ResourceProvider):
     def __init__(self,
                  provider: Provider,
                  connection_provider: Client,
-                 logging_name: str = "TEST"):
+                 logging_name: str):
         self.provider_params = provider
         self.connection_provider = connection_provider
         self.logging_name = logging_name
