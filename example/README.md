@@ -1,6 +1,6 @@
 # pulumi-snowflake AWS Example
 
-This folder contains an example Pulumi program which creates a Snowflake file format.
+This folder contains an example Pulumi program which creates a set of Snowflake resources.
 
 > **NOTE:** Pulumi has some problems with Dynamic Providers in Python on Windows and may not work on this platform.  [See this GitHub issue](https://github.com/pulumi/pulumi/issues/3807).
 

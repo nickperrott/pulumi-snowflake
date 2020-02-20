@@ -1,18 +1,20 @@
 import pulumi
 
 from pulumi_snowflake import Provider
+from pulumi_snowflake.database import Database
 from pulumi_snowflake.fileformat import FileFormat
 from pulumi_snowflake.stage import Stage
-from pulumi_snowflake.storageintegration import AWSStorageIntegration
+from pulumi_snowflake.storageintegration import StorageIntegration
 
 
 # Enter your snowflake DB name and (optionally) Schema here
 my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
 
-my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
+my_storage_integration = StorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc'],
+    storage_provider="S3",
     provider=my_provider
 )
 
@@ -50,6 +52,12 @@ my_stage = Stage("MyStage",
             )
 
 
+my_database = Database("MyDatabase",
+                       comment="A test database",
+                       transient=False,
+                       data_retention_time_in_days=1
+                       )
+
 pulumi.export('StorageIntegrationName', my_storage_integration.name)
 pulumi.export('StorageIntegrationType', my_storage_integration.type)
 pulumi.export('StorageIntegrationArn', my_storage_integration.storage_aws_role_arn)
@@ -60,3 +68,7 @@ pulumi.export('FileFormatDatabase', my_file_format.database)
 pulumi.export('FileFormatSchema', my_file_format.schema)
 
 pulumi.export('StageName', my_stage.name)
+
+pulumi.export('DatabaseName', my_database.name)
+pulumi.export('DatabaseTransient', my_database.transient)
+pulumi.export('DatabaseShare', my_database.share)

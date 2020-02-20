@@ -4,7 +4,7 @@ from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
 from .stage_provider import StageProvider
 from ..provider import Provider
-from ..connection_provider import ConnectionProvider
+from ..client import Client
 
 
 class Stage(Resource):
@@ -82,7 +82,7 @@ class Stage(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         provider = provider if provider else Provider()
-        connection_provider = ConnectionProvider(provider=provider)
+        connection_provider = Client(provider=provider)
         super().__init__(StageProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
             'database': database,
