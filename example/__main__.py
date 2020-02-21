@@ -6,7 +6,7 @@ from pulumi_snowflake.fileformat import FileFormat
 from pulumi_snowflake.schema import Schema
 from pulumi_snowflake.stage import Stage
 from pulumi_snowflake.storageintegration import StorageIntegration
-
+from pulumi_snowflake.warehouse import Warehouse, WarehouseScalingPolicyValues, WarehouseSizeValues
 
 # Enter your snowflake DB name and (optionally) Schema here
 my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
@@ -58,12 +58,24 @@ my_database = Database("MyDatabase",
                        data_retention_time_in_days=1
                        )
 
+
 my_schema = Schema("MySchema",
                    database=my_database.name,
                    comment="A test schema",
                    transient=True,
                    data_retention_time_in_days=1
                    )
+
+my_warehouse = Warehouse("MyWarehouse",
+                         comment="A test warehouse",
+                         warehouse_size=WarehouseSizeValues.XSMALL,
+                         auto_suspend=300,
+                         min_cluster_count=1,
+                         max_cluster_count=1,
+                         auto_resume=True,
+                         initially_suspended=True
+                         )
+
 
 pulumi.export('StorageIntegrationName', my_storage_integration.name)
 pulumi.export('StorageIntegrationType', my_storage_integration.type)
@@ -81,3 +93,5 @@ pulumi.export('DatabaseTransient', my_database.transient)
 pulumi.export('DatabaseShare', my_database.share)
 
 pulumi.export('SchemaName', my_schema.name)
+
+pulumi.export('WarehouseName', my_warehouse.name)
