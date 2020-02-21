@@ -82,8 +82,8 @@ class Stage(Resource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         """
         provider = provider if provider else Provider()
-        connection_provider = Client(provider=provider)
-        super().__init__(StageProvider(provider, connection_provider), resource_name, {
+        client = Client(provider=provider)
+        super().__init__(StageProvider(provider, client), resource_name, {
             'resource_name': resource_name,
             'database': database,
             'url': url,
