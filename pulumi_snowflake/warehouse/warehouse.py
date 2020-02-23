@@ -60,6 +60,11 @@ class Warehouse(Resource):
     Specifies a comment for the warehouse.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  name: Input[Optional[str]] = None,
@@ -78,6 +83,7 @@ class Warehouse(Resource):
         connection_provider = Client(provider=provider)
         super().__init__(WarehouseProvider(provider, connection_provider), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'name': name,
             'warehouse_size': warehouse_size,
             'max_cluster_count': max_cluster_count,

@@ -51,6 +51,11 @@ class Stage(Resource):
     Specifies a comment for the stage.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  database: Input[str] = None,
@@ -85,6 +90,7 @@ class Stage(Resource):
         client = Client(provider=provider)
         super().__init__(StageProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'database': database,
             'url': url,
             'storage_integration': storage_integration,

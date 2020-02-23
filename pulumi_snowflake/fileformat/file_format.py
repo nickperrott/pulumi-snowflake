@@ -40,6 +40,11 @@ class FileFormat(Resource):
     The Snowflake schema in which the file format exists.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  database: Input[str] = None,
@@ -86,6 +91,7 @@ class FileFormat(Resource):
         super().__init__(FileFormatProvider(provider, client), resource_name, {
             'database': database,
             'resource_name': resource_name,
+            'full_name': None,
             'compression': compression,
             'record_delimiter': record_delimiter,
             'field_delimiter': field_delimiter,

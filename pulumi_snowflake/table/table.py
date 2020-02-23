@@ -32,6 +32,11 @@ class Table(Resource):
     Specifies a comment for the table.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  columns: Input[List[Column]],
@@ -47,6 +52,7 @@ class Table(Resource):
         client = Client(provider=provider)
         super().__init__(TableProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'columns': [ column.as_dict() for column in columns ],
             'database': database,
             'schema': schema,

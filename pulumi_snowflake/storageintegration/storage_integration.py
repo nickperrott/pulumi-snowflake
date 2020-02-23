@@ -65,6 +65,11 @@ class StorageIntegration(Resource):
     Specifies the ID for your Office 365 tenant that the allowed and blocked storage accounts belong to.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  enabled: Input[bool],
@@ -99,6 +104,7 @@ class StorageIntegration(Resource):
 
         super().__init__(StorageIntegrationProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'name': name,
             'enabled': enabled,
             'storage_aws_role_arn': storage_aws_role_arn,
