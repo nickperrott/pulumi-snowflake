@@ -2,6 +2,8 @@ from typing import Optional, List
 
 from pulumi import Input, ResourceOptions, Output
 from pulumi.dynamic import Resource
+
+from .column import Column
 from .table_provider import TableProvider
 from ..provider import Provider
 from ..client import Client
@@ -32,6 +34,7 @@ class Table(Resource):
 
     def __init__(self,
                  resource_name: str,
+                 columns: Input[List[Column]],
                  database: Input[str] = None,
                  schema: Input[str] = None,
                  name: Input[Optional[str]] = None,
@@ -44,6 +47,7 @@ class Table(Resource):
         client = Client(provider=provider)
         super().__init__(TableProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'columns': [ column.as_dict() for column in columns ],
             'database': database,
             'schema': schema,
             'name': name,

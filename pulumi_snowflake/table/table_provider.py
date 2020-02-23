@@ -14,13 +14,24 @@ class TableProvider(BaseDynamicProvider):
     def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
 """CREATE{% if temporary %} TEMPORARY{% endif %} {{ resource_type | upper }} {{ full_name }}
+(
+{% for column in columns %}  {{ column.name | sql_identifier }} {{ column.type }}
+  {%- if column.collation %} COLLATE {{ column.collation | sql }}{% endif %}
+  {%- if column.default %} DEFAULT {{ column.default }}{% endif %}
+  {%- if column.autoincrement %} AUTOINCREMENT{% endif %}
+  {%- if column.not_null %} NOT NULL{% endif %}
+  {%- if column.unique %} UNIQUE{% endif %}
+  {%- if column.primary_key %} PRIMARY KEY{% endif -%}
+  {{ "," if not loop.last }}
+{% endfor %})
 {% if cluster_by -%}
 CLUSTER BY ( {{ cluster_by | join(',') }} )
 {% endif %}
 {%- if data_retention_time_in_days %}DATA_RETENTION_TIME_IN_DAYS = {{ data_retention_time_in_days | sql }}
 {% endif %}
 {%- if comment %}COMMENT = {{ comment | sql }}
-{% endif %}""")
+{% endif %}
+""")
 
         sql = template.render({
             "full_name": self._get_full_object_name(inputs, name),
