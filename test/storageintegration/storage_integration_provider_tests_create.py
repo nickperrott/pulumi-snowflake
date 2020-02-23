@@ -113,14 +113,6 @@ class StorageIntegrationProviderTests(unittest.TestCase):
                 field: fieldValues[field]
             })
 
-
-            print(result.outs)
-            print({
-                **self.get_standard_outputs(),
-                "full_name": "test_name",
-                field: fieldValues[field]
-            })
-
             self.assertDictEqual(result.outs, {
                 **self.get_standard_outputs(),
                 "full_name": "test_name",
