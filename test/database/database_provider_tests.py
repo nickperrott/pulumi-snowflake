@@ -91,6 +91,20 @@ class DatabaseProviderTests(unittest.TestCase):
             ]))
         ])
 
+    def test_delete_database(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.delete("test_database", {
+            "name": "test_database"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call(f"DROP DATABASE test_database")
+        ])
+
+
     # HELPERS
 
     def get_mock_connection_provider(self, mock_cursor):
