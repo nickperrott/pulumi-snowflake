@@ -6,33 +6,24 @@ from pulumi_snowflake.fileformat import FileFormat
 from pulumi_snowflake.pipe import Pipe
 from pulumi_snowflake.schema import Schema
 from pulumi_snowflake.stage import Stage
-from pulumi_snowflake.storageintegration import AWSStorageIntegration
+from pulumi_snowflake.storageintegration import StorageIntegration
 from pulumi_snowflake.warehouse import Warehouse, WarehouseScalingPolicyValues, WarehouseSizeValues
 
 # Enter your snowflake DB name and (optionally) Schema here
 my_provider = Provider(database="FIRSTTEST", schema="FIRSTSCHEMA")
 
-my_storage_integration = AWSStorageIntegration("MyStorageIntegration",
+my_storage_integration = StorageIntegration("MyStorageIntegration",
     enabled=True,
     storage_aws_role_arn='myarn',
     storage_allowed_locations=['s3://allowloc'],
+    storage_provider="S3",
     provider=my_provider
 )
 
 
 # The resource below does not provide a database and schema, so it uses the provider values
 
-my_file_format = FileFormat("MyFileFormat",
-    name=None,
-    type="CSV",
-    provider=my_provider
-)
-
-# The resource below provides an explicit database and schema which overrides the provider values
-
 my_stage = Stage("MyStage",
-                 database="SECONDDATABASE",
-                 schema="SECONDSCHEMA",
                  file_format={
                      "type": "CSV",
                      "null_if": ["NULL","n"],
@@ -44,12 +35,23 @@ my_stage = Stage("MyStage",
                      "skip_header": 1
                  },
                  copy_options={
-                     "size_limit":100,
-                     "on_error": "skip_file_45%",
-                     "match_by_column_name": "case_insensitive",
+                     "size_limit": 100,
+                     "on_error": "skip_file_45%"
                 },
                 provider=my_provider
             )
+
+
+# The resource below provides an explicit database and schema which overrides the provider values
+
+my_file_format = FileFormat("MyFileFormat",
+    database="SECONDDATABASE",
+    schema="SECONDSCHEMA",
+    name=None,
+    type="CSV",
+    provider=my_provider
+)
+
 
 my_database = Database("MyDatabase",
                        comment="A test database",
@@ -75,13 +77,13 @@ my_warehouse = Warehouse("MyWarehouse",
                          initially_suspended=True
                          )
 
-# Pipe example - requires Table to be implemented before it will work:
+# Pipe example - this required a table named FIRSTTABLE to exist.
 
-# my_pipe = Pipe("MyPipe",
-#                auto_ingest=False,
-#                comment="A test pipe",
-#                code=my_stage.name.apply(lambda n: f"copy into tablename from @{n}")
-#                )
+my_pipe = Pipe("MyPipe",
+               auto_ingest=False,
+               comment="A test pipe",
+               code=my_stage.name.apply(lambda n: f"copy into FIRSTTABLE from @{n}")
+               )
 
 
 pulumi.export('StorageIntegrationName', my_storage_integration.name)

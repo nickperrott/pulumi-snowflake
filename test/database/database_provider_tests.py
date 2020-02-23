@@ -24,9 +24,27 @@ class DatabaseProviderTests(unittest.TestCase):
             call("\n".join([
                 f"CREATE DATABASE test_db",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = %s"
-            ]), ('test_comment',))
+                f"COMMENT = 'test_comment'",
+                ""
+            ]))
         ])
+
+    def test_create_database_minimal_args(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": "test_db",
+            "comment": None,
+            "transient": None,
+            "data_retention_time_in_days": None,
+            "share": None
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([f"CREATE DATABASE test_db", ""]))
+            ])
 
     def test_when_create_database_with_transient_true_then_appears_in_create(self):
         mock_cursor = Mock()
@@ -45,8 +63,9 @@ class DatabaseProviderTests(unittest.TestCase):
             call("\n".join([
                 f"CREATE TRANSIENT DATABASE test_db",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = %s"
-            ]), ('test_comment',))
+                f"COMMENT = 'test_comment'",
+                ""
+            ]))
         ])
 
     def test_when_create_database_with_share_then_appears_in_create(self):
@@ -59,17 +78,54 @@ class DatabaseProviderTests(unittest.TestCase):
             "comment": "test_comment",
             "transient": False,
             "data_retention_time_in_days": 7,
-            "share": "test.share"
+            "share": "testshare"
         })
 
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"CREATE DATABASE test_db",
-                f"FROM SHARE test.share",
+                f"FROM SHARE testshare",
                 f"DATA_RETENTION_TIME_IN_DAYS = 7",
-                f"COMMENT = %s"
-            ]), ('test_comment',))
+                f"COMMENT = 'test_comment'",
+                ""
+            ]))
         ])
+
+    def test_delete_database(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+
+        provider.delete("test_database", {
+            "name": "test_database"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call(f"DROP DATABASE test_database")
+        ])
+
+    def test_when_share_contains_special_chars_then_enquoted(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": "test_db",
+            "comment": None,
+            "transient": None,
+            "data_retention_time_in_days": None,
+            "share": "test-share"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE DATABASE test_db",
+                f'FROM SHARE "test-share"',
+                ""
+            ]))
+        ])
+
 
     # HELPERS
 

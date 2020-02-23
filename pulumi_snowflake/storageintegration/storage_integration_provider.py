@@ -1,31 +1,35 @@
-from typing import Tuple
-
-from .. import Client
-from ..baseprovider import BaseDynamicProvider
+from ..client import Client
 from ..provider import Provider
+from ..baseprovider.base_dynamic_provider import BaseDynamicProvider
 
 
-class PipeProvider(BaseDynamicProvider):
+class StorageIntegrationProvider(BaseDynamicProvider):
     """
-    Dynamic provider for Snowflake Pipe resources.
+    Dynamic provider for Snowflake Storage Integration resources.
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, resource_type="Pipe")
+        super().__init__(provider_params, connection_provider, resource_type="Storage Integration")
 
     def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
 """CREATE {{ resource_type | upper }} {{ full_name }}
-{% if auto_ingest is boolean %}AUTO_INGEST = {{ auto_ingest | sql }}
+{% if type %}TYPE = {{ type | sql }}
 {% endif %}
-{%- if aws_sns_topic %}AWS_SNS_TOPIC = {{ aws_sns_topic | sql }}
+{%- if storage_provider %}STORAGE_PROVIDER = {{ storage_provider | sql }}
 {% endif %}
-{%- if integration %}INTEGRATION = {{ integration | sql }}
+{%- if storage_aws_role_arn %}STORAGE_AWS_ROLE_ARN = {{ storage_aws_role_arn | sql }}
+{% endif %}
+{%- if enabled is boolean %}ENABLED = {{ enabled | sql }}
+{% endif %}
+{%- if storage_allowed_locations %}STORAGE_ALLOWED_LOCATIONS = {{ storage_allowed_locations | sql }}
+{% endif %}
+{%- if storage_blocked_locations %}STORAGE_BLOCKED_LOCATIONS = {{ storage_blocked_locations | sql }}
+{% endif %}
+{%- if azure_tenant_id %}AZURE_TENANT_ID = {{ azure_tenant_id | sql }}
 {% endif %}
 {%- if comment %}COMMENT = {{ comment | sql }}
-{% endif -%}
-AS {{ code }}
-""")
+{% endif %}""")
 
         sql = template.render({
             "full_name": self._get_full_object_name(inputs, name),

@@ -3,6 +3,20 @@ from unittest.mock import Mock, call
 
 from pulumi_snowflake.baseprovider import BaseDynamicProvider
 
+class TestProvider(BaseDynamicProvider):
+
+    def __init__(self, provider_params, connection_provider):
+        super().__init__(provider_params, connection_provider, "Test")
+
+    def generate_sql_create_statement(self, name, inputs, environment):
+        template = environment.from_string(
+            """CREATE TESTOBJECT {{ full_name }}""")
+
+        sql = template.render({
+            "full_name": self._get_full_object_name(inputs, name)
+        })
+
+        return sql
 
 class BaseDynamicProviderTests(unittest.TestCase):
 
@@ -10,7 +24,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "database": "test_db",
             "schema": "test_schema",
@@ -28,7 +42,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name"
@@ -44,7 +58,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "database": "test_db",
             "name": "test_name",
@@ -61,7 +75,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "schema": "test_schema",
             "name": "test_name",
@@ -78,7 +92,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             "database": "test_db",
             "schema": "test_schema",
@@ -97,7 +111,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name"
@@ -112,7 +126,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         result = provider.create({
             "database": "test_db",
             "name": "test_name",
@@ -134,7 +148,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name"
@@ -154,7 +168,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -164,7 +178,9 @@ class BaseDynamicProviderTests(unittest.TestCase):
 
         self.assertDictEqual(result.outs, {
             "full_name": "test_name",
-            "name": "test_name"
+            "name": "test_name",
+            "database": None,
+            "schema": None,
         })
 
 
@@ -176,7 +192,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = None
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name"
@@ -195,7 +211,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -218,7 +234,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -240,7 +256,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         result = provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -263,7 +279,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name"
@@ -284,7 +300,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -307,7 +323,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -328,7 +344,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_provider.database = "test_provider_db"
         mock_provider.schema = "test_provider_schema"
 
-        provider = BaseDynamicProvider(mock_provider, mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(mock_provider, mock_connection_provider)
         provider.create({
             "name": "test_name",
             "resource_name": "test_resource_name",
@@ -345,7 +361,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
         provider.create({
             "database": "test~db",
             "schema": "test_schema",
@@ -359,18 +375,39 @@ class BaseDynamicProviderTests(unittest.TestCase):
             ]))
         ])
 
-
     def test_when_name_has_invalid_chars_then_raises_exception(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        provider = BaseDynamicProvider(self.get_mock_provider(), mock_connection_provider, 'TESTOBJECT', [])
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
             "database": "test~db",
             "schema": "test_schema",
             "name": 'test"name',
             "resource_name": "test_resource_name"
+        })
+
+    def test_when_invalid_string_then_raises_exception(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        class TestIdProvider(BaseDynamicProvider):
+            def __init__(self, provider_params, connection_provider):
+                super().__init__(provider_params, connection_provider, "TestId")
+
+            def generate_sql_create_statement(self, name, inputs, environment):
+                template = environment.from_string("{{ test_str | sql }}")
+                sql = template.render(**inputs)
+                return sql
+
+        provider = TestIdProvider(self.get_mock_provider(), mock_connection_provider)
+
+        self.assertRaises(Exception, provider.create, {
+            "test_str": "my_test_string'; DROP TABLE USERS --",
+            "name": "test_name",
+            "resource_name": "test_resource_name",
+            "database": "test_input_db"
         })
 
     # HELPERS

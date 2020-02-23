@@ -20,21 +20,83 @@ class WarehouseProviderTests(unittest.TestCase):
             "integration": "test_integration",
             "code": '''copy into snowpipe_db.public.mytable
 from @snowpipe_db.public.mystage
-file_format = (type = 'JSON');''',
-            "comment": "test comment",
+file_format = (type = 'JSON');'''
         })
 
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 "CREATE PIPE test_wh",
                 "AUTO_INGEST = TRUE",
-                "AWS_SNS_TOPIC = %s",
-                "INTEGRATION = %s",
-                "COMMENT = %s",
+                "AWS_SNS_TOPIC = 'test_topic'",
+                "INTEGRATION = 'test_integration'",
+                "COMMENT = 'test comment'",
                 "AS copy into snowpipe_db.public.mytable",
                 "from @snowpipe_db.public.mystage",
                 "file_format = (type = 'JSON');",
-            ]), ("test_topic", "test_integration", 'test comment',))
+            ]))
+        ])
+
+    def test_create_pipe_minimal_args(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = PipeProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": 'test_wh',
+            "comment": None,
+            "auto_ingest": None,
+            "aws_sns_topic": None,
+            "integration": None,
+            "code": '''copy into snowpipe_db.public.mytable
+from @snowpipe_db.public.mystage
+file_format = (type = 'JSON');'''
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                "CREATE PIPE test_wh",
+                "AS copy into snowpipe_db.public.mytable",
+                "from @snowpipe_db.public.mystage",
+                "file_format = (type = 'JSON');",
+            ]))
+        ])
+
+        def test_create_pipe_minimal_args(self):
+            mock_cursor = Mock()
+            mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+            provider = PipeProvider(self.get_mock_provider(), mock_connection_provider)
+            provider.create({
+                "name": 'test_wh',
+                "comment": None,
+                "auto_ingest": None,
+                "aws_sns_topic": None,
+                "integration": None,
+                "code": '''copy into snowpipe_db.public.mytable
+    from @snowpipe_db.public.mystage
+    file_format = (type = 'JSON');'''
+            })
+
+            mock_cursor.execute.assert_has_calls([
+                call("\n".join([
+                    "CREATE PIPE test_wh",
+                    "AS copy into snowpipe_db.public.mytable",
+                    "from @snowpipe_db.public.mystage",
+                    "file_format = (type = 'JSON');",
+                ]))
+            ])
+
+    def test_delete_pipe(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = PipeProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.delete("test_pipe", {
+            "name": "test_pipe"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call(f"DROP PIPE test_pipe")
         ])
 
     # HELPERS
