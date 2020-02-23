@@ -6,8 +6,6 @@ from pulumi_snowflake.fileformat import FileFormatProvider
 
 class FileFormatProviderTests(unittest.TestCase):
 
-    # Put outputs on fileformat object
-
     def test_when_call_delete_then_sql_is_generated(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)

@@ -16,7 +16,7 @@ class PipeProvider(BaseDynamicProvider):
     def generate_sql_create_statement(self, validated_name, inputs, environment):
         template = environment.from_string(
 """CREATE PIPE {{ full_name }}
-{% if auto_ingest %}AUTO_INGEST = {{ auto_ingest | sql }}
+{% if auto_ingest is boolean %}AUTO_INGEST = {{ auto_ingest | sql }}
 {% endif %}
 {%- if aws_sns_topic %}AWS_SNS_TOPIC = {{ aws_sns_topic | sql }}
 {% endif %}
