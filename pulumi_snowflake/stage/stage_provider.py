@@ -11,7 +11,7 @@ class StageProvider(BaseDynamicProvider):
     def __init__(self, provider_params: Provider, connection_provider: Client):
         super().__init__(provider_params, connection_provider, resource_type="Stage")
 
-    def generate_sql_create_statement(self, validated_name, inputs, environment):
+    def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
 """CREATE{% if temporary %} TEMPORARY{% endif %} {{ resource_type | upper }} {{ full_name }}
 {% if url %}URL = {{ url | sql }}
@@ -30,17 +30,17 @@ class StageProvider(BaseDynamicProvider):
 {% endif %}""")
 
         sql = template.render({
-            "full_name": self._get_full_object_name(inputs, validated_name),
+            "full_name": self._get_full_object_name(inputs, name),
             "resource_type": self.resource_type,
             **inputs
         })
 
         return sql
 
-    def generate_sql_drop_statement(self, validated_name, inputs, environment):
+    def generate_sql_drop_statement(self, name, inputs, environment):
         template = environment.from_string("DROP {{ resource_type | upper }} {{ full_name }}")
         sql = template.render({
-            "full_name": self._get_full_object_name(inputs, validated_name),
+            "full_name": self._get_full_object_name(inputs, name),
             "resource_type": self.resource_type
         })
         return sql

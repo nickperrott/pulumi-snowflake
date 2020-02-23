@@ -9,12 +9,12 @@ class TestProvider(BaseDynamicProvider):
     def __init__(self, provider_params, connection_provider):
         super().__init__(provider_params, connection_provider, "Test")
 
-    def generate_sql_drop_statement(self, validated_name, inputs, environment):
+    def generate_sql_drop_statement(self, name, inputs, environment):
         template = environment.from_string(
             """DROP TESTOBJECT {{ full_name }}""")
 
         sql = template.render({
-            "full_name": self._get_full_object_name(inputs, validated_name)
+            "full_name": self._get_full_object_name(inputs, name)
         })
 
         return sql
@@ -71,6 +71,25 @@ class BaseDynamicProviderTests(unittest.TestCase):
         mock_cursor.execute.assert_has_calls([
             call("\n".join([
                 f"DROP TESTOBJECT test_name"
+            ]))
+        ])
+
+
+    def test_when_name_has_special_chars_then_identifier_is_enquoted(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.delete("test-name", {
+            "database": "test~db",
+            "schema": "test_schema",
+            "name": "test-name",
+            "resource_name": "test_resource_name"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f'DROP TESTOBJECT "test~db".test_schema."test-name"'
             ]))
         ])
 

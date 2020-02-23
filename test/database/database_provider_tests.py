@@ -96,12 +96,34 @@ class DatabaseProviderTests(unittest.TestCase):
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
         provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+
         provider.delete("test_database", {
             "name": "test_database"
         })
 
         mock_cursor.execute.assert_has_calls([
             call(f"DROP DATABASE test_database")
+        ])
+
+    def test_when_share_contains_special_chars_then_enquoted(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = DatabaseProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "name": "test_db",
+            "comment": None,
+            "transient": None,
+            "data_retention_time_in_days": None,
+            "share": "test-share"
+        })
+
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f"CREATE DATABASE test_db",
+                f'FROM SHARE "test-share"',
+                ""
+            ]))
         ])
 
 

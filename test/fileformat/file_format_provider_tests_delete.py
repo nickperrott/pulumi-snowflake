@@ -47,16 +47,6 @@ class FileFormatProviderTests(unittest.TestCase):
             call(f"DROP FILE FORMAT database_name.schema_name.test_file_format")
         ])
 
-    def test_when_call_delete_and_id_invalid_then_error_thrown(self):
-        mock_cursor = Mock()
-        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
-
-        provider = FileFormatProvider(self.get_mock_provider(), mock_connection_provider)
-
-        self.assertRaises(Exception, provider.delete, "invalid-id", {
-            "database": "database_name"
-        })
-
     # HELPERS
 
     def get_mock_connection_provider(self, mock_cursor):

@@ -8,12 +8,12 @@ class TestProvider(BaseDynamicProvider):
     def __init__(self, provider_params, connection_provider):
         super().__init__(provider_params, connection_provider, "Test")
 
-    def generate_sql_create_statement(self, validated_name, inputs, environment):
+    def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
             """CREATE TESTOBJECT {{ full_name }}""")
 
         sql = template.render({
-            "full_name": self._get_full_object_name(inputs, validated_name)
+            "full_name": self._get_full_object_name(inputs, name)
         })
 
         return sql
@@ -357,26 +357,35 @@ class BaseDynamicProviderTests(unittest.TestCase):
             ]))
         ])
 
-    def test_when_invalid_identifier_then_raises_exception(self):
+    def test_when_name_has_special_chars_then_identifier_is_enquoted(self):
         mock_cursor = Mock()
         mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
 
-        class TestIdProvider(BaseDynamicProvider):
-            def __init__(self, provider_params, connection_provider):
-                super().__init__(provider_params, connection_provider, "TestId")
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
+        provider.create({
+            "database": "test~db",
+            "schema": "test_schema",
+            "name": "test-name",
+            "resource_name": "test_resource_name"
+        })
 
-            def generate_sql_create_statement(self, validated_name, inputs, environment):
-                template = environment.from_string("{{ test_id | sql_identifier }}")
-                sql = template.render(**inputs)
-                return sql
+        mock_cursor.execute.assert_has_calls([
+            call("\n".join([
+                f'CREATE TESTOBJECT "test~db".test_schema."test-name"'
+            ]))
+        ])
 
-        provider = TestIdProvider(self.get_mock_provider(), mock_connection_provider)
+    def test_when_name_has_invalid_chars_then_raises_exception(self):
+        mock_cursor = Mock()
+        mock_connection_provider = self.get_mock_connection_provider(mock_cursor)
+
+        provider = TestProvider(self.get_mock_provider(), mock_connection_provider)
 
         self.assertRaises(Exception, provider.create, {
-            "test_id": "My-Id",
-            "name": "test_name",
-            "resource_name": "test_resource_name",
-            "database": "test_input_db",
+            "database": "test~db",
+            "schema": "test_schema",
+            "name": 'test"name',
+            "resource_name": "test_resource_name"
         })
 
     def test_when_invalid_string_then_raises_exception(self):
@@ -387,7 +396,7 @@ class BaseDynamicProviderTests(unittest.TestCase):
             def __init__(self, provider_params, connection_provider):
                 super().__init__(provider_params, connection_provider, "TestId")
 
-            def generate_sql_create_statement(self, validated_name, inputs, environment):
+            def generate_sql_create_statement(self, name, inputs, environment):
                 template = environment.from_string("{{ test_str | sql }}")
                 sql = template.render(**inputs)
                 return sql
