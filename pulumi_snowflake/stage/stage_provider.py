@@ -9,11 +9,11 @@ class StageProvider(BaseDynamicProvider):
     """
 
     def __init__(self, provider_params: Provider, connection_provider: Client):
-        super().__init__(provider_params, connection_provider, logging_name="Stage")
+        super().__init__(provider_params, connection_provider, resource_type="Stage")
 
     def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
-"""CREATE{% if temporary %} TEMPORARY{% endif %} STAGE {{ full_name }}
+"""CREATE{% if temporary %} TEMPORARY{% endif %} {{ resource_type | upper }} {{ full_name }}
 {% if url %}URL = {{ url | sql }}
 {% endif %}
 {%- if storage_integration %}STORAGE_INTEGRATION = {{ storage_integration | sql }}
@@ -31,14 +31,16 @@ class StageProvider(BaseDynamicProvider):
 
         sql = template.render({
             "full_name": self._get_full_object_name(inputs, name),
+            "resource_type": self.resource_type,
             **inputs
         })
 
         return sql
 
     def generate_sql_drop_statement(self, name, inputs, environment):
-        template = environment.from_string("DROP STAGE {{ full_name }}")
+        template = environment.from_string("DROP {{ resource_type | upper }} {{ full_name }}")
         sql = template.render({
-            "full_name": self._get_full_object_name(inputs, name)
+            "full_name": self._get_full_object_name(inputs, name),
+            "resource_type": self.resource_type
         })
         return sql
