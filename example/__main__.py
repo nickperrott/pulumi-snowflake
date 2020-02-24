@@ -11,19 +11,24 @@ from pulumi_snowflake.table import Table
 from pulumi_snowflake.table.column import Column
 from pulumi_snowflake.warehouse import Warehouse, WarehouseSizeValues
 
-# === pulumi_snowflake Example ===
+"""
+# pulumi_snowflake Example Program
 
-# The following is a Pulumi program which demonstrates some of pulumi_snowflake's features.  To run the full example,
-# you will need:
-#
-#   * Snowflake credentials in your config (see README)
-#   * a database named "MyDatabase2" and schema named "MySchema2" (or comment out the "Explicit Provider" example below)
+The following is a Pulumi program which demonstrates some of pulumi_snowflake's features.  To run the full example,
+you will need:
+
+  * Snowflake credentials in your config (see README)
+  * a database named "MyDatabase2" and schema named "MySchema2" (or comment out the "Explicit Provider" example below)
+
+"""
 
 
-# DEFAULT PROVIDER EXAMPLE
+"""
+## Default provider example
 
-# The resources below all use the default provider, which will read the credentials from config.  We can also
-# specify the database and schema in the config, but in this case they are passed in explicitly.
+The resources below all use the default provider, which will read the credentials from config.  We can also
+specify the database and schema in the config, but in this case they are passed in explicitly.
+"""
 
 my_database = Database("MyDatabase",
                        comment="A test database",
@@ -86,7 +91,9 @@ def get_pipe_inputs():
 my_pipe = Pipe("MyPipe",
                auto_ingest=False,
                comment="A test pipe",
-               code=get_pipe_inputs().apply(lambda ins: f"copy into {ins['table_name']} from @{ins['stage_name']}"),
+               code=pulumi.Output.all(my_table.full_name, my_stage.full_name).apply(
+                   lambda a: f"COPY INTO {a[0]} FROM @{a[1]}"
+               ),
                opts=pulumi.ResourceOptions(depends_on=[my_stage,my_table])
                )
 
@@ -101,12 +108,14 @@ my_warehouse = Warehouse("MyWarehouse",
                          )
 
 
-# EXPLICIT PROVIDER EXAMPLE
+"""
+## Explicit Provider Example
 
-# In this example, the File Format resource below is passed an explicit provider.  Any values given to the `Provider`,
-# such as credentials or database/schema names, override any found in the config.
-#
-# NOTE: MyDatabase2 and MySchema2 must exist for this to work.
+In this example, the File Format resource below is passed an explicit provider.  Any values given to the `Provider`,
+such as credentials or database/schema names, override any found in the config.
+
+_NOTE_: MyDatabase2 and MySchema2 must exist for this to work.
+"""
 
 my_provider = Provider(database="MyDatabase2", schema="MySchema2")
 
@@ -115,8 +124,10 @@ my_file_format = FileFormat("MyFileFormat",
                             provider=my_provider
                             )
 
-# In this example, the File Format resource below is passed an explicit provider, however it is also given an explicit
-# database and schema.  These values will override those from the provider.
+"""
+In this example, the File Format resource below is passed an explicit provider, however it is also given an explicit
+database and schema.  These values will override those from the provider.
+"""
 
 my_file_format_2 = FileFormat("MyFileFormat2",
                               database=my_database.name,
