@@ -39,6 +39,10 @@ class Database(Resource):
     Specifies a comment for the database.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
 
     def __init__(self,
                  resource_name: str,
@@ -54,6 +58,7 @@ class Database(Resource):
         client = Client(provider=provider)
         super().__init__(DatabaseProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'name': name,
             'share': share,
             'transient': transient,

@@ -24,7 +24,8 @@ pulumi config set --secret snowflakeRole [desired role]
 
 > Note that `snowflakeRole` is optional, however your role must have adequate privilages to create storage integrations to run this example.  By default, the `SYSADMIN` role does not have these privilages, but `ACCOUNTADMIN` does.
 
-* Set your Snowflake table and schema name in `__main__.py`.
+* Create a database named "MyDatabase2" and schema named "MySchema2", or comment out the "Explicit Provider" example in
+`__main__.py`
 * Deploy the stack:
 
 ```

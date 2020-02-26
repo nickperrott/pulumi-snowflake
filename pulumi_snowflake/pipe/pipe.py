@@ -40,6 +40,11 @@ class Pipe(Resource):
     Specifies a comment for the pipe.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
+
     def __init__(self,
                  resource_name: str,
                  name: Input[Optional[str]] = None,
@@ -56,6 +61,7 @@ class Pipe(Resource):
         client = Client(provider=provider)
         super().__init__(PipeProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'name': name,
             'auto_ingest': auto_ingest,
             'aws_sns_topic': aws_sns_topic,

@@ -39,6 +39,10 @@ class Schema(Resource):
     Specifies a comment for the schema.
     """
 
+    full_name: Output[str]
+    """
+    The fully qualified name of the resource.
+    """
 
     def __init__(self,
                  resource_name: str,
@@ -54,6 +58,7 @@ class Schema(Resource):
         client = Client(provider=provider)
         super().__init__(SchemaProvider(provider, client), resource_name, {
             'resource_name': resource_name,
+            'full_name': None,
             'name': name,
             'transient': transient,
             'data_retention_time_in_days': data_retention_time_in_days,

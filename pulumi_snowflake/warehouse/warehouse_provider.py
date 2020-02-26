@@ -33,9 +33,9 @@ class WarehouseProvider(BaseDynamicProvider):
 {% endif %}""")
 
         sql = template.render({
+            **inputs,
             "full_name": self._get_full_object_name(inputs, name),
-            "resource_type": self.resource_type,
-            **inputs
+            "resource_type": self.resource_type
         })
 
         return sql
