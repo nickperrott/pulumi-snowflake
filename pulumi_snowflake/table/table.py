@@ -53,7 +53,7 @@ class Table(Resource):
         super().__init__(TableProvider(provider, client), resource_name, {
             'resource_name': resource_name,
             'full_name': None,
-            'columns': [ column.as_dict() for column in columns ],
+            'columns': [column.as_dict() for column in columns],
             'database': database,
             'schema': schema,
             'name': name,

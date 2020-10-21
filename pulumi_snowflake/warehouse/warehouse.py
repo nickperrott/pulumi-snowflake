@@ -40,7 +40,7 @@ class Warehouse(Resource):
     Auto-scale mode.  Should be one of `WarehouseScalingPolicyValues`.
     """
 
-    auto_suspend: Output[Optional[Union[int,str]]]
+    auto_suspend: Output[Optional[Union[int, str]]]
     """
     Specifies the number of seconds of inactivity after which a warehouse is automatically suspended.
     """
