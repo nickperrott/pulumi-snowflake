@@ -19,9 +19,14 @@ class Grant(Resource):
     The name of the role in Snowflake.
     """
 
-    database: Output[str]
+    grant_on_type: Output[str]
     """
-    Specifies the database that the privileges will be granted on
+    Specifies the type of object that the grant is on.  i.e DATABASE | WAREHOUSE
+    """
+
+    grant_on: Output[str]
+    """
+    Specifies the name of the object tha the privileges will be granted on
     """
 
     privileges: Output[List[str]]
@@ -47,7 +52,8 @@ class Grant(Resource):
     def __init__(self,
                  resource_name: str,
                  name: Input[Optional[str]] = None,
-                 database: Output[str] = None,
+                 grant_on_type: Output[str] = "DATABASE",
+                 grant_on: Output[str] = None,
                  privileges: Output[List[str]] = [],
                  role: Output[str] = None,
                  grant_option: Input[bool] = False,
@@ -60,7 +66,8 @@ class Grant(Resource):
             'resource_name': resource_name,
             'full_name': None,
             'name': name,
-            'database': database,
+            'grant_on_type' : grant_on_type,
+            'grant_on': grant_on,
             'privileges': privileges,
             'role': role,
             'grant_option': grant_option

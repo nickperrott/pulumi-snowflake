@@ -15,7 +15,7 @@ class GrantProvider(BaseDynamicProvider):
     def generate_sql_create_statement(self, name, inputs, environment):
         template = environment.from_string(
             """GRANT {% for priv in privileges %} {{priv}}{% if not loop.last %},{% endif %}{% endfor %}
-ON DATABASE {{database}} TO ROLE {{role}}
+ON {{grant_on_type}} {{grant_on}} TO ROLE {{role}}
 {%- if grant_option %} WITH GRANT OPTION
 {% endif %}
 """)
@@ -33,7 +33,7 @@ ON DATABASE {{database}} TO ROLE {{role}}
             """REVOKE
 {% for priv in privileges %} {{priv}} {% if not loop.last %},{% endif %}
 {% endfor %}
-            ON DATABASE {{database}} FROM ROLE {{role}} CASCADE
+            ON {{grant_on_type}} {{grant_on}} FROM ROLE {{role}} CASCADE
 """)
         sql = template.render({
             **inputs,
