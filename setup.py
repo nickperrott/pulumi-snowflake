@@ -16,12 +16,12 @@ setuptools.setup(
     install_requires=[
         'pulumi>=1.0.0',
         'snowflake-connector-python>=2.1.3',
-        'Jinja2'
+        'Jinja2>=2.11.2'
     ],
     tests_require=[
         'pulumi>=1.0.0',
         'snowflake-connector-python>=2.1.3',
-        'Jinja2'
+         'Jinja2>=2.11.2'
     ],
     test_suite='test'
 )
